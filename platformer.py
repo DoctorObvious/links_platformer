@@ -31,26 +31,26 @@ def main():
 
     x = y = 0
     level = [
-        "PPPPPPPPPPPPPPPPPPPPPPPPP",
-        "P   P        P     P    P",
-        "P                   E   P",
-        "P    PPPPPPPP     PPPPPPP",
+        "PPPPPPPPPPPPPPPPPSPPPPPPP",
+        "P               P P     P",
+        "P               P      EP",
+        "P            SSSS PPPPPPP",
         "P                       P",
-        "P    E         P        P",
-        "P     PPPPPPP           P",
+        "P         B             P",
+        "P         B      B      P",
+        "P         B B           P",
+        "P         B E           P",
+        "PP        B E           P",
+        "P         B E           P",
+        "P  P      B E           P",
+        "P         B E           P",
+        "P      P  B E           P",
+        "P         B E           P",
+        "P         B E           P",
+        "P      SSSS SSSS        P",
         "P                       P",
-        "P       PPPPPPP    E  P P",
-        "PB    P  P            P P",
-        "P        P     P        P",
-        "P  P           P        P",
-        "P          P            P",
-        "P    P E E  P   PPPPPP  P",
-        "P            P          P",
-        "P       P           E   P",
-        "P     PPPPP E  PPPP     P",
-        "P          P            P",
-        "P   E                   P",
-        "PPPPPPPPPPPPPPPPPPPPPPPPP", ]
+        "P                       P",
+        "PPPPPBPPPPPBPPPPBPPPPPPPP", ]
     # build the level
     for row in level:
         for col in row:
@@ -62,6 +62,10 @@ def main():
                 b = PlatformBouncy1(x, y)
                 platforms.append(b)
                 entities.add(b)
+            if col == "S":
+                s = PlatformSticky(x, y)
+                platforms.append(s)
+                entities.add(s)
             if col == "E":
                 e = ExitBlock(x, y)
                 platforms.append(e)
@@ -131,9 +135,6 @@ class Player(Entity):
         if up:
             # only jump if on the ground
             if self.onGround: self.yvel -= 10
-        if up:
-            # only jump if on the ground
-            if self.onGround: self.yvel -= 10
         if down:
             pass
         if running:
@@ -186,6 +187,23 @@ class Player(Entity):
                         self.yvel = -10
                         print "collide top bounce off"
 
+                elif isinstance(p, PlatformSticky):
+                    if xvel > 0:
+                        self.rect.right = p.rect.left
+                        print "collide right stick"
+                    if xvel < 0:
+                        self.rect.left = p.rect.right
+                        print "collide left stick"
+                    if yvel < 0:
+                        self.rect.top = p.rect.bottom
+                        self.yvel = -1
+                        print "collide bottom stick"
+                    if yvel > 0:
+                        self.rect.bottom = p.rect.top
+                        self.onGround = True
+                        self.yvel = 0
+                        print "collide top stick"
+
                 else:  # Must be a normal platform
                     if xvel > 0:
                         self.rect.right = p.rect.left
@@ -208,7 +226,7 @@ class Platform(Entity):
         Entity.__init__(self)
         self.image = Surface((32, 32))
         self.image.convert()
-        self.image.fill(Color("#DDDDDD"))
+        self.image.fill(Color("#999999"))
         self.rect = Rect(x, y, 32, 32)
 
     def update(self):
@@ -217,7 +235,7 @@ class Platform(Entity):
 class ExitBlock(Platform):
     def __init__(self, x, y):
         Platform.__init__(self, x, y)
-        self.image.fill(Color("#0033FF"))
+        self.image.fill(Color("#DD33FF"))
 
 class PlatformBouncy1(Platform):
     def __init__(self, x, y):
@@ -225,6 +243,17 @@ class PlatformBouncy1(Platform):
         self.image = Surface((32, 32))
         self.image.convert()
         self.image.fill(Color("#5533FF"))
+        self.rect = Rect(x, y, 32, 32)
+
+    def update(self):
+        pass
+
+class PlatformSticky(Platform):
+    def __init__(self, x, y):
+        Entity.__init__(self)
+        self.image = Surface((32, 32))
+        self.image.convert()
+        self.image.fill(Color("#FF0155"))
         self.rect = Rect(x, y, 32, 32)
 
     def update(self):

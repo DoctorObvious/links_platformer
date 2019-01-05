@@ -13,6 +13,7 @@ DEPTH = 32
 FLAGS = 0
 CAMERA_SLACK = 300   # not sure what this is for
 
+
 def main():
     global cameraX, cameraY
     pygame.init()
@@ -39,7 +40,7 @@ def main():
         "P     PPPPPPP           P",
         "P                       P",
         "P       PPPPPPP    E  P P",
-        "PP    P  P            P P",
+        "PB    P  P            P P",
         "P        P     P        P",
         "P  P           P        P",
         "P          P            P",
@@ -49,7 +50,7 @@ def main():
         "P     PPPPP E  PPPP     P",
         "P          P            P",
         "P   E                   P",
-        "PPPPPPPPPPPPPPPPPPPPPPPPPP",]
+        "PPPPPPPPPPPPPPPPPPPPPPPPP", ]
     # build the level
     for row in level:
         for col in row:
@@ -57,6 +58,10 @@ def main():
                 p = Platform(x, y)
                 platforms.append(p)
                 entities.add(p)
+            if col == "B":
+                b = PlatformBouncy1(x, y)
+                platforms.append(b)
+                entities.add(b)
             if col == "E":
                 e = ExitBlock(x, y)
                 platforms.append(e)
@@ -126,6 +131,9 @@ class Player(Entity):
         if up:
             # only jump if on the ground
             if self.onGround: self.yvel -= 10
+        if up:
+            # only jump if on the ground
+            if self.onGround: self.yvel -= 10
         if down:
             pass
         if running:
@@ -155,22 +163,45 @@ class Player(Entity):
     def collide(self, xvel, yvel, platforms):
         for p in platforms:
             if pygame.sprite.collide_rect(self, p):
+
+                # Handle collision with an Exit Block
                 if isinstance(p, ExitBlock):
                     pygame.event.post(pygame.event.Event(QUIT))
-                if xvel > 0:
-                    self.rect.right = p.rect.left
-                    print "collide right"
-                if xvel < 0:
-                    self.rect.left = p.rect.right
-                    print "collide left"
-                if yvel < 0:
-                    self.rect.top = p.rect.bottom
-                    self.yvel = 0
-                    print "collide top"
-                if yvel > 0:
-                    self.rect.bottom = p.rect.top
-                    self.onGround = True
-                    self.yvel = 0
+
+                # Handle collision with an Bouncy Block
+                elif isinstance(p, PlatformBouncy1):
+                    if xvel > 0:
+                        self.rect.right = p.rect.left
+                        print "collide right bounce"
+                    if xvel < 0:
+                        self.rect.left = p.rect.right
+                        print "collide left bounce"
+                    if yvel < 0:
+                        self.rect.top = p.rect.bottom
+                        self.yvel = 0
+                        print "collide bottom bounce off"
+                    if yvel > 0:
+                        self.rect.bottom = p.rect.top
+                        self.onGround = True
+                        self.yvel = -10
+                        print "collide top bounce off"
+
+                else:  # Must be a normal platform
+                    if xvel > 0:
+                        self.rect.right = p.rect.left
+                        print "collide right"
+                    if xvel < 0:
+                        self.rect.left = p.rect.right
+                        print "collide left"
+                    if yvel < 0:
+                        self.rect.top = p.rect.bottom
+                        self.yvel = 0
+                        print "collide top"
+                    if yvel > 0:
+                        self.rect.bottom = p.rect.top
+                        self.onGround = True
+                        self.yvel = 0
+
 
 class Platform(Entity):
     def __init__(self, x, y):
@@ -187,6 +218,18 @@ class ExitBlock(Platform):
     def __init__(self, x, y):
         Platform.__init__(self, x, y)
         self.image.fill(Color("#0033FF"))
+
+class PlatformBouncy1(Platform):
+    def __init__(self, x, y):
+        Entity.__init__(self)
+        self.image = Surface((32, 32))
+        self.image.convert()
+        self.image.fill(Color("#5533FF"))
+        self.rect = Rect(x, y, 32, 32)
+
+    def update(self):
+        pass
+
 
 if __name__ == "__main__":
     main()

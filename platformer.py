@@ -36,21 +36,22 @@ def main():
         "P               P      EP",
         "P            SSSS PPPPPPP",
         "P                       P",
-        "P         B             P",
-        "P         B      B      P",
-        "P         B B           P",
-        "P         B E           P",
-        "PP        B E           P",
-        "P         B E           P",
-        "P  P      B E           P",
-        "P         B E           P",
-        "P      P  B E           P",
-        "P         B E           P",
-        "P         B E           P",
-        "P      SSSS SSSS        P",
+        "P         P             P",
+        "P         P      B      P",
+        "P      B  B B           P",
+        "P      B  B E           P",
+        "PP     B  B E           P",
+        "P      B  B E           P",
+        "P  P   B  B E           P",
+        "P      B  B B           P",
+        "P      B  B             P",
+        "P      B  B             P",
+        "P         BBB           P",
+        "P  B   SSSSSSSSS        P",
         "P                       P",
         "P                       P",
-        "PPPPPBPPPPPBPPPPBPPPPPPPP", ]
+        "PPPPPBB         BPPPPPPPP",
+        "       PPPPPPPPP         ", ]
     # build the level
     for row in level:
         for col in row:
@@ -140,20 +141,29 @@ class Player(Entity):
         if running:
             self.xvel = 12
         if left:
-            self.xvel = -8
+            self.xvel = self.xvel - 0.65
+
         if right:
-            self.xvel = 8
+            self.xvel = self.xvel + 0.65
+
         if not self.onGround:
             # only accelerate with gravity if in the air
             self.yvel += 0.55
             # max falling speed
             if self.yvel > 100: self.yvel = 100
-        if not(left or right):
+        if self.onGround and not(left or right):
             self.xvel = 0
         # increment in x direction
         self.rect.left += self.xvel
         # do x-axis collisions
         self.collide(self.xvel, 0, platforms)
+
+        #limit horizontal speed
+        if self.xvel < -8.0:
+            self.xvel = -8.0
+        if self.xvel > 8.0:
+            self.xvel = 8.0
+
         # increment in y direction
         self.rect.top += self.yvel
         # assuming we're in the air
@@ -173,35 +183,41 @@ class Player(Entity):
                 elif isinstance(p, PlatformBouncy1):
                     if xvel > 0:
                         self.rect.right = p.rect.left
-                        print "collide right bounce"
+                        print "collide left bounce"
+                        self.xvel = -self.xvel
                     if xvel < 0:
                         self.rect.left = p.rect.right
-                        print "collide left bounce"
+                        print "collide right bounce"
+                        self.xvel = -self.xvel
                     if yvel < 0:
                         self.rect.top = p.rect.bottom
-                        self.yvel = 0
+                        self.yvel = -self.yvel
                         print "collide bottom bounce off"
                     if yvel > 0:
                         self.rect.bottom = p.rect.top
-                        self.onGround = True
-                        self.yvel = -10
+                        self.onGround = False
+                        self.yvel = -self.yvel
                         print "collide top bounce off"
 
                 elif isinstance(p, PlatformSticky):
+                    self.onGround = True
                     if xvel > 0:
                         self.rect.right = p.rect.left
                         print "collide right stick"
+                        self.yvel = 0.0
+                        self.xvel = 0.0
                     if xvel < 0:
                         self.rect.left = p.rect.right
                         print "collide left stick"
+                        self.yvel = 0.0
+                        self.xvel = -0.0
                     if yvel < 0:
                         self.rect.top = p.rect.bottom
                         self.yvel = -1
                         print "collide bottom stick"
                     if yvel > 0:
                         self.rect.bottom = p.rect.top
-                        self.onGround = True
-                        self.yvel = 0
+                        self.yvel = 4
                         print "collide top stick"
 
                 else:  # Must be a normal platform

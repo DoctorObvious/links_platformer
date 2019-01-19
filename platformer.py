@@ -47,11 +47,10 @@ def main():
         "P      B  B             P",
         "P      B  B             P",
         "P         BBB           P",
-        "P  B   SSSSSSSSS        P",
+        "P  B                    P",
         "P                       P",
         "P                       P",
-        "PPPPPBB         BPPPPPPPP",
-        "       PPPPPPPPP         ", ]
+        "PPWWWWPMMMMMMMMMMPPPPPPPP", ]
     # build the level
     for row in level:
         for col in row:
@@ -67,6 +66,14 @@ def main():
                 s = PlatformSticky(x, y)
                 platforms.append(s)
                 entities.add(s)
+            if col == "M":
+                m = Platformmovingcarpetright(x, y)
+                platforms.append(m)
+                entities.add(m)
+            if col == "W":
+                w = Platformmovingcarpetleft(x, y)
+                platforms.append(w)
+                entities.add(w)
             if col == "E":
                 e = ExitBlock(x, y)
                 platforms.append(e)
@@ -199,25 +206,65 @@ class Player(Entity):
                         self.yvel = -self.yvel
                         print "collide top bounce off"
 
+                elif isinstance(p, Platformmovingcarpetleft):
+                    if xvel > 0:
+                        self.rect.right = p.rect.left
+                        print "collide left mcarpet"
+                        self.xvel = -self.xvel
+                    if xvel < 0:
+                        self.rect.left = p.rect.right
+                        print "collide right mcarpet"
+                        self.xvel = -self.xvel
+                    if yvel < 0:
+                        self.rect.top = p.rect.bottom
+                        self.xvel = self.xvel + 10
+                        print "collide bottom mcarpet"
+                    if yvel > 0:
+                        self.rect.bottom = p.rect.top
+                        self.xvel = -self.xvel - 10
+                        print "collide top mcarpet"
+                    if yvel < 0:
+                        self.rect.bottom = p.rect.top
+                        self.xvel = -self.xvel - 10
+                        print "collide top mcarpet"
+
+                elif isinstance(p, Platformmovingcarpetright):
+                    if xvel > 0:
+                        self.rect.right = p.rect.left
+                        print "collide left mcarpet"
+                        self.xvel = -self.xvel
+                    if xvel < 0:
+                        self.rect.left = p.rect.right
+                        print "collide right mcarpet"
+                        self.xvel = -self.xvel
+                    if yvel < 0:
+                        self.rect.top = p.rect.bottom
+                        self.xvel = self.xvel + 10
+                        print "collide bottom mcarpet"
+                    if yvel > 0:
+                        self.rect.bottom = p.rect.top
+                        self.xvel = self.xvel + 10
+                        print "collide top mcarpet"
+
                 elif isinstance(p, PlatformSticky):
                     self.onGround = True
                     if xvel > 0:
-                        self.rect.right = p.rect.left
+                        self.rect.right = p.rect.left + 1
                         print "collide right stick"
                         self.yvel = 0.0
                         self.xvel = 0.0
                     if xvel < 0:
-                        self.rect.left = p.rect.right
+                        self.rect.left = p.rect.right - 1
                         print "collide left stick"
                         self.yvel = 0.0
                         self.xvel = -0.0
                     if yvel < 0:
-                        self.rect.top = p.rect.bottom
-                        self.yvel = -1
+                        self.rect.top = p.rect.bottom - 1
+                        self.yvel = 0.0
                         print "collide bottom stick"
                     if yvel > 0:
-                        self.rect.bottom = p.rect.top
-                        self.yvel = 4
+                        self.rect.bottom = p.rect.top + 1
+                        self.yvel = 0.0
                         print "collide top stick"
 
                 else:  # Must be a normal platform
@@ -270,6 +317,28 @@ class PlatformSticky(Platform):
         self.image = Surface((32, 32))
         self.image.convert()
         self.image.fill(Color("#FF0155"))
+        self.rect = Rect(x, y, 32, 32)
+
+    def update(self):
+        pass
+
+class Platformmovingcarpetleft(Platform):
+    def __init__(self, x, y):
+        Entity.__init__(self)
+        self.image = Surface((32, 32))
+        self.image.convert()
+        self.image.fill(Color("#0000FF"))
+        self.rect = Rect(x, y, 32, 32)
+
+    def update(self):
+        pass
+
+class Platformmovingcarpetright(Platform):
+    def __init__(self, x, y):
+        Entity.__init__(self)
+        self.image = Surface((32, 32))
+        self.image.convert()
+        self.image.fill(Color("#0000FF"))
         self.rect = Rect(x, y, 32, 32)
 
     def update(self):

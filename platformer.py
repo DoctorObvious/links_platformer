@@ -13,12 +13,11 @@ DEPTH = 32
 FLAGS = 0
 CAMERA_SLACK = 300   # not sure what this is for
 
-
 def main():
     global cameraX, cameraY
     pygame.init()
     screen = pygame.display.set_mode(DISPLAY, FLAGS, DEPTH)
-    pygame.display.set_caption("PLATFORMER! coproducers: Link, mark")
+    pygame.display.set_caption("PLATFORMER! Producers: Link, Mark")
     timer = pygame.time.Clock()
 
     up = down = left = right = running = False
@@ -39,16 +38,16 @@ def main():
         "P         P             P",
         "P         P PPP  B      P",
         "P         B B           P",
-        "P   SSS   B E           P",
-        "PP        B E           P",
-        "P  P   P  B E           P",
-        "P  PPPPP  B E           P",
+        "P   SSS   B B           P",
+        "PP        B B           P",
+        "P  P   P  B B           P",
+        "P  PPHHP  B B           P",
         "P      B  B B           P",
         "P      B  B             P",
         "P      B  B             P",
         "P         BBB           P",
         "P            B          P",
-        "P                       P",
+        "P               P       P",
         "P                       P",
         "PPWWWWWWPPMMMMMMMPPPPPPPP", ]
     # build the level
@@ -58,6 +57,10 @@ def main():
                 p = Platform(x, y)
                 platforms.append(p)
                 entities.add(p)
+            if col == "H":
+                h = PlatformHurt(x, y)
+                platforms.append(h)
+                entities.add(h)
             if col == "B":
                 b = PlatformBouncy1(x, y)
                 platforms.append(b)
@@ -140,6 +143,7 @@ class Player(Entity):
         self.image.fill((0, 225, 0))
         self.image.convert()
         self.rect = Rect(x, y, 32, 32)
+        self.lives = 3
 
     def update(self, up, down, left, right, running, platforms):
         if up:
@@ -226,6 +230,26 @@ class Player(Entity):
                         self.onGround = False
                         self.yvel = -self.yvel
                         print "collide top bounce off"
+
+                elif isinstance(p, PlatformHurt):
+                    self.lives -= 1
+                    if self.lives == 0:
+                        pygame.event.post(pygame.event.Event(QUIT))
+                    print "Hurt: lives left = {}".format(self.lives)
+                    if xvel > 0:
+                        self.rect.right = p.rect.left
+                        print "collide left"
+                    if xvel < 0:
+                        self.rect.left = p.rect.right
+                        print "collide right"
+                    if yvel < 0:
+                        self.rect.top = p.rect.bottom
+                        print "collide bottom"
+                    if yvel > 0:
+                        self.rect.bottom = p.rect.top
+                        self.onGround = False
+                        self.yvel = -self.yvel
+                        print "collide top"
 
                 elif isinstance(p, Platformmovingcarpetleft):
                     print "Left carpet: "
@@ -340,6 +364,17 @@ class PlatformBouncy1(Platform):
     def update(self):
         pass
 
+class PlatformHurt(Platform):
+    def __init__(self, x, y):
+        Entity.__init__(self)
+        self.image = Surface((32, 32))
+        self.image.convert()
+        self.image.fill(Color("#FF0000"))
+        self.rect = Rect(x, y, 32, 32)
+
+    def update(self):
+        pass
+
 class PlatformSticky(Platform):
     def __init__(self, x, y):
         Entity.__init__(self)
@@ -372,7 +407,6 @@ class Platformmovingcarpetright(Platform):
 
     def update(self):
         pass
-
 
 if __name__ == "__main__":
     main()

@@ -13,6 +13,10 @@ DEPTH = 32
 FLAGS = 0
 CAMERA_SLACK = 300   # not sure what this is for
 
+def my_print(message):
+    if False:
+        print message
+
 def main():
     global cameraX, cameraY
     pygame.init()
@@ -23,29 +27,29 @@ def main():
     up = down = left = right = running = False
     bg = Surface((32,32))
     bg.convert()
-    bg.fill(Color("#000023"))
+    bg.fill(Color("#009923"))
     entities = pygame.sprite.Group()
     player = Player(32, 32)
     platforms = []
 
     x = y = 0
     level = [
-        "PPPPPPPPPPPPPPPPPSPPPPPPP",
-        "P               P P     P",
+        "PPPPPPPPPPPPPPPPPPPPPPPPP",
+        "P               P       P",
         "P               P      EP",
         "P            SSSS PPPPPPP",
         "P                       P",
         "P         P             P",
         "P         P PPP  B      P",
-        "P         B B           P",
+        "P         B B  P   P    P",
         "P   SSS   B B           P",
-        "PP        B B           P",
+        "PP        B B   P  P    P",
         "P  P   P  B B           P",
-        "P  PPHHP  B B           P",
+        "P  PPHHP  B B  P   PP   P",
         "P      B  B B           P",
-        "P      B  B             P",
-        "P      B  B             P",
-        "P         BBB           P",
+        "P      B  B P P         P",
+        "P      B  B        P    P",
+        "P         BBB  P        P",
         "P            B          P",
         "P               P       P",
         "P                       P",
@@ -212,68 +216,68 @@ class Player(Entity):
 
                 # Handle collision with an Bouncy Block
                 elif isinstance(p, PlatformBouncy1):
-                    print "Bouncy: "
+                    my_print("Bouncy: ")
                     if xvel > 0:
                         self.rect.right = p.rect.left
-                        print "collide left"
+                        my_print("collide left")
                         self.xvel = -self.xvel
                     if xvel < 0:
                         self.rect.left = p.rect.right
-                        print "collide right"
+                        my_print("collide right")
                         self.xvel = -self.xvel
                     if yvel < 0:
                         self.rect.top = p.rect.bottom
                         self.yvel = -self.yvel
-                        print "collide bottom bounce off"
+                        my_print("collide bottom bounce off")
                     if yvel > 0:
                         self.rect.bottom = p.rect.top
                         self.onGround = False
                         self.yvel = -self.yvel
-                        print "collide top bounce off"
+                        my_print ("collide top bounce off")
 
                 elif isinstance(p, PlatformHurt):
                     self.lives -= 1
                     if self.lives == 0:
                         pygame.event.post(pygame.event.Event(QUIT))
-                    print "Hurt: lives left = {}".format(self.lives)
+                    my_print("Hurt: lives left = {}".format(self.lives))
                     if xvel > 0:
                         self.rect.right = p.rect.left
-                        print "collide left"
+                        my_print("collide left")
                     if xvel < 0:
                         self.rect.left = p.rect.right
-                        print "collide right"
+                        my_print("collide right")
                     if yvel < 0:
                         self.rect.top = p.rect.bottom
-                        print "collide bottom"
+                        my_print("collide bottom")
                     if yvel > 0:
                         self.rect.bottom = p.rect.top
                         self.onGround = False
                         self.yvel = -self.yvel
-                        print "collide top"
+                        my_print("collide top")
 
                 elif isinstance(p, Platformmovingcarpetleft):
-                    print "Left carpet: "
+                    my_print("Left carpet: ")
                     # if xvel > 0:
                     #     self.rect.right = p.rect.left
-                    #     print "collide left"
+                    #     my_print "collide left"
                     #     self.xvel = -self.xvel
                     # if xvel < 0:
                     #     self.rect.left = p.rect.right
-                    #     print "collide right"
+                    #     my_print "collide right"
                     #     self.xvel = -self.xvel
                     # if yvel < 0:
                     #     self.rect.top = p.rect.bottom
-                    #     print "collide bottom"
+                    #     my_print "collide bottom"
                     if yvel > 0:
                         self.onGround = True
                         self.yvel = 0
                         self.rect.bottom = p.rect.top
                         # self.xvel = self.xvel - 10
                         self.groundSpeed = -10
-                        print "collide top"
+                        my_print("collide top")
 
                 elif isinstance(p, Platformmovingcarpetright):
-                    print "Right carpet: "
+                    my_print("Right carpet: ")
 
                     if yvel > 0:
                         self.onGround = True
@@ -281,10 +285,10 @@ class Player(Entity):
                         self.rect.bottom = p.rect.top
                         # self.xvel = self.xvel + 10
                         self.groundSpeed = 10
-                        print "collide top"
+                        my_print("collide top")
 
                 elif isinstance(p, PlatformSticky):
-                    print "Sticky: "
+                    my_print("Sticky: ")
                     self.onGround = True
                     self.onSticky = True
 
@@ -300,37 +304,37 @@ class Player(Entity):
                     else:
                         if xvel > 0:
                             self.rect.right = p.rect.left + 1
-                            print "collide right"
+                            my_print("collide right")
                             self.yvel = 0.0
                             self.xvel = 0.0
                         if xvel < 0:
                             self.rect.left = p.rect.right - 1
-                            print "collide left"
+                            my_print("collide left")
                             self.yvel = 0.0
                             self.xvel = -0.0
                         if yvel < 0:
                             self.rect.top = p.rect.bottom - 1
                             self.yvel = 0.0
-                            print "collide bottom"
+                            my_print("collide bottom")
                         if yvel > 0:
                             self.rect.bottom = p.rect.top + 1
                             self.yvel = 0.0
-                            print "collide top"
+                            my_print ("collide top")
 
                 else:  # Must be a normal platform
-                    print "Platform: "
+                    my_print("Platform: ")
                     if xvel > 0:
                         self.rect.right = p.rect.left
                         self.xvel = 0
-                        print "collide right"
+                        my_print("collide right")
                     if xvel < 0:
                         self.rect.left = p.rect.right
                         self.xvel = 0
-                        print "collide left"
+                        my_print("collide left")
                     if yvel < 0:
                         self.rect.top = p.rect.bottom
                         self.yvel = 0
-                        print "collide top"
+                        my_print("collide top")
                     if yvel > 0:
                         self.rect.bottom = p.rect.top
                         self.onGround = True

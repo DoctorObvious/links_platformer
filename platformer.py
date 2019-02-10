@@ -13,6 +13,8 @@ DEPTH = 32
 FLAGS = 0
 CAMERA_SLACK = 300   # not sure what this is for
 
+NUM_LEVELS = 3
+
 def my_print(message):
     if False:
         print message
@@ -24,112 +26,165 @@ def main():
     pygame.display.set_caption("PLATFORMER! Producers: Link, Mark")
     timer = pygame.time.Clock()
 
-    up = down = left = right = running = False
-    bg = Surface((32,32))
-    bg.convert()
-    bg.fill(Color("#009923"))
-    entities = pygame.sprite.Group()
-    player = Player(32, 32)
-    platforms = []
-
-    x = y = 0
-    level = [
+    levels = [[] for x in range(NUM_LEVELS)]
+    levels[0] = [
+        "PPPPPPPPPPPPPPPPPPPPPPPPP",
+        "P               P       P",
+        "P               P      EP",
+        "P            SSSS    PPPP",
+        "P                   P   P",
+        "P                  P    P",
+        "P           PP   PPPP   P",
+        "P      B  PPB           P",
+        "P  PP                   P",
+        "PP                      P",
+        "P  P   PPPB             P",
+        "P  PPHHP                P",
+        "P                       P",
+        "P                       P",
+        "P                       P",
+        "P                       P",
+        "P                       P",
+        "P                       P",
+        "P                       P",
+        "PPWWWWWWPPMMMMMMMPPPPPPPP", ]
+    levels[1] = [
+        "PPPPPPPPPPPPPPPPPPPPPPPPP",
+        "P               P       P",
+        "P               P      EP",
+        "P            SSSS    PPPP",
+        "P                 P     P",
+        "P                       P",
+        "P           PPPPPBPPP   P",
+        "P               P      PP",
+        "P  SSS          P     P P",
+        "PP                   P  P",
+        "P  P   PPP          P   P",
+        "P  PPHHP          P     P",
+        "P                P     PP",
+        "P             P         P",
+        "P              P        P",
+        "P               P       P",
+        "P                PPP    P",
+        "P                  P    P",
+        "P                    P  P",
+        "PPWWWWWWPPMMMMMMMPPPPPPPP", ]
+    levels[2] = [
         "PPPPPPPPPPPPPPPPPPPPPPPPP",
         "P               P       P",
         "P               P      EP",
         "P            SSSS PPPPPPP",
         "P                       P",
         "P         P             P",
-        "P         P PPP  B      P",
-        "P         B B  P   P    P",
-        "P   SSS   B B           P",
-        "PP        B B   P  P    P",
-        "P  P   P  B B           P",
-        "P  PPHHP  B B  P   PP   P",
-        "P      B  B B           P",
-        "P      B  B P P         P",
-        "P      B  B        P    P",
-        "P         BBB  P        P",
-        "P            B          P",
-        "P               P       P",
-        "P                       P",
+        "P         P P    BPPP   P",
+        "P  HHH    B B   P      PP",
+        "P         B B   P     P P",
+        "PP        B B        P  P",
+        "P  P   PPPB B       P   P",
+        "P  PPHHP  B B     P     P",
+        "P      B  B B    P     PP",
+        "P      B  B   P         P",
+        "P      B  B    P        P",
+        "P         BBB   P       P",
+        "P            B     P    P",
+        "P               P  P    P",
+        "P                    P  P",
         "PPWWWWWWPPMMMMMMMPPPPPPPP", ]
-    # build the level
-    for row in level:
-        for col in row:
-            if col == "P":
-                p = Platform(x, y)
-                platforms.append(p)
-                entities.add(p)
-            if col == "H":
-                h = PlatformHurt(x, y)
-                platforms.append(h)
-                entities.add(h)
-            if col == "B":
-                b = PlatformBouncy1(x, y)
-                platforms.append(b)
-                entities.add(b)
-            if col == "S":
-                s = PlatformSticky(x, y)
-                platforms.append(s)
-                entities.add(s)
-            if col == "M":
-                m = Platformmovingcarpetright(x, y)
-                platforms.append(m)
-                entities.add(m)
-            if col == "W":
-                w = Platformmovingcarpetleft(x, y)
-                platforms.append(w)
-                entities.add(w)
-            if col == "E":
-                e = ExitBlock(x, y)
-                platforms.append(e)
-                entities.add(e)
-            x += 32
-        y += 32
-        x = 0
 
-    entities.add(player)
+    for n in range(NUM_LEVELS):
+        level = levels[n]
 
-    while 1:
-        timer.tick(60)
+        up = down = left = right = running = False
+        bg = Surface((32,32))
+        bg.convert()
+        bg.fill(Color("#000023"))
+        entities = pygame.sprite.Group()
+        player = Player(32, 32)
+        platforms = []
 
-        for e in pygame.event.get():
-            if e.type == QUIT: raise SystemExit, "QUIT"
-            if e.type == KEYDOWN and e.key == K_ESCAPE:
-                raise SystemExit, "ESCAPE"
-            if e.type == KEYDOWN and e.key == K_UP:
-                up = True
-            if e.type == KEYDOWN and e.key == K_DOWN:
-                down = True
-            if e.type == KEYDOWN and e.key == K_LEFT:
-                left = True
-            if e.type == KEYDOWN and e.key == K_RIGHT:
-                right = True
-            if e.type == KEYDOWN and e.key == K_SPACE:
-                running = True
+        x = y = 0
 
-            if e.type == KEYUP and e.key == K_UP:
-                up = False
-            if e.type == KEYUP and e.key == K_DOWN:
-                down = False
-            if e.type == KEYUP and e.key == K_RIGHT:
-                right = False
-            if e.type == KEYUP and e.key == K_LEFT:
-                left = False
-            if e.type == KEYUP and e.key == K_RIGHT:
-                right = False
+        # build the level
+        for row in level:
+            for col in row:
+                if col == "P":
+                    p = Platform(x, y)
+                    platforms.append(p)
+                    entities.add(p)
+                if col == "H":
+                    h = PlatformHurt(x, y)
+                    platforms.append(h)
+                    entities.add(h)
+                if col == "B":
+                    b = PlatformBouncy1(x, y)
+                    platforms.append(b)
+                    entities.add(b)
+                if col == "S":
+                    s = PlatformSticky(x, y)
+                    platforms.append(s)
+                    entities.add(s)
+                if col == "M":
+                    m = Platformmovingcarpetright(x, y)
+                    platforms.append(m)
+                    entities.add(m)
+                if col == "W":
+                    w = Platformmovingcarpetleft(x, y)
+                    platforms.append(w)
+                    entities.add(w)
+                if col == "E":
+                    e = ExitBlock(x, y)
+                    platforms.append(e)
+                    entities.add(e)
+                x += 32
+            y += 32
+            x = 0
 
-        # draw background
-        for y in range(32):
-            for x in range(32):
-                screen.blit(bg, (x * 32, y * 32))
+        entities.add(player)
+        print "Level {}".format(n + 1)
+        while not player.finished_level:
+            timer.tick(60)
 
-        # update player, draw everything else
-        player.update(up, down, left, right, running, platforms)
-        entities.draw(screen)
+            for e in pygame.event.get():
+                if e.type == QUIT: raise SystemExit, "QUIT"
+                if e.type == KEYDOWN and e.key == K_ESCAPE:
+                    raise SystemExit, "ESCAPE"
+                if e.type == KEYDOWN and e.key == K_UP:
+                    up = True
+                if e.type == KEYDOWN and e.key == K_DOWN:
+                    down = True
+                if e.type == KEYDOWN and e.key == K_LEFT:
+                    left = True
+                if e.type == KEYDOWN and e.key == K_RIGHT:
+                    right = True
+                if e.type == KEYDOWN and e.key == K_SPACE:
+                    running = True
 
-        pygame.display.update()
+                if e.type == KEYUP and e.key == K_UP:
+                    up = False
+                if e.type == KEYUP and e.key == K_DOWN:
+                    down = False
+                if e.type == KEYUP and e.key == K_RIGHT:
+                    right = False
+                if e.type == KEYUP and e.key == K_LEFT:
+                    left = False
+                if e.type == KEYUP and e.key == K_RIGHT:
+                    right = False
+
+            # draw background
+            for y in range(32):
+                for x in range(32):
+                    screen.blit(bg, (x * 32, y * 32))
+
+            # update player, draw everything else
+            player.update(up, down, left, right, running, platforms)
+            entities.draw(screen)
+
+            pygame.display.update()
+
+        print "Finished level {}".format(n + 1)
+        if n + 1 == NUM_LEVELS:
+            print "win!!!!!!"
+            raise SystemExit
 
 class Entity(pygame.sprite.Sprite):
     def __init__(self):
@@ -148,6 +203,7 @@ class Player(Entity):
         self.image.convert()
         self.rect = Rect(x, y, 32, 32)
         self.lives = 3
+        self.finished_level = False
 
     def update(self, up, down, left, right, running, platforms):
         if up:
@@ -212,7 +268,8 @@ class Player(Entity):
 
                 # Handle collision with an Exit Block
                 if isinstance(p, ExitBlock):
-                    pygame.event.post(pygame.event.Event(QUIT))
+                    self.finished_level = True
+                    # pygame.event.post(pygame.event.Event(QUIT))
 
                 # Handle collision with an Bouncy Block
                 elif isinstance(p, PlatformBouncy1):
@@ -239,7 +296,7 @@ class Player(Entity):
                     self.lives -= 1
                     if self.lives == 0:
                         pygame.event.post(pygame.event.Event(QUIT))
-                    my_print("Hurt: lives left = {}".format(self.lives))
+                    print "Hurt: lives left = {}".format(self.lives)
                     if xvel > 0:
                         self.rect.right = p.rect.left
                         my_print("collide left")

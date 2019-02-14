@@ -129,9 +129,9 @@ def main():
         "P                       P",
         "P           PPPP        P",
         "P      SP P        B    P",
-        "PSS B                  P",
+        "PSS B                   P",
         "P                      EP",
-        "PPPPDDDDDDDDDDDDDDDDDDPPP", ]
+        "PPPPDDDDDDDDDDDDDDDDPPPPP", ]
     levels[5] = [
         "PPPPPPPPPPPPPPPPPPPPPPPPP",
         "P                       P",
@@ -152,7 +152,7 @@ def main():
         "P         B             P",
         "P    B P                P",
         "P                      EP",
-        "PPPPDDDDDDDDDDDDDDDDDDPPP", ]
+        "PPPPDDDDDDDDDDDDDDDDDPPPP", ]
     levels[6] = [
         "PPPPPPPPPPPPPPPPPPPPPPPPP",
         "P                       P",

@@ -131,7 +131,7 @@ def main():
         "P      SP P        B    P",
         "PSS B                  P",
         "P                      EP",
-        "PPPPDDDDDDDDDDDDDDDDDDPPP", ]
+        "PPPPDDDDDDDDDDDDDDDDPPPPP", ]
     levels[5] = [
         "PPPPPPPPPPPPPPPPPPPPPPPPP",
         "P                       P",
@@ -146,17 +146,11 @@ def main():
         "P                       P",
         "P                       P",
         "P                       P",
-        "P                       P",
         "P           SSSSSSSSS   P",
-<<<<<<< HEAD
         "P                       P",
-        "P  SP  SBP              P",
-        "P  S B                  P",
-=======
-        "P          P            P",
         "P         B             P",
+        "P                       P",
         "P    B P                P",
->>>>>>> ff28664deba168e63a5c67d68e9c942481e8319b
         "P                      EP",
         "PPPPDDDDDDDDDDDDDDDDDDPPP", ]
     levels[6] = [
@@ -179,7 +173,7 @@ def main():
         "P                       P",
         "P                       P",
         "P                      EP",
-        "PPPWWWWWWWWWMMMMMMMMPPPP", ]
+        "PPPWWWWWWWWWMMMMMMMMPPPPP", ]
     levels[7] = [
         "PPPPPPPPPPPPPPPPPPPPPPPPP",
         "P               P       P",

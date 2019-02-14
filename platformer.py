@@ -107,8 +107,8 @@ def main():
         "P                       P",
         "P                      EP",
         "P                      SP",
-        "P  HHHHHHHHH           SP",
-        "P  SSSSSSSSS           SP",
+        "P  HHHHHHHHH      L    SP",
+        "P  SSSSSSSSS     S     SP",
         "P                      SP",
         "PPPPHHHHHHHHSSSSSSSSSSSSP", ]
     levels[4] = [
@@ -148,9 +148,9 @@ def main():
         "P                       P",
         "P                       P",
         "P           SSSSSSSSS   P",
-        "P                       P",
+        "P          P            P",
         "P         B             P",
-        "P    B                  P",
+        "P    B P                P",
         "P                      EP",
         "PPPP                   PPP", ]
     levels[6] = [
@@ -242,7 +242,7 @@ def main():
         "P               P       P",
         "P               P      EP",
         "P            SSSS PPPPPPP",
-        "P                       P",
+        "P                      HP",
         "P         P             P",
         "P         P PSSSSBSSS   P",
         "P  SSS    B B   P      PP",
@@ -254,7 +254,7 @@ def main():
         "P      B  B   P         P",
         "P      B  B    P        P",
         "P         BBB   P       P",
-        "P   SSS      B     P    P",
+        "PH HSSS      B     P    L",
         "P               P  P    P",
         "P                    P  P",
         "PPWWWWWWPPMMMMMMMPPPPPPPP",]
@@ -268,7 +268,7 @@ def main():
         "P      SB    SB  P      P",
         "P                       P",
         "P   PHHHHHHHHHHHH       P",
-        "PPP                     P",
+        "PPP        L            P",
         "P  P   PPPB             P",
         "P  PPHHP                P",
         "P                       P",
@@ -304,6 +304,10 @@ def main():
                     h = PlatformHurt(x, y)
                     platforms.append(h)
                     entities.add(h)
+                if col == "L":
+                    l = PlatformLife(x, y)
+                    platforms.append(l)
+                    entities.add(l)
                 if col == "B":
                     b = PlatformBouncy1(x, y)
                     platforms.append(b)
@@ -410,9 +414,13 @@ class Player(Entity):
         if running:
             self.xvel = 12
         if left:
+            if self.xvel > 0.0 and self.onGround:
+                self.xvel = 0.0
             self.xvel = self.xvel - 0.65
 
         if right:
+            if self.xvel < 0.0 and self.onGround:
+                self.xvel = 0.0
             self.xvel = self.xvel + 0.65
 
         # if not self.onGround and not self.onSticky:
@@ -500,6 +508,34 @@ class Player(Entity):
                         self.onGround = False
                         self.yvel = -self.yvel
                         my_print("collide top")
+
+                elif isinstance(p, PlatformLife):
+                    print "Healed: lives = {}".format(self.lives)
+                    if xvel > 0:
+                        self.rect.right = p.rect.left
+                        self.xvel = 0
+                        self.lives = self.lives + 1
+                        if self.lives > 3:
+                            self.lives = 3
+                    if xvel < 0:
+                        self.rect.left = p.rect.right
+                        self.xvel = 0
+                        self.lives = self.lives + 1
+                        if self.lives > 3:
+                            self.lives = 3
+                    if yvel < 0:
+                        self.rect.top = p.rect.bottom
+                        self.yvel = 0
+                        self.lives = self.lives + 1
+                        if self.lives > 3:
+                            self.lives = 3
+                    if yvel > 0:
+                        self.rect.bottom = p.rect.top
+                        self.onGround = True
+                        self.yvel = 0
+                        self.lives = self.lives + 1
+                        if self.lives > 3:
+                            self.lives = 3
 
                 elif isinstance(p, Platformmovingcarpetleft):
                     my_print("Left carpet: ")
@@ -620,6 +656,17 @@ class PlatformHurt(Platform):
         self.image = Surface((32, 32))
         self.image.convert()
         self.image.fill(Color("#FF0000"))
+        self.rect = Rect(x, y, 32, 32)
+
+    def update(self):
+        pass
+
+class PlatformLife(Platform):
+    def __init__(self, x, y):
+        Entity.__init__(self)
+        self.image = Surface((32, 32))
+        self.image.convert()
+        self.image.fill(Color("#00FFDD"))
         self.rect = Rect(x, y, 32, 32)
 
     def update(self):

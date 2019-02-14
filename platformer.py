@@ -45,9 +45,9 @@ def main():
         "P                       P",
         "P                       P",
         "P                       P",
-        "P                       P",
-        "P                      EP",
-        "PPPPPPPPPPPPPPPPPPPPPPPPP", ]
+        "P             S         P",
+        "P              L       EP",
+        "PPWWMMPPHPPBPPPPPDDDDDPPP", ]
     levels[1] = [
         "PPPPPPPPPPPPPPPPPPPPPPPPP",
         "P                       P",
@@ -131,7 +131,7 @@ def main():
         "P         P        B    P",
         "P    B                  P",
         "P                      EP",
-        "PPPP                  PPP", ]
+        "PPPPDDDDDDDDDDDDDDDDDDPPP", ]
     levels[5] = [
         "PPPPPPPPPPPPPPPPPPPPPPPPP",
         "P                       P",
@@ -152,7 +152,7 @@ def main():
         "P         B             P",
         "P    B P                P",
         "P                      EP",
-        "PPPP                   PPP", ]
+        "PPPPDDDDDDDDDDDDDDDDDDPPP", ]
     levels[6] = [
         "PPPPPPPPPPPPPPPPPPPPPPPPP",
         "P                       P",
@@ -280,15 +280,17 @@ def main():
         "P                       P",
         "PPWWWWWWPPMMMMMMMPPPPPPPP", ]
 
-    for n in range(NUM_LEVELS):
-        level = levels[n]
+    player = Player(32, 32)
 
+    for n in range(NUM_LEVELS):
+        player.finished_level = False
+        player.reset_position(32, 32)
+        level = levels[n]
         up = down = left = right = running = False
         bg = Surface((32,32))
         bg.convert()
         bg.fill(Color("#000023"))
         entities = pygame.sprite.Group()
-        player = Player(32, 32)
         platforms = []
 
         x = y = 0
@@ -300,6 +302,10 @@ def main():
                     p = Platform(x, y)
                     platforms.append(p)
                     entities.add(p)
+                if col == "D":
+                    d = PlatformPit(x, y)
+                    platforms.append(d)
+                    entities.add(d)
                 if col == "H":
                     h = PlatformHurt(x, y)
                     platforms.append(h)
@@ -386,17 +392,25 @@ class Entity(pygame.sprite.Sprite):
 class Player(Entity):
     def __init__(self, x, y):
         Entity.__init__(self)
+        self.image = Surface((32,32))
+        self.image.fill((0, 225, 0))
+        self.image.convert()
         self.xvel = 0
         self.yvel = 0
         self.onGround = False
         self.onSticky = False
         self.groundSpeed = 0
-        self.image = Surface((32,32))
-        self.image.fill((0, 225, 0))
-        self.image.convert()
         self.rect = Rect(x, y, 32, 32)
         self.lives = 3
         self.finished_level = False
+
+    def reset_position(self, x, y):
+        self.xvel = 0
+        self.yvel = 0
+        self.onGround = False
+        self.onSticky = False
+        self.groundSpeed = 0
+        self.rect = Rect(x, y, 32, 32)
 
     def update(self, up, down, left, right, running, platforms):
         if up:
@@ -508,6 +522,13 @@ class Player(Entity):
                         self.onGround = False
                         self.yvel = -self.yvel
                         my_print("collide top")
+
+                elif isinstance(p, PlatformPit):
+                    self.lives -= 1
+                    if self.lives == 0:
+                        pygame.event.post(pygame.event.Event(QUIT))
+                    print "hit pit: lives left = {}".format(self.lives)
+                    self.reset_position(32, 32)
 
                 elif isinstance(p, PlatformLife):
                     print "Healed: lives = {}".format(self.lives)
@@ -661,12 +682,23 @@ class PlatformHurt(Platform):
     def update(self):
         pass
 
+class PlatformPit(Platform):
+    def __init__(self, x, y):
+        Entity.__init__(self)
+        self.image = Surface((32, 32))
+        self.image.convert()
+        self.image.fill(Color(0, 0, 0))
+        self.rect = Rect(x, y, 32, 32)
+
+    def update(self):
+        pass
+
 class PlatformLife(Platform):
     def __init__(self, x, y):
         Entity.__init__(self)
         self.image = Surface((32, 32))
         self.image.convert()
-        self.image.fill(Color("#00FFDD"))
+        self.image.fill(Color(0, 128, 128))
         self.rect = Rect(x, y, 32, 32)
 
     def update(self):
@@ -677,7 +709,7 @@ class PlatformSticky(Platform):
         Entity.__init__(self)
         self.image = Surface((32, 32))
         self.image.convert()
-        self.image.fill(Color("#FF0155"))
+        self.image.fill(Color(128, 128, 0))
         self.rect = Rect(x, y, 32, 32)
 
     def update(self):
@@ -688,7 +720,7 @@ class Platformmovingcarpetleft(Platform):
         Entity.__init__(self)
         self.image = Surface((32, 32))
         self.image.convert()
-        self.image.fill(Color("#0000FF"))
+        self.image.fill(Color(128, 0, 0))
         self.rect = Rect(x, y, 32, 32)
 
     def update(self):
@@ -699,7 +731,7 @@ class Platformmovingcarpetright(Platform):
         Entity.__init__(self)
         self.image = Surface((32, 32))
         self.image.convert()
-        self.image.fill(Color("#00FFFF"))
+        self.image.fill(Color(255, 0, 255))
         self.rect = Rect(x, y, 32, 32)
 
     def update(self):

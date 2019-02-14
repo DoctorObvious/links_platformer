@@ -45,9 +45,9 @@ def main():
         "P                       P",
         "P                       P",
         "P                       P",
-        "P                       P",
-        "P                      EP",
-        "PPPPPPPPPPPPPPPPPPPPPPPPP", ]
+        "P             S         P",
+        "P              L       EP",
+        "PPWWMMPPHPPBPPPPPDDDDDPPP", ]
     levels[1] = [
         "PPPPPPPPPPPPPPPPPPPPPPPPP",
         "P                       P",
@@ -107,8 +107,8 @@ def main():
         "P                       P",
         "P                      EP",
         "P                      SP",
-        "P  HHHHHHHHH           SP",
-        "P  SSSSSSSSS           SP",
+        "P  HHHHHHHHH      L    SP",
+        "P  SSSSSSSSS     S     SP",
         "P                      SP",
         "PPPPHHHHHHHHSSSSSSSSSSSSP", ]
     levels[4] = [
@@ -131,7 +131,7 @@ def main():
         "P      SP P        B    P",
         "PSS B                  P",
         "P                      EP",
-        "PPPP                  PPP", ]
+        "PPPPDDDDDDDDDDDDDDDDDDPPP", ]
     levels[5] = [
         "PPPPPPPPPPPPPPPPPPPPPPPPP",
         "P                       P",
@@ -148,11 +148,17 @@ def main():
         "P                       P",
         "P                       P",
         "P           SSSSSSSSS   P",
+<<<<<<< HEAD
         "P                       P",
         "P  SP  SBP              P",
         "P  S B                  P",
+=======
+        "P          P            P",
+        "P         B             P",
+        "P    B P                P",
+>>>>>>> ff28664deba168e63a5c67d68e9c942481e8319b
         "P                      EP",
-        "PPPP                   PPP", ]
+        "PPPPDDDDDDDDDDDDDDDDDDPPP", ]
     levels[6] = [
         "PPPPPPPPPPPPPPPPPPPPPPPPP",
         "P                       P",
@@ -242,7 +248,7 @@ def main():
         "P               P       P",
         "P               P      EP",
         "P            SSSS PPPPPPP",
-        "P                       P",
+        "P                      HP",
         "P         P             P",
         "P         P PSSSSBSSS   P",
         "P  SSS    B B   P      PP",
@@ -254,7 +260,7 @@ def main():
         "P      B  B   P         P",
         "P      B  B    P        P",
         "P         BBB   P       P",
-        "P   SSS      B     P    P",
+        "PH HSSS      B     P    L",
         "P               P  P    P",
         "P                    P  P",
         "PPWWWWWWPPMMMMMMMPPPPPPPP",]
@@ -268,7 +274,7 @@ def main():
         "P      SB    SB  P      P",
         "P                       P",
         "P   PHHHHHHHHHHHH       P",
-        "PPP                     P",
+        "PPP        L            P",
         "P  P   PPPB             P",
         "P  PPHHP                P",
         "P                       P",
@@ -280,15 +286,17 @@ def main():
         "P                       P",
         "PPWWWWWWPPMMMMMMMPPPPPPPP", ]
 
-    for n in range(NUM_LEVELS):
-        level = levels[n]
+    player = Player(32, 32)
 
+    for n in range(NUM_LEVELS):
+        player.finished_level = False
+        player.reset_position(32, 32)
+        level = levels[n]
         up = down = left = right = running = False
         bg = Surface((32,32))
         bg.convert()
         bg.fill(Color("#000023"))
         entities = pygame.sprite.Group()
-        player = Player(32, 32)
         platforms = []
 
         x = y = 0
@@ -300,10 +308,18 @@ def main():
                     p = Platform(x, y)
                     platforms.append(p)
                     entities.add(p)
+                if col == "D":
+                    d = PlatformPit(x, y)
+                    platforms.append(d)
+                    entities.add(d)
                 if col == "H":
                     h = PlatformHurt(x, y)
                     platforms.append(h)
                     entities.add(h)
+                if col == "L":
+                    l = PlatformLife(x, y)
+                    platforms.append(l)
+                    entities.add(l)
                 if col == "B":
                     b = PlatformBouncy1(x, y)
                     platforms.append(b)
@@ -382,17 +398,25 @@ class Entity(pygame.sprite.Sprite):
 class Player(Entity):
     def __init__(self, x, y):
         Entity.__init__(self)
+        self.image = Surface((32,32))
+        self.image.fill((0, 225, 0))
+        self.image.convert()
         self.xvel = 0
         self.yvel = 0
         self.onGround = False
         self.onSticky = False
         self.groundSpeed = 0
-        self.image = Surface((32,32))
-        self.image.fill((0, 225, 0))
-        self.image.convert()
         self.rect = Rect(x, y, 32, 32)
         self.lives = 3
         self.finished_level = False
+
+    def reset_position(self, x, y):
+        self.xvel = 0
+        self.yvel = 0
+        self.onGround = False
+        self.onSticky = False
+        self.groundSpeed = 0
+        self.rect = Rect(x, y, 32, 32)
 
     def update(self, up, down, left, right, running, platforms):
         if up:
@@ -410,9 +434,13 @@ class Player(Entity):
         if running:
             self.xvel = 12
         if left:
+            if self.xvel > 0.0 and self.onGround:
+                self.xvel = 0.0
             self.xvel = self.xvel - 0.65
 
         if right:
+            if self.xvel < 0.0 and self.onGround:
+                self.xvel = 0.0
             self.xvel = self.xvel + 0.65
 
         # if not self.onGround and not self.onSticky:
@@ -500,6 +528,41 @@ class Player(Entity):
                         self.onGround = False
                         self.yvel = -self.yvel
                         my_print("collide top")
+
+                elif isinstance(p, PlatformPit):
+                    self.lives -= 1
+                    if self.lives == 0:
+                        pygame.event.post(pygame.event.Event(QUIT))
+                    print "hit pit: lives left = {}".format(self.lives)
+                    self.reset_position(32, 32)
+
+                elif isinstance(p, PlatformLife):
+                    print "Healed: lives = {}".format(self.lives)
+                    if xvel > 0:
+                        self.rect.right = p.rect.left
+                        self.xvel = 0
+                        self.lives = self.lives + 1
+                        if self.lives > 3:
+                            self.lives = 3
+                    if xvel < 0:
+                        self.rect.left = p.rect.right
+                        self.xvel = 0
+                        self.lives = self.lives + 1
+                        if self.lives > 3:
+                            self.lives = 3
+                    if yvel < 0:
+                        self.rect.top = p.rect.bottom
+                        self.yvel = 0
+                        self.lives = self.lives + 1
+                        if self.lives > 3:
+                            self.lives = 3
+                    if yvel > 0:
+                        self.rect.bottom = p.rect.top
+                        self.onGround = True
+                        self.yvel = 0
+                        self.lives = self.lives + 1
+                        if self.lives > 3:
+                            self.lives = 3
 
                 elif isinstance(p, Platformmovingcarpetleft):
                     my_print("Left carpet: ")
@@ -625,12 +688,34 @@ class PlatformHurt(Platform):
     def update(self):
         pass
 
+class PlatformPit(Platform):
+    def __init__(self, x, y):
+        Entity.__init__(self)
+        self.image = Surface((32, 32))
+        self.image.convert()
+        self.image.fill(Color(0, 0, 0))
+        self.rect = Rect(x, y, 32, 32)
+
+    def update(self):
+        pass
+
+class PlatformLife(Platform):
+    def __init__(self, x, y):
+        Entity.__init__(self)
+        self.image = Surface((32, 32))
+        self.image.convert()
+        self.image.fill(Color(0, 128, 128))
+        self.rect = Rect(x, y, 32, 32)
+
+    def update(self):
+        pass
+
 class PlatformSticky(Platform):
     def __init__(self, x, y):
         Entity.__init__(self)
         self.image = Surface((32, 32))
         self.image.convert()
-        self.image.fill(Color("#FF0155"))
+        self.image.fill(Color(128, 128, 0))
         self.rect = Rect(x, y, 32, 32)
 
     def update(self):
@@ -641,7 +726,7 @@ class Platformmovingcarpetleft(Platform):
         Entity.__init__(self)
         self.image = Surface((32, 32))
         self.image.convert()
-        self.image.fill(Color("#0000FF"))
+        self.image.fill(Color(128, 0, 0))
         self.rect = Rect(x, y, 32, 32)
 
     def update(self):
@@ -652,7 +737,7 @@ class Platformmovingcarpetright(Platform):
         Entity.__init__(self)
         self.image = Surface((32, 32))
         self.image.convert()
-        self.image.fill(Color("#00FFFF"))
+        self.image.fill(Color(255, 0, 255))
         self.rect = Rect(x, y, 32, 32)
 
     def update(self):

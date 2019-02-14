@@ -128,8 +128,8 @@ def main():
         "P                       P",
         "P                       P",
         "P           PPPP        P",
-        "P         P        B    P",
-        "P    B                  P",
+        "P      SP P        B    P",
+        "PSS B                  P",
         "P                      EP",
         "PPPP                  PPP", ]
     levels[5] = [
@@ -149,8 +149,8 @@ def main():
         "P                       P",
         "P           SSSSSSSSS   P",
         "P                       P",
-        "P         B             P",
-        "P    B                  P",
+        "P  SP  SBP              P",
+        "P  S B                  P",
         "P                      EP",
         "PPPP                   PPP", ]
     levels[6] = [

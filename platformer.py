@@ -45,9 +45,9 @@ def main():
         "P                       P",
         "P                       P",
         "P                       P",
-        "P             S         P",
-        "P              L       EP",
-        "PPWWMMPPHPPBPPPPPDDDDDPPP", ]
+        "P                       P",
+        "P                      EP",
+        "PPPPPPPPPPPPPPPPPPPPPPPPP", ]
     levels[1] = [
         "PPPPPPPPPPPPPPPPPPPPPPPPP",
         "P                       P",
@@ -67,7 +67,7 @@ def main():
         "P                       P",
         "P                       P",
         "P                       P",
-        "P                      EP",
+        "P                     LEP",
         "PPPHHHPPPHHHPPPPPHHHPPPPP", ]
     levels[2] = [
         "PPPPPPPPPPPPPPPPPPPPPPPPP",
@@ -84,7 +84,7 @@ def main():
         "P                       P",
         "P                       P",
         "P                       P",
-        "P                       P",
+        "P                       L",
         "P                       P",
         "P                       P",
         "P                 P     P",
@@ -107,7 +107,7 @@ def main():
         "P                       P",
         "P                      EP",
         "P                      SP",
-        "P  HHHHHHHHH      L    SP",
+        "P  HHHHHHHHH           SP",
         "P  SSSSSSSSS     S     SP",
         "P                      SP",
         "PPPPHHHHHHHHSSSSSSSSSSSSP", ]
@@ -239,10 +239,10 @@ def main():
         "PPWWWWWWPPMMMMMMMPPPPPPPP",]
     levels[10] = [
         "PPPPPPPPPPPPPPPPPPPPPPPPP",
-        "P               P       P",
+        "P               PL      P",
         "P               P      EP",
         "P            SSSS PPPPPPP",
-        "P                      HP",
+        "P                    HHHP",
         "P         P             P",
         "P         P PSSSSBSSS   P",
         "P  SSS    B B   P      PP",
@@ -698,7 +698,7 @@ class PlatformLife(Platform):
         Entity.__init__(self)
         self.image = Surface((32, 32))
         self.image.convert()
-        self.image.fill(Color(0, 128, 128))
+        self.image.fill(Color(0, 128, 128, 78))
         self.rect = Rect(x, y, 32, 32)
 
     def update(self):

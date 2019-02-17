@@ -1,6 +1,6 @@
 from settings import *
 
-import pygame
+from game_clock import *
 from pygame import *
 
 WIN_WIDTH = 800
@@ -61,12 +61,12 @@ def main():
         "P                       P",
         "P                       P",
         "P                       P",
+        "P          E            P",
         "P                       P",
         "P                       P",
+        "P              P   P    P",
         "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
+        "P                     LLP",
         "P                     LEP",
         "PPPHHHPPPHHHPPPPPHHHPPPPP", ]
     levels[2] = [
@@ -242,7 +242,7 @@ def main():
         "P               PL      P",
         "P               P      EP",
         "P            SSSS PPPPPPP",
-        "P                    HHHP",
+        "P                     HHP",
         "P         P             P",
         "P         P PSSSSBSSS   P",
         "P  SSS    B B   P      PP",
@@ -279,6 +279,8 @@ def main():
         "P                       P",
         "P                       P",
         "PPWWWWWWPPMMMMMMMPPPPPPPP", ]
+
+    start_the_clock()
 
     player = Player(32, 32)
 
@@ -401,6 +403,7 @@ class Player(Entity):
         self.onSticky = False
         self.groundSpeed = 0
         self.rect = Rect(x, y, 32, 32)
+        self.last_hurt_time = current_time() - 10.0
         self.lives = 3
         self.finished_level = False
 
@@ -411,6 +414,7 @@ class Player(Entity):
         self.onSticky = False
         self.groundSpeed = 0
         self.rect = Rect(x, y, 32, 32)
+        self.last_hurt_time = current_time() - 10.0
 
     def update(self, up, down, left, right, running, platforms):
         if up:
@@ -473,6 +477,13 @@ class Player(Entity):
         # do y-axis collisions
         self.collide(0, self.yvel, platforms)
 
+        #making you turn red after hurt
+        if elapsed_time(self.last_hurt_time) < BANDAID_TIME:
+            self.image.fill((255, 0, 0, 5))
+        else:
+            self.image.fill((0, 225, 0))
+
+
     def collide(self, xvel, yvel, platforms):
         for p in platforms:
             if pygame.sprite.collide_rect(self, p):
@@ -504,10 +515,12 @@ class Player(Entity):
                         my_print ("collide top bounce off")
 
                 elif isinstance(p, PlatformHurt):
-                    self.lives -= 1
-                    if self.lives == 0:
-                        pygame.event.post(pygame.event.Event(QUIT))
-                    print "Hurt: lives left = {}".format(self.lives)
+                    if elapsed_time(self.last_hurt_time) > BANDAID_TIME:
+                        self.lives -= 1
+                        self.last_hurt_time = current_time()
+                        if self.lives == 0:
+                            pygame.event.post(pygame.event.Event(QUIT))
+                        print "Hurt: lives left = {}".format(self.lives)
                     if xvel > 0:
                         self.rect.right = p.rect.left
                         my_print("collide left")

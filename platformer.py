@@ -11,7 +11,7 @@ HALF_HEIGHT = int(WIN_HEIGHT / 2)
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT)
 DEPTH = 32
 FLAGS = 0
-CAMERA_SLACK = 9   # not sure what this is for
+CAMERA_SLACK = int(WIN_WIDTH / 5)
 
 
 def my_print(message):
@@ -246,8 +246,6 @@ class Player(Entity):
         if cameraX < 0:
             cameraX = 0
 
-        print "CameraX: {}".format(cameraX)
-            
         # update player, based on camera movement.
         self.rect.centerx = self.rect.centerx - (cameraX - old_cameraX)
 

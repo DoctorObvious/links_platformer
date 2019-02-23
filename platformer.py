@@ -1,5 +1,5 @@
 from settings import *
-
+from level_data import *
 from game_clock import *
 from pygame import *
 
@@ -13,11 +13,11 @@ DEPTH = 32
 FLAGS = 0
 CAMERA_SLACK = 300   # not sure what this is for
 
-NUM_LEVELS = 12
 
 def my_print(message):
     if False:
         print message
+
 
 def main():
     global cameraX, cameraY
@@ -26,259 +26,6 @@ def main():
     pygame.display.set_caption("PLATFORMER! Producers: Link, Mark")
     timer = pygame.time.Clock()
 
-    levels = [[] for x in range(NUM_LEVELS)]
-    levels[0] = [
-        "PPPPPPPPPPPPPPPPPPPPPPPPP",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                      EP",
-        "PPPPPPPPPPPPPPPPPPPPPPPPP", ]
-    levels[1] = [
-        "PPPPPPPPPPPPPPPPPPPPPPPPP",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P          E            P",
-        "P                       P",
-        "P                       P",
-        "P              P   P    P",
-        "P                       P",
-        "P                     LLP",
-        "P                     LEP",
-        "PPPHHHPPPHHHPPPPPHHHPPPPP", ]
-    levels[2] = [
-        "PPPPPPPPPPPPPPPPPPPPPPPPP",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       L",
-        "P                       P",
-        "P                       P",
-        "P                 P     P",
-        "P                      EP",
-        "PPPPHHHPPHHHHPPHHHHHHHHPP", ]
-    levels[3] = [
-        "PPPPPPPPPPPPPPPPPPPPPPPPP",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                      EP",
-        "P                      SP",
-        "P  HHHHHHHHH           SP",
-        "P  SSSSSSSSS     S     SP",
-        "P                      SP",
-        "PPPPHHHHHHHHSSSSSSSSSSSSP", ]
-    levels[4] = [
-        "PPPPPPPPPPPPPPPPPPPPPPPPP",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P           PPPP        P",
-        "P      SP P        B    P",
-        "PSS B                   P",
-        "P                      EP",
-        "PPPPDDDDDDDDDDDDDDDDPPPPP", ]
-    levels[5] = [
-        "PPPPPPPPPPPPPPPPPPPPPPPPP",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P           SSSSSSSSS   P",
-        "P          P            P",
-        "P         B             P",
-        "P    B P                P",
-        "P                      EP",
-        "PPPPDDDDDDDDDDDDDDDDDPPPP", ]
-    levels[6] = [
-        "PPPPPPPPPPPPPPPPPPPPPPPPP",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                      EP",
-        "PPPWWWWWWWWWMMMMMMMMPPPP", ]
-    levels[7] = [
-        "PPPPPPPPPPPPPPPPPPPPPPPPP",
-        "P               P       P",
-        "P               P      EP",
-        "P            SSSS    PPPP",
-        "P                   P   P",
-        "P                  P    P",
-        "P           PP B PPPP   P",
-        "P     PBSSPPB           P",
-        "P  PP                   P",
-        "PPP                     P",
-        "P  P   PPPB             P",
-        "P  PPHHP                P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "PPWWWWWWPPMMMMMMMPPPPPPPP",]
-    levels[8] = [
-        "PPPPPPPPPPPPPPPPPPPPPPPPP",
-        "P               P       P",
-        "P               P      EP",
-        "P            SSSS S  PPPP",
-        "P                 S P   P",
-        "P              SSS P    P",
-        "P           PP   PPPP   P",
-        "P      B  PPB           P",
-        "P  PP                   P",
-        "PP                      P",
-        "P  P   PPPB             P",
-        "P  PPHHP                P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "PPWWWWWWPPMMMMMMMPPPPPPPP",]
-    levels[9] = [
-        "PPPPPPPPPPPPPPPPPPPPPPPPP",
-        "P               P       P",
-        "P               P      EP",
-        "P            SSSS    PPPP",
-        "P                 P     P",
-        "P                       P",
-        "P           PPPPPBPPP   P",
-        "P               P      PP",
-        "P  SSS          P     P P",
-        "PP                   P  P",
-        "P  P   PPP          P   P",
-        "P  PPHHP          P     P",
-        "P                P     PP",
-        "P          PPPP         P",
-        "P              P        P",
-        "P               P       P",
-        "P                PPP    P",
-        "P                  P    P",
-        "P                    P  P",
-        "PPWWWWWWPPMMMMMMMPPPPPPPP",]
-    levels[10] = [
-        "PPPPPPPPPPPPPPPPPPPPPPPPP",
-        "P               PL      P",
-        "P               P      EP",
-        "P            SSSS PPPPPPP",
-        "P                     HHP",
-        "P         P             P",
-        "P         P PSSSSBSSS   P",
-        "P  SSS    B B   P      PP",
-        "P         B B   P     P P",
-        "PP        B B        P  P",
-        "P  P   PPPB B       P   P",
-        "P  PPSSP  B B     P     P",
-        "P      B  B B    P     PP",
-        "P      B  B   P         P",
-        "P      B  B    P        P",
-        "P         BBB   P       P",
-        "PH HSSS      B     P    L",
-        "P               P  P    P",
-        "P                    P  P",
-        "PPWWWWWWPPMMMMMMMPPPPPPPP",]
-    levels[11] = [
-        "PPPPPPPPPPPPPPPPPPPPPPPPP",
-        "P                       P",
-        "P                      EP",
-        "P                    PPPP",
-        "P                   P   P",
-        "P                  P    P",
-        "P      SB    SB  P      P",
-        "P                       P",
-        "P   PHHHHHHHHHHHH       P",
-        "PPP        L            P",
-        "P  P   PPPB             P",
-        "P  PPHHP                P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "P                       P",
-        "PPWWWWWWPPMMMMMMMPPPPPPPP", ]
 
     start_the_clock()
 
@@ -296,6 +43,7 @@ def main():
         platforms = []
 
         x = y = 0
+        cameraX = cameraY = 0
 
         # build the level
         for row in level:
@@ -378,6 +126,13 @@ def main():
 
             # update player, draw everything else
             player.update(up, down, left, right, running, platforms)
+
+            # camera movement
+            for entity in entities:
+                if isinstance(entity, Platform):
+                    entity.update(cameraX, cameraY)
+
+            # redraw entities
             entities.draw(screen)
 
             pygame.display.update()
@@ -667,14 +422,21 @@ class Platform(Entity):
         self.image.convert()
         self.image.fill(Color("#999999"))
         self.rect = Rect(x, y, 32, 32)
+        self.x = x
+        self.y = y
 
-    def update(self):
-        pass
+    def update(self, camera_x, camera_y):
+        self.rect.x = self.x - camera_x
+        self.rect.y = self.y - camera_y
+
 
 class ExitBlock(Platform):
     def __init__(self, x, y):
         Platform.__init__(self, x, y)
         self.image.fill(Color("#DD33FF"))
+        self.x = x
+        self.y = y
+
 
 class PlatformBouncy1(Platform):
     def __init__(self, x, y):
@@ -683,9 +445,9 @@ class PlatformBouncy1(Platform):
         self.image.convert()
         self.image.fill(Color("#5533FF"))
         self.rect = Rect(x, y, 32, 32)
+        self.x = x
+        self.y = y
 
-    def update(self):
-        pass
 
 class PlatformHurt(Platform):
     def __init__(self, x, y):
@@ -694,9 +456,9 @@ class PlatformHurt(Platform):
         self.image.convert()
         self.image.fill(Color("#FF0000"))
         self.rect = Rect(x, y, 32, 32)
+        self.x = x
+        self.y = y
 
-    def update(self):
-        pass
 
 class PlatformPit(Platform):
     def __init__(self, x, y):
@@ -705,9 +467,9 @@ class PlatformPit(Platform):
         self.image.convert()
         self.image.fill(Color(0, 0, 0))
         self.rect = Rect(x, y, 32, 32)
+        self.x = x
+        self.y = y
 
-    def update(self):
-        pass
 
 class PlatformLife(Platform):
     def __init__(self, x, y):
@@ -716,9 +478,9 @@ class PlatformLife(Platform):
         self.image.convert()
         self.image.fill(Color(0, 128, 128, 25))
         self.rect = Rect(x, y, 32, 32)
+        self.x = x
+        self.y = y
 
-    def update(self):
-        pass
 
 class PlatformSticky(Platform):
     def __init__(self, x, y):
@@ -727,9 +489,9 @@ class PlatformSticky(Platform):
         self.image.convert()
         self.image.fill(Color(128, 128, 0))
         self.rect = Rect(x, y, 32, 32)
+        self.x = x
+        self.y = y
 
-    def update(self):
-        pass
 
 class Platformmovingcarpetleft(Platform):
     def __init__(self, x, y):
@@ -738,9 +500,9 @@ class Platformmovingcarpetleft(Platform):
         self.image.convert()
         self.image.fill(Color(128, 0, 0))
         self.rect = Rect(x, y, 32, 32)
+        self.x = x
+        self.y = y
 
-    def update(self):
-        pass
 
 class Platformmovingcarpetright(Platform):
     def __init__(self, x, y):
@@ -749,9 +511,9 @@ class Platformmovingcarpetright(Platform):
         self.image.convert()
         self.image.fill(Color(255, 0, 255))
         self.rect = Rect(x, y, 32, 32)
+        self.x = x
+        self.y = y
 
-    def update(self):
-        pass
 
 if __name__ == "__main__":
     main()

@@ -35,6 +35,8 @@ def main():
         player.finished_level = False
         player.reset_position(32, 32)
         level = levels[n]
+        level_width = len(level[0]) * 32
+        print "level_width: {}".format(level_width)
         up = down = left = right = running = False
         bg = Surface((32,32))
         bg.convert()
@@ -125,7 +127,7 @@ def main():
                     screen.blit(bg, (x * 32, y * 32))
 
             # update player, draw everything else
-            player.update(up, down, left, right, running, platforms)
+            player.update(up, down, left, right, running, platforms, level_width)
 
             # camera movement
             for entity in entities:
@@ -173,7 +175,7 @@ class Player(Entity):
         self.rect = Rect(x, y, 32, 32)
         self.last_hurt_time = current_time() - 10.0
 
-    def update(self, up, down, left, right, running, platforms):
+    def update(self, up, down, left, right, running, platforms, level_width):
         global cameraX, cameraY
         if up:
             # only jump if on the ground
@@ -245,6 +247,8 @@ class Player(Entity):
 
         if cameraX < 0:
             cameraX = 0
+        if cameraX > level_width - WIN_WIDTH:
+            cameraX = level_width - WIN_WIDTH
 
         # update player, based on camera movement.
         self.rect.centerx = self.rect.centerx - (cameraX - old_cameraX)

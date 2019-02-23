@@ -221,7 +221,7 @@ class Player(Entity):
         # do x-axis collisions
         self.collide(self.xvel, 0, platforms)
 
-        #limit horizontal speed
+        # limit horizontal speed
         if self.xvel < -8.0 + self.groundSpeed:
             self.xvel = -8.0 + self.groundSpeed
         if self.xvel > 8.0 + self.groundSpeed:
@@ -235,16 +235,20 @@ class Player(Entity):
         # do y-axis collisions
         self.collide(0, self.yvel, platforms)
 
-        #calculate new x camera
+        # calculate new x camera
         old_cameraX = cameraX
-        if (cameraX + HALF_WIDTH) - self.rect.centerx > CAMERA_SLACK:
-            cameraX = self.rect.centerx + CAMERA_SLACK - HALF_WIDTH
-        elif self.rect.centerx - (cameraX + HALF_WIDTH) > CAMERA_SLACK:
-            cameraX = self.rect.centerx - CAMERA_SLACK - HALF_WIDTH
+
+        if (cameraX + HALF_WIDTH) - (self.rect.centerx + cameraX) > CAMERA_SLACK:
+            cameraX = (self.rect.centerx + cameraX) + CAMERA_SLACK - HALF_WIDTH
+        elif (self.rect.centerx + cameraX) - (cameraX + HALF_WIDTH) > CAMERA_SLACK:
+            cameraX = (self.rect.centerx + cameraX) - CAMERA_SLACK - HALF_WIDTH
+
         if cameraX < 0:
             cameraX = 0
+
+        print "CameraX: {}".format(cameraX)
             
-        #update player, based on camera movement.    
+        # update player, based on camera movement.
         self.rect.centerx = self.rect.centerx - (cameraX - old_cameraX)
 
         #making you turn red after hurt
@@ -252,7 +256,6 @@ class Player(Entity):
             self.image.fill((255, 0, 0, 5))
         else:
             self.image.fill((0, 225, 0))
-
 
     def collide(self, xvel, yvel, platforms):
         for p in platforms:

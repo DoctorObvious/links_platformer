@@ -1,5 +1,5 @@
 import pygame
 from pygame.locals import *
 
-FPS = 450
+FPS =
 BANDAID_TIME = 1.567  # seconds

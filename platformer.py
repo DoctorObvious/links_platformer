@@ -387,9 +387,11 @@ def main():
             print "win!!!!!!"
             raise SystemExit
 
+
 class Entity(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
+
 
 class Player(Entity):
     def __init__(self, x, y):
@@ -545,6 +547,7 @@ class Player(Entity):
 
                 elif isinstance(p, PlatformLife):
                     print "Healed: lives = {}".format(self.lives)
+                    self.last_hurt_time = current_time() - 10.0
                     if xvel > 0:
                         self.rect.right = p.rect.left
                         self.xvel = 0
@@ -711,7 +714,7 @@ class PlatformLife(Platform):
         Entity.__init__(self)
         self.image = Surface((32, 32))
         self.image.convert()
-        self.image.fill(Color(0, 128, 128, 78))
+        self.image.fill(Color(0, 128, 128, 25))
         self.rect = Rect(x, y, 32, 32)
 
     def update(self):

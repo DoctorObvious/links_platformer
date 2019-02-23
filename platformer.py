@@ -11,7 +11,7 @@ HALF_HEIGHT = int(WIN_HEIGHT / 2)
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT)
 DEPTH = 32
 FLAGS = 0
-CAMERA_SLACK = 300   # not sure what this is for
+CAMERA_SLACK = 9   # not sure what this is for
 
 
 def my_print(message):
@@ -174,6 +174,7 @@ class Player(Entity):
         self.last_hurt_time = current_time() - 10.0
 
     def update(self, up, down, left, right, running, platforms):
+        global cameraX, cameraY
         if up:
             # only jump if on the ground
             if self.onSticky:
@@ -233,6 +234,18 @@ class Player(Entity):
             self.onGround = False
         # do y-axis collisions
         self.collide(0, self.yvel, platforms)
+
+        #calculate new x camera
+        old_cameraX = cameraX
+        if (cameraX + HALF_WIDTH) - self.rect.centerx > CAMERA_SLACK:
+            cameraX = self.rect.centerx + CAMERA_SLACK - HALF_WIDTH
+        elif self.rect.centerx - (cameraX + HALF_WIDTH) > CAMERA_SLACK:
+            cameraX = self.rect.centerx - CAMERA_SLACK - HALF_WIDTH
+        if cameraX < 0:
+            cameraX = 0
+            
+        #update player, based on camera movement.    
+        self.rect.centerx = self.rect.centerx - (cameraX - old_cameraX)
 
         #making you turn red after hurt
         if elapsed_time(self.last_hurt_time) < BANDAID_TIME:

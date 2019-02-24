@@ -1,4 +1,4 @@
-NUM_LEVELS = 12
+NUM_LEVELS = 13
 
 levels = [[] for x in range(NUM_LEVELS)]
 
@@ -10,41 +10,20 @@ levels[0] = [
     "P                                      P",
     "P                                      P",
     "P                           P          P",
-    "P                                      P",
+    "P                      P               P",
     "P                                      P",
     "P                    P            P    P",
     "P                                      P",
-    "P                                      P",
+    "P              P                       P",
     "P            P                         P",
     "P                                      P",
-    "P                                      P",
+    "P      P                               P",
     "P     P                                P",
-    "P                                      P",
-    "P                                      P",
-    "P                                     EP",
+    "P                      P               P",
+    "P  P                           PP      P",
+    "P              P             PP       EP",
     "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", ]
 levels[1] = [
-    "PPPPPPPPPPPPPPPPPPPPPPPPP",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P          E            P",
-    "P                       P",
-    "P                       P",
-    "P              P   P    P",
-    "P                       P",
-    "P                     LLP",
-    "P                     LEP",
-    "PPPHHHPPPHHHPPPPPHHHPPPPP", ]
-levels[2] = [
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
     "P                       P",
     "P                       P",
@@ -65,6 +44,27 @@ levels[2] = [
     "P                 P     P",
     "P                      EP",
     "PPPPHHHPPHHHHPPHHHHHHHHPP", ]
+levels[2] = [
+    "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P                       P              P",
+    "P                       P              P",
+    "P                       P              P",
+    "P                       P              P",
+    "P                       P              P",
+    "P                                      P",
+    "P                                      P",
+    "P                   P   P              P",
+    "P                       P              P",
+    "P              P        P              P",
+    "P                       P              P",
+    "P          P            P      H       P",
+    "P          PP           P              P",
+    "P                       P              P",
+    "P              P   P    P              P",
+    "P                       P              P",
+    "P                     LLP              P",
+    "P                     LEP              E",
+    "PPPHHHPPPHHHPPPPPHHHPPPPPPPPPHHHPPPPPPPP", ]
 levels[3] = [
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
     "P                       P",
@@ -87,6 +87,27 @@ levels[3] = [
     "P                      SP",
     "PPPPHHHHHHHHSSSSSSSSSSSSP", ]
 levels[4] = [
+    "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P                       P               ",
+    "P                       P               ",
+    "P                       P               ",
+    "P                       P               ",
+    "P                       P               ",
+    "P                       P               ",
+    "P                       PSSSSSSSSSSSSSSS",
+    "P                       P              S",
+    "P                       P PPPPPPPPPPPP S",
+    "P                       P  P           S",
+    "P                       P  P           S",
+    "P                       P  P           S",
+    "P                       PE P           S",
+    "P        SSSSSSSSSSSSSSSSSSSSSS        S",
+    "P                                      S",
+    "P                       P      SSSSSSSSS",
+    "P  P              P     P               ",
+    "P                       P               ",
+    "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", ]
+levels[5] = [
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
     "P                       P",
     "P                       P",
@@ -107,7 +128,7 @@ levels[4] = [
     "PSS B                   P",
     "P                      EP",
     "PPPPDDDDDDDDDDDDDDDDPPPPP", ]
-levels[5] = [
+levels[6] = [
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
     "P                       P",
     "P                       P",
@@ -128,7 +149,7 @@ levels[5] = [
     "P    B P                P",
     "P                      EP",
     "PPPPDDDDDDDDDDDDDDDDDPPPP", ]
-levels[6] = [
+levels[7] = [
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
     "P                       P",
     "P                       P",
@@ -149,7 +170,7 @@ levels[6] = [
     "P                       P",
     "P                      EP",
     "PPPWWWWWWWWWMMMMMMMMPPPP", ]
-levels[7] = [
+levels[8] = [
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
     "P               P       P",
     "P               P      EP",
@@ -170,7 +191,7 @@ levels[7] = [
     "P                       P",
     "P                       P",
     "PPWWWWWWPPMMMMMMMPPPPPPPP", ]
-levels[8] = [
+levels[9] = [
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
     "P               P       P",
     "P               P      EP",
@@ -191,7 +212,7 @@ levels[8] = [
     "P                       P",
     "P                       P",
     "PPWWWWWWPPMMMMMMMPPPPPPPP", ]
-levels[9] = [
+levels[10] = [
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
     "P               P       P",
     "P               P      EP",
@@ -212,7 +233,7 @@ levels[9] = [
     "P                  P    P",
     "P                    P  P",
     "PPWWWWWWPPMMMMMMMPPPPPPPP", ]
-levels[10] = [
+levels[11] = [
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
     "P               PL      P",
     "P               P      EP",
@@ -233,7 +254,7 @@ levels[10] = [
     "P               P  P    P",
     "P                    P  P",
     "PPWWWWWWPPMMMMMMMPPPPPPPP", ]
-levels[11] = [
+levels[12] = [
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
     "P                       P",
     "P                      EP",

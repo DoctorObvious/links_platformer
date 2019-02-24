@@ -36,7 +36,6 @@ def main():
         player.reset_position(32, 32)
         level = levels[n]
         level_width = len(level[0]) * 32
-        print "level_width: {}".format(level_width)
         up = down = left = right = running = False
         bg = Surface((32,32))
         bg.convert()

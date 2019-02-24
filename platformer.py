@@ -21,20 +21,23 @@ def my_print(message):
 
 def main():
     global cameraX, cameraY
+    global DISPLAYSURF, BASICFONT
     pygame.init()
     screen = pygame.display.set_mode(DISPLAY, FLAGS, DEPTH)
     pygame.display.set_caption("PLATFORMER! Producers: Link, Mark")
     timer = pygame.time.Clock()
 
-
     start_the_clock()
+
+    DISPLAYSURF = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+    BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
 
     player = Player(32, 32)
 
-    for n in range(NUM_LEVELS):
+    for level_number in range(NUM_LEVELS):
         player.finished_level = False
         player.reset_position(32, 32)
-        level = levels[n]
+        level = levels[level_number]
         level_width = len(level[0]) * 32
         up = down = left = right = running = False
         bg = Surface((32,32))
@@ -42,9 +45,11 @@ def main():
         bg.fill(Color("#000023"))
         entities = pygame.sprite.Group()
         platforms = []
+        start_message = 'Level: {}'.format(level_number + 1)
 
         x = y = 0
         cameraX = cameraY = 0
+        level_started = False
 
         # build the level
         for row in level:
@@ -90,7 +95,7 @@ def main():
             x = 0
 
         entities.add(player)
-        print "Level {}".format(n + 1)
+        # print "Level {}".format(level_number + 1)
         while not player.finished_level:
             timer.tick(60)
 
@@ -100,14 +105,19 @@ def main():
                     raise SystemExit, "ESCAPE"
                 if e.type == KEYDOWN and e.key == K_UP:
                     up = True
+                    level_started = True
                 if e.type == KEYDOWN and e.key == K_DOWN:
                     down = True
+                    level_started = True
                 if e.type == KEYDOWN and e.key == K_LEFT:
                     left = True
+                    level_started = True
                 if e.type == KEYDOWN and e.key == K_RIGHT:
                     right = True
+                    level_started = True
                 if e.type == KEYDOWN and e.key == K_SPACE:
                     running = True
+                    level_started = True
 
                 if e.type == KEYUP and e.key == K_UP:
                     up = False
@@ -126,7 +136,8 @@ def main():
                     screen.blit(bg, (x * 32, y * 32))
 
             # update player, draw everything else
-            player.update(up, down, left, right, running, platforms, level_width)
+            if level_started:
+                player.update(up, down, left, right, running, platforms, level_width)
 
             # camera movement
             for entity in entities:
@@ -136,10 +147,14 @@ def main():
             # redraw entities
             entities.draw(screen)
 
+            # draw text
+            if not level_started:
+                draw_big_message(start_message, color=BLUE, pulse_time=0.5)
+
             pygame.display.update()
 
-        print "Finished level {}".format(n + 1)
-        if n + 1 == NUM_LEVELS:
+        print "Finished level {}".format(level_number + 1)
+        if level_number + 1 == NUM_LEVELS:
             print "win!!!!!!"
             raise SystemExit
 
@@ -532,40 +547,38 @@ class Platformmovingcarpetright(Platform):
         self.y = y
 
 
+########################
+# Helper Functions
+########################
+
+def draw_big_message(message, color=BLUE, pulse_time=8.0):
+    use_color = get_pulse_color([color, GREEN], pulse_time=pulse_time)
+
+    if message is not None:
+        font = pygame.font.Font('freesansbold.ttf', 50)
+        surf = font.render(message, True, use_color)
+        rect = surf.get_rect()
+        rect.midtop = (HALF_WIDTH, HALF_HEIGHT)
+        DISPLAYSURF.blit(surf, rect)
+
+
+def get_pulse_color(colors, pulse_time=2.0, pulse_start_time=0.0):
+    num_colors = len(colors)
+    one_color_time = pulse_time/num_colors
+
+    mod_time = ((current_time() - pulse_start_time) % pulse_time)
+    norm_time = mod_time/one_color_time
+    ix1 = int(norm_time)
+    ix2 = (ix1+1) % num_colors
+    fraction = norm_time - ix1
+
+    use_color = list(colors[0])
+    for ii in range(3):
+        use_color[ii] = int((1.0-fraction) * float(colors[ix1][ii]) + fraction * float(colors[ix2][ii]))
+
+    use_color = tuple(use_color)
+    return use_color
+
+
 if __name__ == "__main__":
     main()
-
-# def main():
-#     global FPSCLOCK, DISPLAYSURF, BASICFONT
-#
-#     pygame.init
-#     pygame.mixer.init(frequency=44100, channels=2)
-#     s = pygame.mixer.Sound(SOUND_HAPPY)
-#     s.play()
-#
-#     FPSCLOCK = pygame.time.Clock()
-#     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHIEGHT))
-#     BASICFONT = pygame.font.Font('freesanbold.ttf', 18)
-#     pygame.display.set_caption('Platformer')
-#
-#     show_splash_screen()
-#
-#
-# def show_splash_screen():
-#     title_font = pygame.font.Font('freesanbold.ttf', 100)
-#
-#     degrees1 = 0
-#     degrees2 = 0
-#
-#     pygame.event.get
-#
-#     while True:
-#         DISPLAYSURF.fill(BGCOLOR)
-#
-#         use_color = get_pulse_color((BLACK, PURPLE), pulse_time=2.0)
-#         title_surf_2 = title_font.render('Platformer', True, use_color)
-#
-#
-# def terminate():
-#     pygame.quit()
-#     sys.exit

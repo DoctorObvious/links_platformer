@@ -46,6 +46,7 @@ def main():
         entities = pygame.sprite.Group()
         platforms = []
         start_message = 'Level: {}'.format(level_number + 1)
+        info_message = level_messages[level_number]
 
         x = y = 0
         cameraX = cameraY = 0
@@ -150,6 +151,7 @@ def main():
             # draw text
             if not level_started:
                 draw_big_message(start_message, color=BLUE, pulse_time=0.5)
+                draw_small_message(info_message, color=BLUE, pulse_time=0.5)
 
             pygame.display.update()
 
@@ -560,6 +562,18 @@ def draw_big_message(message, color=BLUE, pulse_time=8.0):
         rect = surf.get_rect()
         rect.midtop = (HALF_WIDTH, HALF_HEIGHT)
         DISPLAYSURF.blit(surf, rect)
+
+
+def draw_small_message(message_list, color=BLUE, pulse_time=8.0):
+    use_color = get_pulse_color([color, GREEN], pulse_time=pulse_time)
+
+    for m, message in enumerate(message_list):
+        if message is not None:
+            font = pygame.font.Font('freesansbold.ttf', 25)
+            surf = font.render(message, True, use_color)
+            rect = surf.get_rect()
+            rect.midtop = (HALF_WIDTH, HALF_HEIGHT + 50 + (m * 25))
+            DISPLAYSURF.blit(surf, rect)
 
 
 def get_pulse_color(colors, pulse_time=2.0, pulse_start_time=0.0):

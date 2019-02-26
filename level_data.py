@@ -1,5 +1,11 @@
 NUM_LEVELS = 13
 
+level_messages = [[] for x in range(NUM_LEVELS)]
+
+level_messages[0] = ["The act of jumping", 
+                     "Here's a test."]
+level_messages[1] = ["Don't get hurt with the red blocks"]
+
 levels = [[] for x in range(NUM_LEVELS)]
 
 levels[0] = [

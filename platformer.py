@@ -37,6 +37,7 @@ def main():
     for level_number in range(NUM_LEVELS):
         player.finished_level = False
         player.reset_position(32, 32)
+        player.last_hurt_time = current_time() - 10.0
         level = levels[level_number]
         level_width = len(level[0]) * 32
         up = down = left = right = running = False
@@ -47,6 +48,7 @@ def main():
         platforms = []
         start_message = 'Level: {}'.format(level_number + 1)
         info_message = level_messages[level_number]
+        message_prompt = 'Press any key to start'
 
         x = y = 0
         cameraX = cameraY = 0
@@ -150,12 +152,22 @@ def main():
 
             # draw text
             if not level_started:
-                draw_big_message(start_message, color=BLUE, pulse_time=0.5)
-                draw_small_message(info_message, color=BLUE, pulse_time=0.5)
+                draw_big_message(start_message, color=BLUE, pulse_time=1.0)
+                draw_small_message(info_message, color=BLUE, pulse_time=1.0)
+                draw_prompt_message(message_prompt, color=BLACK, pulse_time=1.5)
+                level_start_time = current_time()
+
+            message_time = 'Time = {:3.1f}'.format(elapsed_time(level_start_time))
+            message_life = 'lives = {}'.format(player.lives)
+            draw_life_message(message_life, color=BLUE, pulse_time=1.5)
+            draw_time_message(message_time, color=RED, pulse_time=1.5)
 
             pygame.display.update()
 
-        print "Finished level {}".format(level_number + 1)
+        # Add the time spent on the just-finished level
+        player.all_previous_level_times = player.all_previous_level_times + elapsed_time(level_start_time)
+        print "Finished level {}, total playing time = {:3.1f}".format(level_number + 1, player.all_previous_level_times)
+
         if level_number + 1 == NUM_LEVELS:
             print "win!!!!!!"
             raise SystemExit
@@ -181,6 +193,7 @@ class Player(Entity):
         self.last_hurt_time = current_time() - 10.0
         self.lives = 3
         self.finished_level = False
+        self.all_previous_level_times = 0
 
     def reset_position(self, x, y):
         self.xvel = 0
@@ -190,20 +203,21 @@ class Player(Entity):
         self.groundSpeed = 0
         self.rect = Rect(x, y, 32, 32)
         self.last_hurt_time = current_time() - 10.0
+        self.image.fill((0, 225, 0))
 
     def update(self, up, down, left, right, running, platforms, level_width):
         global cameraX, cameraY
         if up:
             # only jump if on the ground
             if self.onSticky:
-                self.yvel = -0.65
+                self.yvel = self.yvel - 0.65
             elif self.onGround:
-                self.yvel -= 10
+                self.yvel -= 10.2
             # self.onGround = False
             # self.onSticky = False
         if down:
-            if self.onSticky == True:
-                self.yvel = 0.65
+            if self.onSticky:
+                self.yvel = self.yvel + 0.65
             self.onSticky = False
         if running:
             self.xvel = 12
@@ -226,6 +240,11 @@ class Player(Entity):
                 self.yvel = 100
         if self.onGround and not(left or right):
             self.xvel = 0
+
+        # only move up or down on stickies when you press up or down.
+        if self.onSticky and not(up or down):
+            self.yvel = 0
+
         # increment in x direction
         if self.onGround:
             self.rect.left += self.xvel + self.groundSpeed
@@ -247,11 +266,19 @@ class Player(Entity):
 
         # increment/move in y direction
         self.rect.top = self.rect.top + self.yvel
+
         # assuming we're in the air
         if not self.onSticky:
             self.onGround = False
         # do y-axis collisions
         self.collide(0, self.yvel, platforms)
+
+        # Limit Vertical Speed
+        if self.onSticky:
+            if self.yvel < -5.0:
+                self.yvel = -5.0
+            if self.yvel > 5.0:
+                self.yvel = 5.0
 
         # calculate new x camera
         old_cameraX = cameraX
@@ -269,7 +296,7 @@ class Player(Entity):
         # update player, based on camera movement.
         self.rect.centerx = self.rect.centerx - (cameraX - old_cameraX)
 
-        #making you turn red after hurt
+        # making you turn red after hurt
         if elapsed_time(self.last_hurt_time) < BANDAID_TIME:
             self.image.fill((255, 0, 0, 5))
         else:
@@ -324,7 +351,7 @@ class Player(Entity):
                     if yvel > 0:
                         self.rect.bottom = p.rect.top
                         self.onGround = False
-                        self.yvel = -self.yvel
+                        self.yvel = -6.0
                         my_print("collide top")
 
                 elif isinstance(p, PlatformPit):
@@ -404,10 +431,11 @@ class Player(Entity):
                     if self.rect.right == p.rect.left + 1 or self.rect.left == p.rect.right - 1  \
                         or self.rect.top == p.rect.bottom - 1 or self.rect.bottom == p.rect.top + 1:
 
+                        pass
                         # Determine if we are on the top or, say, a side. Only allow side movement when checking
                         # collisions based on the yvel (not when checking horizontal)
-                        if self.rect.bottom != p.rect.top + 1 and yvel != 0.0:
-                            self.yvel = 0.0
+                        # if self.rect.bottom != p.rect.top + 1 and yvel != 0.0:
+                        #     self.yvel = 0.0
 
                     else:
                         if xvel > 0:
@@ -419,7 +447,7 @@ class Player(Entity):
                             self.rect.left = p.rect.right - 1
                             my_print("collide left")
                             self.yvel = 0.0
-                            self.xvel = -0.0
+                            self.xvel = 0.0
                         if yvel < 0:
                             self.rect.top = p.rect.bottom - 1
                             self.yvel = 0.0
@@ -561,6 +589,36 @@ def draw_big_message(message, color=BLUE, pulse_time=8.0):
         surf = font.render(message, True, use_color)
         rect = surf.get_rect()
         rect.midtop = (HALF_WIDTH, HALF_HEIGHT)
+        DISPLAYSURF.blit(surf, rect)
+
+def draw_life_message(message_life, color=RED, pulse_time=8.0):
+    use_color = get_pulse_color([color, DARKRED], pulse_time=pulse_time)
+
+    if message_life is not None:
+        font = pygame.font.Font('freesansbold.ttf', 15)
+        surf = font.render(message_life, True, use_color)
+        rect = surf.get_rect()
+        rect.midtop = (WIN_WIDTH - WIN_WIDTH + 50, WIN_HEIGHT - WIN_HEIGHT + 10)
+        DISPLAYSURF.blit(surf, rect)
+
+def draw_time_message(message_time, color=RED, pulse_time=8.0):
+    use_color = get_pulse_color([color, DARKRED], pulse_time=pulse_time)
+
+    if message_time is not None:
+        font = pygame.font.Font('freesansbold.ttf', 15)
+        surf = font.render(message_time, True, use_color)
+        rect = surf.get_rect()
+        rect.midtop = (WIN_WIDTH - 50, WIN_HEIGHT - WIN_HEIGHT + 10)
+        DISPLAYSURF.blit(surf, rect)
+
+def draw_prompt_message(message_prompt, color=BLACK, pulse_time=8.0):
+    use_color = get_pulse_color([color, DARKGREEN], pulse_time=pulse_time)
+
+    if message_prompt is not None:
+        font = pygame.font.Font('freesansbold.ttf', 15)
+        surf = font.render(message_prompt, True, use_color)
+        rect = surf.get_rect()
+        rect.midtop = (HALF_WIDTH, WIN_HEIGHT - 25)
         DISPLAYSURF.blit(surf, rect)
 
 

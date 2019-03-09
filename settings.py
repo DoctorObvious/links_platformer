@@ -9,6 +9,7 @@ BANDAID_TIME = 1.567  # seconds
 WHITE     = (255, 255, 255)
 BLACK     = (  0,   0,   0)
 RED       = (255,   0,   0)
+DARKRED   = (255,  50,   0)
 GREEN     = (  0, 255,   0)
 BLUE      = (  0,   0, 255)
 BLUE2     = ( 10,   0, 215)

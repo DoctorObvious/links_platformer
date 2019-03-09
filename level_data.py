@@ -1,3 +1,5 @@
+from platformer import *
+
 NUM_LEVELS = 13
 
 level_messages = [[] for x in range(NUM_LEVELS)]
@@ -15,19 +17,19 @@ levels[0] = [
     "P                                      P",
     "P                                      P",
     "P                                      P",
-    "P                           P          P",
+    "P                          PP          P",
     "P                      P               P",
-    "P                                      P",
-    "P                    P            P    P",
-    "P                                      P",
+    "P                                     EP",
+    "P                    P            PPPPPP",
+    "P                PP                    P",
     "P              P                       P",
-    "P            P                         P",
-    "P                                      P",
-    "P      P                               P",
-    "P     P                                P",
-    "P                      P               P",
+    "P            P P                       P",
+    "P        PP    P          PP    PP     P",
+    "P      P              PP               P",
+    "P     P                  PP            P",
+    "P                      P   PP          P",
     "P  P                           PP      P",
-    "P              P             PP       EP",
+    "P              P             PP        P",
     "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", ]
 levels[1] = [
     "PPPPPPPPPPPPPPPPPPPPPPPPP",

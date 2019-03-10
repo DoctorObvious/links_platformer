@@ -1,8 +1,8 @@
-from platformer import *
 
 level_messages = []
-
 levels = []
+
+
 level_messages.append(["Go for the pink portal block!"])
 levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
@@ -254,12 +254,12 @@ levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
     "P               P       P",
     "P               P      EP",
-    "P            SSSS    PPPP",
-    "P                   P   P",
-    "P                 PP    P",
-    "P           S           P",
-    "P           S           P",
-    "P           S           P",
+    "P               S    SPPP",
+    "P                S   S  P",
+    "P                  SSS  P",
+    "P                S S    P",
+    "P                       P",
+    "P                       P",
     "PP             P        P",
     "P                       P",
     "P                       P",
@@ -293,6 +293,28 @@ levels.append([
     "P                       P",
     "P                       P",
     "PDDDDDDDDDDDDDDDDDDDDDDDP", ])
+level_messages.append(["Practice with stickies!"])
+levels.append([
+    "PPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "PPPPS                   P",
+    "P    S                  P",
+    "P      S                P",
+    "P    S                  P",
+    "P      S                P",
+    "PS  S  HHHHHHHHHHHHHHHHHP",
+    "PS  H  H                P",
+    "PS   HH                 P",
+    "PS                      P",
+    "PH                      P",
+    "PH SSP        SSS       P",
+    "PH                   L  P",
+    "PHHHHH                 EP",
+    "PPPPPPDDDDDDDDPPPPPPPPPPP", ])
 level_messages.append(["That's a LOT of LAVA!!!"])
 levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
@@ -300,10 +322,10 @@ levels.append([
     "P                      EP",
     "P                    PPPP",
     "P                   P   P",
-    "P                  P    P",
-    "P      SB    SB  P      P",
+    "P                P P    P",
+    "P      SB    SP         P",
     "P                       P",
-    "P   PHHHHHHHHHHHHP      P",
+    "P   PHHHHHHHHHHHHPL     P",
     "PPP  HHHHHHHHHHHHP      P",
     "P  PHHHPPPPPPPPPPP      P",
     "P  PPPPP                P",

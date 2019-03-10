@@ -33,8 +33,9 @@ def main():
     BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
 
     player = Player(32, 32)
+    num_levels = len(levels)
 
-    for level_number in range(NUM_LEVELS):
+    for level_number in range(num_levels):
         player.finished_level = False
         player.reset_position(32, 32)
         player.last_hurt_time = current_time() - 10.0
@@ -168,7 +169,7 @@ def main():
         player.all_previous_level_times = player.all_previous_level_times + elapsed_time(level_start_time)
         print "Finished level {}, total playing time = {:3.1f}".format(level_number + 1, player.all_previous_level_times)
 
-        if level_number + 1 == NUM_LEVELS:
+        if level_number + 1 == num_levels:
             print "win!!!!!!"
             raise SystemExit
 
@@ -222,22 +223,36 @@ class Player(Entity):
         if running:
             self.xvel = 12
         if left:
-            if self.xvel > 0.0 and self.onGround:
-                self.xvel = 0.0
-            self.xvel = self.xvel - 0.65
+            if self.xvel > 0.0:
+                if self.onGround:
+                    self.xvel = 0.0
+                else:
+                    self.xvel = self.xvel - 0.3  # extra help changing direction in air
+
+            if self.onGround:
+                self.xvel = self.xvel - 0.65
+            else:
+                self.xvel = self.xvel - 0.4
 
         if right:
-            if self.xvel < 0.0 and self.onGround:
-                self.xvel = 0.0
-            self.xvel = self.xvel + 0.65
+            if self.xvel < 0.0:
+                if self.onGround:
+                    self.xvel = 0.0
+                else:
+                    self.xvel = self.xvel + 0.3  # extra help changing direction in air
+
+            if self.onGround:
+                self.xvel = self.xvel + 0.65
+            else:
+                self.xvel = self.xvel + 0.4
 
         # if not self.onGround and not self.onSticky:
         if not self.onSticky:
             # only accelerate with gravity if in the air
-            self.yvel += 0.55
+            self.yvel += GRAVITY
             # max falling speed
-            if self.yvel > 100:
-                self.yvel = 100
+            if self.yvel > 90:
+                self.yvel = 90
         if self.onGround and not(left or right):
             self.xvel = 0
 
@@ -329,8 +344,14 @@ class Player(Entity):
                     if yvel > 0:
                         self.rect.bottom = p.rect.top
                         self.onGround = False
-                        self.yvel = -self.yvel
-                        my_print ("collide top bounce off")
+                        my_print('Bounce start yvel {}'.format(self.yvel))
+                        self.yvel = -max(0.0, self.yvel - 2*GRAVITY) * .8
+
+                        if self.yvel > -2*GRAVITY:
+                            self.yvel = 0.0
+                            self.onGround = True
+
+                        my_print("collide top bounce off")
 
                 elif isinstance(p, PlatformHurt):
                     if elapsed_time(self.last_hurt_time) > BANDAID_TIME:
@@ -513,13 +534,14 @@ class PlatformBouncy1(Platform):
 
 class PlatformHurt(Platform):
     def __init__(self, x, y):
+        dip_height = 4
         Entity.__init__(self)
-        self.image = Surface((32, 32))
+        self.image = Surface((32, 32 - dip_height))
         self.image.convert()
         self.image.fill(Color("#FF0000"))
-        self.rect = Rect(x, y, 32, 32)
+        self.rect = Rect(x, y + dip_height, 32, 32 - dip_height)
         self.x = x
-        self.y = y
+        self.y = y + dip_height
 
 
 class PlatformPit(Platform):

@@ -1,16 +1,33 @@
 from platformer import *
 
-NUM_LEVELS = 13
+level_messages = []
 
-level_messages = [[] for x in range(NUM_LEVELS)]
-
-level_messages[0] = ["The act of jumping", 
-                     "Here's a test."]
-level_messages[1] = ["Don't get hurt with the red blocks"]
-
-levels = [[] for x in range(NUM_LEVELS)]
-
-levels[0] = [
+levels = []
+level_messages.append(["Go for the pink portal block!"])
+levels.append([
+    "PPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                      EP",
+    "PPPPDDDPPDDDDPPPPPPPPPPPP", ])
+level_messages.append(["The act of jumping",
+                       "Here's a test."])
+levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
     "P                                      P",
     "P                                      P",
@@ -28,10 +45,12 @@ levels[0] = [
     "P      P              PP               P",
     "P     P                  PP            P",
     "P                      P   PP          P",
-    "P  P                           PP      P",
+    "P PP                           PP      P",
     "P              P             PP        P",
-    "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", ]
-levels[1] = [
+    "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", ])
+level_messages.append(["Don't get hurt with the red lava blocks,",
+                       "But if you do, heal with the teal water blocks."])
+levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
     "P                       P",
     "P                       P",
@@ -46,13 +65,14 @@ levels[1] = [
     "P                       P",
     "P                       P",
     "P                       P",
-    "P                       L",
     "P                       P",
     "P                       P",
+    "P                PLP    P",
     "P                 P     P",
     "P                      EP",
-    "PPPPHHHPPHHHHPPHHHHHHHHPP", ]
-levels[2] = [
+    "PPPPHHHPPHHHHPPHHHHHHHHPP", ])
+level_messages.append(["More practice avoiding lava"])
+levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
     "P                       P              P",
     "P                       P              P",
@@ -62,18 +82,20 @@ levels[2] = [
     "P                                      P",
     "P                                      P",
     "P                   P   P              P",
+    "P                       P      P       P",
+    "P              P        P      P       P",
+    "P                       P      P       P",
+    "P          P            P      P       P",
+    "P          PP           P      P       P",
+    "P                       P      P       P",
+    "P              PPPPP    P      P       P",
+    "P                   P   P              P",
     "P                       P              P",
-    "P              P        P              P",
-    "P                       P              P",
-    "P          P            P      H       P",
-    "P          PP           P              P",
-    "P                       P              P",
-    "P              PPPPP    P              P",
-    "P                       P              P",
-    "P                     LLP              P",
-    "P                     LEP              E",
-    "PPPHHHPPPHHHPPPPPHHHPPPPPPPPPHHHPPPPPPPP", ]
-levels[3] = [
+    "P                    PLLP              E",
+    "PPPHHHPPPHHHPPPPPHHHPPPPPPPPPHHHPPPHHPPP", ])
+level_messages.append(["You can stick to all sides of sticky blocks",
+                       "Try it by jumping onto them."])
+levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
     "P                       P",
     "P                       P",
@@ -87,35 +109,38 @@ levels[3] = [
     "P                       P",
     "P                       P",
     "P                       P",
-    "P                       P",
-    "P                      EP",
-    "P                      SP",
-    "P  HHHHHHHHH           SP",
-    "P  SSSSSSSSS     S     SP",
-    "P                      SP",
-    "PPPPHHHHHHHHSSSSSSSSSSSSP", ]
-levels[4] = [
+    "S                S      P",
+    "S               S      EP",
+    "S                 SSSSSSP",
+    "S  PHHHHHHPS           SP",
+    "S  SSSSSSSSS  PS       SP",
+    "S                      SP",
+    "PPPPHHHHHHHHSSSSSSSSSSSSP", ])
+level_messages.append(["Here is a fun loop-de-loop!"])
+levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
-    "P                       P               ",
-    "P                       P               ",
-    "P                       P               ",
-    "P                       P               ",
-    "P                       P               ",
-    "P                       P               ",
+    "P                       P              P",
+    "P                       P              P",
+    "P                       P              P",
+    "P                       P              P",
+    "P                       P              P",
+    "P                       P              P",
     "P                       PSSSSSSSSSSSSSSS",
     "P                       P              S",
-    "P                       P PPPPPPPPPPPP S",
+    "P                       P PPPPPPPHPPPP S",
+    "P                       P  P     P     S",
     "P                       P  P           S",
     "P                       P  P           S",
-    "P                       P  P           S",
-    "P                       PE P           S",
-    "P        SSSSSSSSSSSSSSSSSSSSSS        S",
-    "P                                      S",
-    "P                       P      SSSSSSSSS",
-    "P  P              P     P               ",
-    "P                       P               ",
-    "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", ]
-levels[5] = [
+    "P        SSSSSSSSSSSSSSSPE P           S",
+    "P                       SSSSSSS        S",
+    "P                    PP                S",
+    "P                      PP      SSSSSSSSS",
+    "P  P              P     P               L",
+    "P                       P              P",
+    "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", ])
+level_messages.append(["You can bounce on the bouncy blocks for a while,",
+                       "But don't fall into the pit!"])
+levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
     "P                       P",
     "P                       P",
@@ -135,8 +160,9 @@ levels[5] = [
     "P      SP P        B    P",
     "PSS B                   P",
     "P                      EP",
-    "PPPPDDDDDDDDDDDDDDDDPPPPP", ]
-levels[6] = [
+    "PPPPDDDDDDDDDDDDDDDDPPPPP", ])
+level_messages.append(["STAY AWAY FROM THAT PIT!"])
+levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
     "P                       P",
     "P                       P",
@@ -156,8 +182,9 @@ levels[6] = [
     "P         B             P",
     "P    B P                P",
     "P                      EP",
-    "PPPPDDDDDDDDDDDDDDDDDPPPP", ]
-levels[7] = [
+    "PPPPDDDDDDDDDDDDDDDDDPPPP", ])
+level_messages.append(["Can you go the wrong way on a moving carpet?"])
+levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
     "P                       P",
     "P                       P",
@@ -177,62 +204,21 @@ levels[7] = [
     "P                       P",
     "P                       P",
     "P                      EP",
-    "PPPWWWWWWWWWMMMMMMMMPPPP", ]
-levels[8] = [
-    "PPPPPPPPPPPPPPPPPPPPPPPPP",
-    "P               P       P",
-    "P               P      EP",
-    "P            SSSS    PPPP",
-    "P                   P   P",
-    "P                  P    P",
-    "P           PP B PPPP   P",
-    "P     PB  SPBP          P",
-    "P   SB     S PB         P",
-    "PPS        S   P        P",
-    "P  P      B             P",
-    "P  PPHHH                P",
-    "P                  P    P",
-    "P        P     P        P",
-    "P                       P",
-    "P           P           P",
-    "P               P       P",
-    "P                       P",
-    "P                   P   P",
-    "PPWWWWWWPPMMMMMMMPPPPPPPP", ]
-levels[9] = [
-    "PPPPPPPPPPPPPPPPPPPPPPPPP",
-    "P               P       P",
-    "P               P      EP",
-    "P            SSSS S  PPPP",
-    "P                 S P   P",
-    "P              SSS P    P",
-    "P           PP   PPPP   P",
-    "P      B  PPB           P",
-    "P  PP                   P",
-    "PP                      P",
-    "P  P   PPPB   P         P",
-    "P  PPHHP       P        P",
-    "P                       P",
+    "PPPWWWWWWWWWMMMMMMMMPPPP", ])
+level_messages.append(["Up the staircase!"])
+levels.append([
+    "PPPPPPPPPPPPPPPPSSLPPPPPP",
+    "P               S       P",
+    "P               S      EP",
+    "P               S    PPPP",
     "P                 P     P",
     "P                       P",
-    "P                 P     P",
-    "P                       P",
-    "P                 P     P",
-    "P                       P",
-    "PPWWWWWWPPMMMMMMMPPPPPPPP", ]
-levels[10] = [
-    "PPPPPPPPPPPPPPPPPPPPPPPPP",
-    "P               P       P",
-    "P               P      EP",
-    "P            SSSS    PPPP",
-    "P                 P     P",
-    "P                       P",
-    "P           PPPPPBPPP   P",
+    "P               PPPPP   P",
     "P               P      PP",
-    "P  SSS          P     P P",
+    "P               P     P P",
     "PP                   P  P",
-    "P  P   PPP          P   P",
-    "P  PPHHP          P     P",
+    "P                   P   P",
+    "P                 P     P",
     "P                P     PP",
     "P          PPPP         P",
     "P              P        P",
@@ -240,40 +226,64 @@ levels[10] = [
     "P                PPP    P",
     "P                  P    P",
     "P                    P  P",
-    "PPWWWWWWPPMMMMMMMPPPPPPPP", ]
-levels[11] = [
+    "PPPPPPPPPPDDDPPPPPPPPPPPP", ])
+level_messages.append(["Putting the blocks together."])
+levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
-    "P               PL      P",
+    "P               P       P",
     "P               P      EP",
-    "P            SSSS PPPPPPP",
-    "P                    HHHP",
-    "P         P             P",
-    "P         P PSSSSBSSS   P",
-    "P  SSS    B B   P      PP",
-    "P         B B   P     P P",
-    "PP        B B        P  P",
-    "P  P   PPPB B       P   P",
-    "P  PPSSP  B B     P     P",
-    "P      B  B B    P     PP",
-    "P      B  B   P         P",
-    "P      B  B    P        P",
-    "P         BBB   P       P",
-    "PH HSSS      B     P    L",
-    "P               P  P    P",
-    "P                    P  P",
-    "PPWWWWWWPPMMMMMMMPPPPPPPP", ]
-levels[12] = [
-    "PPPPPPPPPPPPPPPPPPPPPPPPP",
-    "P                       P",
-    "P                      EP",
-    "P                    PPPP",
+    "P            SSSS    PPPP",
     "P                   P   P",
-    "P                  P    P",
-    "P      SB    SB  P      P",
+    "P                 PP    P",
+    "P           PP     PP   P",
+    "P     PB   PBP          P",
+    "P   SB     S PB         P",
+    "PP         S   P        P",
+    "P         B             P",
     "P                       P",
-    "P   PHHHHHHHHHHHH       P",
-    "PPP        L            P",
-    "P  P   PPPB             P",
+    "P                  P    P",
+    "P        P     P        P",
+    "P                       P",
+    "P           P           P",
+    "P               P       P",
+    "P                       P",
+    "P                   P   P",
+    "PPWWWWWWPPMMMMMMMPPPPPPPP", ])
+level_messages.append(["Sometimes, falling is inevitable"])
+levels.append([
+    "PPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P               P       P",
+    "P               P      EP",
+    "P            SSSS    PPPP",
+    "P                   P   P",
+    "P                 PP    P",
+    "P           S           P",
+    "P           S           P",
+    "P           S           P",
+    "PP             P        P",
+    "P                       P",
+    "P                       P",
+    "P                  P    P",
+    "P        P     P        P",
+    "P                       P",
+    "P           P           P",
+    "P               P       P",
+    "P                       P",
+    "P                   P   P",
+    "PPDDDPPDDDDDDDPPDPPPPPPPP", ])
+level_messages.append(["Now would be a bad time to fall :("])
+levels.append([
+    "PPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P               P       P",
+    "P               P      EP",
+    "P            SSSS SSSPPPP",
+    "P                 S     P",
+    "P                       P",
+    "P        P  PP          P",
+    "P      B                P",
+    "P  PP     L             P",
+    "PP                      P",
+    "P  P   SPPB             P",
     "P  PPHHP                P",
     "P                       P",
     "P                       P",
@@ -282,4 +292,50 @@ levels[12] = [
     "P                       P",
     "P                       P",
     "P                       P",
-    "PPWWWWWWPPMMMMMMMPPPPPPPP", ]
+    "PDDDDDDDDDDDDDDDDDDDDDDDP", ])
+level_messages.append(["That's a LOT of LAVA!!!"])
+levels.append([
+    "PPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P                       P",
+    "P                      EP",
+    "P                    PPPP",
+    "P                   P   P",
+    "P                  P    P",
+    "P      SB    SB  P      P",
+    "P                       P",
+    "P   PHHHHHHHHHHHHP      P",
+    "PPP  HHHHHHHHHHHHP      P",
+    "P  PHHHPPPPPPPPPPP      P",
+    "P  PPPPP                P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "PDDDDDDDDDDDDDDDDDDDDDDDP", ])
+level_messages.append(["Oh, No! The lava spilled!",
+                       "It is possible to take no damage. Try it!",
+                       "It's a REAL challenge!"])
+levels.append([
+    "PPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P               P       P",
+    "P               S      EP",
+    "P            SSSS SPPPHPP",
+    "P         P     S     HHP",
+    "P         P     S     HHP",
+    "P  PHHPP  P PSSSS SSS HHP",
+    "P  PPHH   B B   S     HPP",
+    "P     H P B B   P       S",
+    "PP    HH  B B       PS  S",
+    "PH PHHHHHPB B           S",
+    "PH PHHHPH B B     S     S",
+    "P  HHPPBH B B    S  SSSPP",
+    "P HHHHHBH B   P         P",
+    "P  HHHHBH B             P",
+    "PH HHHHHH BBB   P       P",
+    "P  HSSSPHP   B          P",
+    "P PPPPPPPP      P  P    P",
+    "P                    P  P",
+    "PPPPPPPPPPPPPPPPPPPPPPPLP", ])

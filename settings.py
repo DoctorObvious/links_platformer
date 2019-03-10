@@ -4,6 +4,7 @@ from pygame.locals import *
 FPS = 8
 BANDAID_TIME = 1.567  # seconds
 
+GRAVITY = 0.55
 
 #             R    G    B
 WHITE     = (255, 255, 255)

@@ -12,8 +12,8 @@ HALF_HEIGHT = int(WIN_HEIGHT / 2)
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT)
 DEPTH = 32
 FLAGS = 0
-CAMERA_SLACK = int(WIN_WIDTH / 5)
-
+CAMERA_SLACK_X = int(WIN_WIDTH / 5)
+CAMERA_SLACK_Y = int(WIN_HEIGHT / 5)
 
 def my_print(message):
     if False:
@@ -42,7 +42,8 @@ def main():
         player.last_hurt_time = current_time() - 10.0
         level = levels[level_number]
         level_width = len(level[0]) * 32
-        up = down = left = right = running = False
+        level_height = len(level) * 32
+        up = down = left = right = False
         bg = Surface((32,32))
         bg.convert()
         bg.fill(Color("#000032"))
@@ -124,9 +125,6 @@ def main():
                 if e.type == KEYDOWN and e.key == K_RIGHT:
                     right = True
                     player.running_level = True
-                if e.type == KEYDOWN and e.key == K_SPACE:
-                    running = True
-                    player.running_level = True
 
                 if e.type == KEYUP and e.key == K_UP:
                     up = False
@@ -146,7 +144,7 @@ def main():
 
             # update player, draw everything else
             if player.running_level:
-                player.update(up, down, left, right, running, platforms, level_width)
+                player.update(up, down, left, right, platforms, level_width, level_height)
 
             # camera movement
             for entity in entities:
@@ -189,7 +187,9 @@ def main():
             draw_small_message(["total time = {:3.1f}".format(player.all_previous_level_times),
                                 "press spacebar to continue..."])
             for e in pygame.event.get():
-                if e.type == KEYDOWN and e.key == K_SPACE:
+                if e.type == KEYDOWN and e.key == K_ESCAPE:
+                    raise SystemExit
+                elif e.type == KEYDOWN and e.key == K_SPACE:
                     time_to_exit = True
 
             pygame.display.update()
@@ -236,8 +236,7 @@ class Player(Entity):
         self.last_hurt_time = current_time() - 10.0
         self.image.fill((0, 225, 0))
 
-
-    def update(self, up, down, left, right, running, platforms, level_width):
+    def update(self, up, down, left, right, platforms, level_width, level_height):
         global cameraX, cameraY
         if up:
             # only jump if on the ground
@@ -258,8 +257,7 @@ class Player(Entity):
             if self.onSticky:
                 self.yvel = self.yvel + 0.65
             self.onSticky = False
-        if running:
-            self.xvel = 12
+
         if left:
             if self.xvel > 0.0:
                 if self.onGround:
@@ -339,18 +337,32 @@ class Player(Entity):
         # calculate new x camera
         old_cameraX = cameraX
 
-        if (cameraX + HALF_WIDTH) - (self.rect.centerx + cameraX) > CAMERA_SLACK:
-            cameraX = (self.rect.centerx + cameraX) + CAMERA_SLACK - HALF_WIDTH
-        elif (self.rect.centerx + cameraX) - (cameraX + HALF_WIDTH) > CAMERA_SLACK:
-            cameraX = (self.rect.centerx + cameraX) - CAMERA_SLACK - HALF_WIDTH
+        if (cameraX + HALF_WIDTH) - (self.rect.centerx + cameraX) > CAMERA_SLACK_X:
+            cameraX = (self.rect.centerx + cameraX) + CAMERA_SLACK_X - HALF_WIDTH
+        elif (self.rect.centerx + cameraX) - (cameraX + HALF_WIDTH) > CAMERA_SLACK_X:
+            cameraX = (self.rect.centerx + cameraX) - CAMERA_SLACK_X - HALF_WIDTH
 
         if cameraX < 0:
             cameraX = 0
         if cameraX > level_width - WIN_WIDTH:
             cameraX = level_width - WIN_WIDTH
 
+        # calculate new camera y
+        old_cameraY = cameraY
+
+        if (cameraY + HALF_HEIGHT) - (self.rect.centery + cameraY) > CAMERA_SLACK_Y:
+            cameraY = (self.rect.centery + cameraY) + CAMERA_SLACK_Y - HALF_HEIGHT
+        elif (self.rect.centery + cameraY) - (cameraY + HALF_HEIGHT) > CAMERA_SLACK_Y:
+            cameraY = (self.rect.centery + cameraY) - CAMERA_SLACK_Y - HALF_HEIGHT
+
+        if cameraY < 0:
+            cameraY = 0
+        if cameraY > level_height - WIN_HEIGHT:
+            cameraY = level_height - WIN_HEIGHT
+
         # update player, based on camera movement.
         self.rect.centerx = self.rect.centerx - (cameraX - old_cameraX)
+        self.rect.centery = self.rect.centery - (cameraY - old_cameraY)
 
         # making you turn red after hurt
         if elapsed_time(self.last_hurt_time) < BANDAID_TIME:
@@ -384,13 +396,17 @@ class Player(Entity):
                         my_print("collide bottom bounce off")
                     if yvel > 0:
                         self.rect.bottom = p.rect.top
-                        self.onGround = False
                         my_print('Bounce start yvel {}'.format(self.yvel))
-                        self.yvel = -max(0.0, self.yvel - 2*GRAVITY) * .8
+                        self.yvel = -max(0.0, self.yvel - 1.5 * GRAVITY) * 0.85
 
-                        if self.yvel > -2*GRAVITY:
+                        if self.yvel > -3*GRAVITY:
                             self.yvel = 0.0
+                            self.is_jumping=False
                             self.onGround = True
+                        else:
+                            self.is_jumping=True
+                            self.up_was_released = False
+                            self.onGround = False
 
                         my_print("collide top bounce off")
 
@@ -576,7 +592,7 @@ class PlatformBouncy1(Platform):
 
 class PlatformHurt(Platform):
     def __init__(self, x, y):
-        dip_height = 4
+        dip_height = 10
         Entity.__init__(self)
         self.image = Surface((32, 32 - dip_height))
         self.image.convert()

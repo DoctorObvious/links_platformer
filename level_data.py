@@ -187,7 +187,8 @@ levels.append([
     "PSS B                   P",
     "P                      EP",
     "PPPPDDDDDDDDDDDDDDDDPPPPP", ])
-level_messages.append(["STAY AWAY FROM THAT PIT!"])
+level_messages.append(["STAY AWAY FROM THAT PIT!",
+                       "p.s. you can start by falling to the right"])
 levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
     "P                       P",
@@ -203,34 +204,12 @@ levels.append([
     "P                       P",
     "P                       P",
     "P                       P",
-    "P           SSSSSSSSS   P",
-    "P          P            P",
+    "P           BBB         P",
+    "P                       P",
     "P         B             P",
     "P    B P                P",
     "P                      EP",
     "PPPPDDDDDDDDDDDDDDDDDPPPP", ])
-level_messages.append(["Can you go the wrong way on a moving carpet?"])
-levels.append([
-    "PPPPPPPPPPPPPPPPPPPPPPPPP",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                       P",
-    "P                      EP",
-    "PPPWWWWWWWWWMMMMMMMMPPPP", ])
 level_messages.append(["Up the staircase!"])
 levels.append([
     "PPPPPPPPPPPPPPPPSSLPPPPPP",
@@ -253,6 +232,70 @@ levels.append([
     "P                  P    P",
     "P                    P  P",
     "PPPPPPPPPPDDDPPPPPPPPPPPP", ])
+level_messages.append(["Ride the moving carpets!"])
+levels.append([
+    "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P                                   P",
+    "P                                   P",
+    "PPPMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM  P",
+    "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP  P",
+    "P                                   P",
+    "P                                   P",
+    "P  WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWP",
+    "P  PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P                                   P",
+    "P                                   P",
+    "PMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM  P",
+    "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP  P",
+    "P                                   P",
+    "P                                   P",
+    "P  WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWP",
+    "P  PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P                                   P",
+    "P                                   P",
+    "PMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM  P",
+    "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP  P",
+    "P                                   P",
+    "P                                   P",
+    "P  WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWP",
+    "P  PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P                                   P",
+    "P                                  EP",
+    "PMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMPPP", ])
+level_messages.append(["Can you go the wrong way on a moving carpet?"])
+levels.append([
+    "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P                                   P",
+    "P                                   P",
+    "P                                   P",
+    "P                                   P",
+    "P                                   P",
+    "P                                   P",
+    "PPPWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW  P",
+    "PPPPPPPPP       PPPPPPPPPPPPPPPPPP  P",
+    "P                                   P",
+    "P                                   P",
+    "P  MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMP",
+    "P  PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P                                   P",
+    "P                                   P",
+    "PWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW  P",
+    "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP  P",
+    "P                                   P",
+    "P                                   P",
+    "P  MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMP",
+    "P  PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P                                   P",
+    "P                                   P",
+    "PWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW  P",
+    "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP  P",
+    "P                                   P",
+    "P                                   P",
+    "P  MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMP",
+    "P  PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P                                   P",
+    "P                                  EP",
+    "PWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWPPP", ])
 level_messages.append(["Putting the blocks together."])
 levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
@@ -275,6 +318,8 @@ levels.append([
     "P                       P",
     "P                   P   P",
     "PPWWWWWWPPMMMMMMMPPPPPPPP", ])
+
+
 level_messages.append(["Sometimes, falling is inevitable"])
 levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",

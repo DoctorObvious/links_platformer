@@ -1,5 +1,5 @@
 from settings import *
-from level_data_dad import *
+from level_data import *
 from game_clock import *
 from pygame import *
 import time
@@ -308,23 +308,24 @@ class Player(Entity):
             self.yvel = 0
 
         # increment in x direction
-        if self.onGround:
-            self.rect.left += self.xvel + self.groundSpeed
-        else:
-            self.rect.left += self.xvel
+        # if self.onGround:
+        self.rect.left += self.xvel + self.groundSpeed
+        # print "Groundspeed: {:3.1f}".format(self.groundSpeed)
+        # else:
+        #     self.rect.left += self.xvel
 
         # reset things that are set in collision detection
         self.onSticky = False
-        self.groundSpeed = 0
+        #self.groundSpeed = 0
 
         # do x-axis collisions
-        self.collide(self.xvel, 0, platforms)
+        self.collide(self.xvel + self.groundSpeed, 0, platforms)
 
         # limit horizontal speed
-        if self.xvel < -8.0 + self.groundSpeed:
-            self.xvel = -8.0 + self.groundSpeed
-        if self.xvel > 8.0 + self.groundSpeed:
-            self.xvel = 8.0 + self.groundSpeed
+        if self.xvel < -8.0:
+            self.xvel = -8.0
+        if self.xvel > 8.0:
+            self.xvel = 8.0
 
         # increment/move in y direction
         self.rect.top = self.rect.top + self.yvel
@@ -394,15 +395,19 @@ class Player(Entity):
                         self.rect.right = p.rect.left
                         my_print("collide left")
                         self.xvel = -self.xvel
+                        self.groundSpeed = -self.groundSpeed
                     if xvel < 0:
                         self.rect.left = p.rect.right
                         my_print("collide right")
                         self.xvel = -self.xvel
+                        self.groundSpeed = -self.groundSpeed
                     if yvel < 0:
+                        self.groundSpeed = 0
                         self.rect.top = p.rect.bottom
                         self.yvel = -self.yvel
                         my_print("collide bottom bounce off")
                     if yvel > 0:
+                        self.groundSpeed = 0
                         self.rect.bottom = p.rect.top
                         my_print('Bounce start yvel {}'.format(self.yvel))
                         self.yvel = -max(0.0, self.yvel - 1.5 * GRAVITY) * 0.85
@@ -430,6 +435,7 @@ class Player(Entity):
                         pass
 
                 elif isinstance(p, PlatformHurt):
+                    self.groundSpeed = 0
                     if elapsed_time(self.last_hurt_time) > BANDAID_TIME:
                         self.lives -= 1
                         self.last_hurt_time = current_time()
@@ -453,6 +459,7 @@ class Player(Entity):
 
                 elif isinstance(p, PlatformPit):
                     self.lives -= 1
+                    self.groundSpeed = 0
                     if self.lives == 0:
                         pygame.event.post(pygame.event.Event(QUIT))
                     print "hit pit: lives left = {}".format(self.lives)
@@ -461,6 +468,7 @@ class Player(Entity):
 
                 elif isinstance(p, PlatformLife):
                     print "Healed: lives = {}".format(self.lives)
+                    self.groundSpeed = 0
                     self.last_hurt_time = current_time() - 10.0
                     if xvel > 0:
                         self.rect.right = p.rect.left
@@ -490,38 +498,55 @@ class Player(Entity):
 
                 elif isinstance(p, Platformmovingcarpetleft):
                     my_print("Left carpet: ")
-                    # if xvel > 0:
-                    #     self.rect.right = p.rect.left
-                    #     my_print "collide left"
-                    #     self.xvel = -self.xvel
-                    # if xvel < 0:
-                    #     self.rect.left = p.rect.right
-                    #     my_print "collide right"
-                    #     self.xvel = -self.xvel
-                    # if yvel < 0:
-                    #     self.rect.top = p.rect.bottom
-                    #     my_print "collide bottom"
+                    if xvel > 0:
+                        self.rect.right = p.rect.left
+                        self.xvel = 0
+                        my_print("collide right")
+                        self.groundSpeed = 0
+                    if xvel < 0:
+                        self.rect.left = p.rect.right
+                        self.xvel = 0
+                        my_print("collide left")
+                        self.groundSpeed = 0
+                    if yvel < 0:
+                        self.rect.top = p.rect.bottom
+                        self.yvel = 0
+                        my_print("collide bottom")
+                        self.groundSpeed = 0
                     if yvel > 0:
                         self.onGround = True
                         self.yvel = 0
                         self.rect.bottom = p.rect.top
-                        # self.xvel = self.xvel - 10
-                        self.groundSpeed = -10
+                        self.groundSpeed = -7
                         my_print("collide top")
 
                 elif isinstance(p, Platformmovingcarpetright):
                     my_print("Right carpet: ")
-
+                    if xvel > 0:
+                        self.rect.right = p.rect.left
+                        self.xvel = 0
+                        my_print("collide right")
+                        self.groundSpeed = 0
+                    if xvel < 0:
+                        self.rect.left = p.rect.right
+                        self.xvel = 0
+                        my_print("collide left")
+                        self.groundSpeed = 0
+                    if yvel < 0:
+                        self.rect.top = p.rect.bottom
+                        self.yvel = 0
+                        my_print("collide bottom")
+                        self.groundSpeed = 0
                     if yvel > 0:
                         self.onGround = True
                         self.yvel = 0
                         self.rect.bottom = p.rect.top
-                        # self.xvel = self.xvel + 10
-                        self.groundSpeed = 10
+                        self.groundSpeed = 7
                         my_print("collide top")
 
                 elif isinstance(p, PlatformSticky):
                     my_print("Sticky: ")
+                    self.groundSpeed = 0
                     self.onGround = True
                     self.onSticky = True
 
@@ -557,6 +582,7 @@ class Player(Entity):
 
                 else:  # Must be a normal platform
                     my_print("Platform: ")
+                    self.groundSpeed = 0
                     if xvel > 0:
                         self.rect.right = p.rect.left
                         self.xvel = 0

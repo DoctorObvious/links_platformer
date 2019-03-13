@@ -2,7 +2,6 @@
 level_messages = []
 levels = []
 
-
 level_messages.append(["Go for the pink portal block!"])
 levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
@@ -48,6 +47,33 @@ levels.append([
     "P PP                           PP      P",
     "P              P             PP        P",
     "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", ])
+
+level_messages.append(["Find the hidden passage!",
+                       "It's pure guesswork to get through,",
+                       "Or is it?"])
+levels.append([
+    "PPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P  PIIIPPPPPPPPPPPPPPPPPP",
+    "PPIIIPIPPPPPPPPPPPPPPPPPP",
+    "PPPPPPIIIIIIPPPPPPPPPPPPP",
+    "PPPPPPPPPPPIPPPPPPPPPPPPP",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                       P",
+    "P                      EP",
+    "PPPPPPPPPPPPPPPPPPPPPPPPP", ])
+
+
 level_messages.append(["Don't get hurt with the red lava blocks,",
                        "But if you do, heal with the teal water blocks."])
 levels.append([
@@ -90,7 +116,7 @@ levels.append([
     "P                       P      P       P",
     "P              PPPPP    P      P       P",
     "P                   P   P              P",
-    "P                       P              P",
+    "P                       I              P",
     "P                    PLLP              E",
     "PPPHHHPPPHHHPPPPPHHHPPPPPPPPPHHHPPPHHPPP", ])
 level_messages.append(["You can stick to all sides of sticky blocks",
@@ -129,9 +155,9 @@ levels.append([
     "P                       P              S",
     "P                       P PPPPPPPHPPPP S",
     "P                       P  P     P     S",
-    "P                       P  P           S",
-    "P                       P  P           S",
-    "P        SSSSSSSSSSSSSSSPE P           S",
+    "P                       I  P           S",
+    "P                       I  P           S",
+    "P        SSSSSSSSSSSSSPPPE P           S",
     "P                       SSSSSSS        S",
     "P                    PP                S",
     "P                      PP      SSSSSSSSS",

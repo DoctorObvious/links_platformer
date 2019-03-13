@@ -89,6 +89,10 @@ def main():
                     m = Platformmovingcarpetright(x, y)
                     platforms.append(m)
                     entities.add(m)
+                if col == "I":
+                    i = PlatformIllusion(x, y)
+                    platforms.append(i)
+                    entities.add(i)
                 if col == "W":
                     w = Platformmovingcarpetleft(x, y)
                     platforms.append(w)
@@ -261,7 +265,8 @@ class Player(Entity):
         if left:
             if self.xvel > 0.0:
                 if self.onGround:
-                    self.xvel = 0.0
+                    # self.xvel = 0.0
+                    self.xvel = self.xvel * 0.4  # extra help changing direction on ground
                 else:
                     self.xvel = self.xvel - 0.3  # extra help changing direction in air
 
@@ -273,7 +278,8 @@ class Player(Entity):
         if right:
             if self.xvel < 0.0:
                 if self.onGround:
-                    self.xvel = 0.0
+                    # self.xvel = 0.0
+                    self.xvel = self.xvel * 0.3  # extra help changing direction on ground
                 else:
                     self.xvel = self.xvel + 0.3  # extra help changing direction in air
 
@@ -293,7 +299,9 @@ class Player(Entity):
             if self.yvel > 90:
                 self.yvel = 90
         if self.onGround and not(left or right):
-            self.xvel = 0
+            self.xvel = self.xvel*.2
+            if abs(self.xvel) < 0.2:
+                self.xvel = 0.
 
         # only move up or down on stickies when you press up or down.
         if self.onSticky and not(up or down):
@@ -409,6 +417,17 @@ class Player(Entity):
                             self.onGround = False
 
                         my_print("collide top bounce off")
+
+                elif isinstance(p, PlatformIllusion):
+                    my_print("Illusion: ")
+                    if xvel > 0:
+                        pass
+                    if xvel < 0:
+                        pass
+                    if yvel < 0:
+                        pass
+                    if yvel > 0:
+                        pass
 
                 elif isinstance(p, PlatformHurt):
                     if elapsed_time(self.last_hurt_time) > BANDAID_TIME:
@@ -575,6 +594,17 @@ class ExitBlock(Platform):
     def __init__(self, x, y):
         Platform.__init__(self, x, y)
         self.image.fill(Color("#DD33FF"))
+        self.x = x
+        self.y = y
+
+
+class PlatformIllusion(Platform):
+    def __init__(self, x, y):
+        Entity.__init__(self)
+        self.image = Surface((32, 32))
+        self.image.convert()
+        self.image.fill(Color("#898989"))
+        self.rect = Rect(x, y, 32, 32)
         self.x = x
         self.y = y
 

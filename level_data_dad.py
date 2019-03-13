@@ -1,8 +1,6 @@
 level_messages = []
 levels = []
 
-# Sticky climb-n-drop
-
 level_messages.append(["Go for the pink portal block!",
                        "Press up to jump."])
 levels.append([
@@ -99,6 +97,32 @@ levels.append([
     "P             P         P           EP",
     "PBBPPPPPHHHHHPPPHHHHHHHPPPHHHHHHHHPPPP", ])
 
+# Sticky climb-n-drop
+level_messages.append(["Climb on the sticky blocks!",
+                       "Push away to let go."])
+levels.append([
+    "PPPPPPPPPPPIIIPPPPPPPPPPPPPPPPPPPPPPPPPPPPPIIIIIPPP",
+    "P  P                             B        B    E  SDDDDDDDDDDDDDDDDDDDDD",
+    "P  P        B                   B        B        S",
+    "P  S       B B          B           B   B         S",
+    "P  S      L   B         B          B   B          S",
+    "P  S          B        PB         B               S",
+    "P  S         B        PPB       BBBBBB            P",
+    "P  S        P       PPPPP            BBBBBBBBBBBBBP",
+    "P  S        P                 P                   P",
+    "P  S        B              P     P     P     P    P",
+    "P  S                PPPPPPPPPBBBPPPPPPPPPPPPPPPP  P",
+    "P  S                    B     B     B      B      S",
+    "P  S                                              S",
+    "P  S                       B     B      B         S",
+    "P  S                PPPPPPPPPPPPPPPPPPPPPPPPPPPP  S",
+    "P  S                                              S",
+    "P                                                 S",
+    "P                                                 P",
+    "P                          P         P            P",
+    "PBBPPPPPBBBBBPPPPPPPPHHHHHPPPHHHHHHHPPPHHHHHHHHPPPP", ])
+
+
 level_messages.append(["Check out the sticky blocks!",
                        "Push down to let go."])
 levels.append([
@@ -124,6 +148,7 @@ levels.append([
     "P                                       P",
     "P             P         P               P",
     "PPPPPPPPHHHHHPPPDDDDDDDPPPHHHHHHHHHPPPPPP", ])
+
 
 level_messages.append(["A sticky situation..."])
 levels.append([

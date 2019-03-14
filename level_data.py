@@ -2,42 +2,6 @@
 level_messages = []
 levels = []
 
-
-level_messages.append(["Moving Carpets!"])
-levels.append([
-    "PPPPPPPPPPPPPPPPPPPPPPPPP",
-    "P P                     P",
-    "P P                     P",
-    "P P                     P",
-    "P P                     P",
-    "P P                     P",
-    "P P     E               P",
-    "P P                     P",
-    "P P                     P",
-    "P P                     P",
-    "P P               WWWWWWP",
-    "P S              P      P",
-    "P S                     P",
-    "P S  MMMMMMMMMMM        P",
-    "P S                     P",
-    "P S                     P",
-    "P P                     P",
-    "P PMMMMMMMMMM           P",
-    "P P                     P",
-    "P P                     P",
-    "P P               WWWWWWP",
-    "P P        P            P",
-    "P PMMMMMMMMM            P",
-    "P P                     P",
-    "P P             WWWWWWWWP",
-    "P P        P            P",
-    "P P        P            P",
-    "P PMMMMMMMMM            P",
-    "P P          W          P",
-    "P                       P",
-    "PPPPMMMMMMMMMMMPPPPPPPPPP", ])
-
-
 level_messages.append(["Go for the pink portal block!"])
 levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
@@ -60,6 +24,8 @@ levels.append([
     "P                       P",
     "P                      EP",
     "PPPPDDDPPDDDDPPPPPPPPPPPP", ])
+
+
 level_messages.append(["The act of jumping",
                        "Here's a test."])
 levels.append([
@@ -83,6 +49,7 @@ levels.append([
     "P PP                           PP      P",
     "P              P             PP        P",
     "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", ])
+
 
 level_messages.append(["Find the hidden passage!",
                        "It's pure guesswork to get through,",
@@ -133,6 +100,8 @@ levels.append([
     "P                 P     P",
     "P                      EP",
     "PPPPHHHPPHHHHPPHHHHHHHHPP", ])
+
+
 level_messages.append(["More practice avoiding lava"])
 levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
@@ -155,6 +124,8 @@ levels.append([
     "P                       I              P",
     "P                    PLLP              E",
     "PPPHHHPPPHHHPPPPPHHHPPPPPPPPPHHHPPPHHPPP", ])
+
+
 level_messages.append(["You can stick to all sides of sticky blocks",
                        "Try it by jumping onto them."])
 levels.append([
@@ -178,6 +149,8 @@ levels.append([
     "S  SSSSSSSSS  PS       SP",
     "S                      SP",
     "PPPPHHHHHHHHSSSSSSSSSSSSP", ])
+
+
 level_messages.append(["Here is a fun loop-de-loop!"])
 levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
@@ -200,6 +173,8 @@ levels.append([
     "P  P              P     P               L",
     "P                       P              P",
     "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", ])
+
+
 level_messages.append(["You can bounce on the bouncy blocks for a while,",
                        "But don't fall into the pit!"])
 levels.append([
@@ -223,6 +198,8 @@ levels.append([
     "PSS B                   P",
     "P                      EP",
     "PPPPDDDDDDDDDDDDDDDDPPPPP", ])
+
+
 level_messages.append(["STAY AWAY FROM THAT PIT!",
                        "p.s. you can start by falling to the right"])
 levels.append([
@@ -246,6 +223,8 @@ levels.append([
     "P    B P                P",
     "P                      EP",
     "PPPPDDDDDDDDDDDDDDDDDPPPP", ])
+
+
 level_messages.append(["Up the staircase!"])
 levels.append([
     "PPPPPPPPPPPPPPPPSSLPPPPPP",
@@ -268,6 +247,8 @@ levels.append([
     "P                  P    P",
     "P                    P  P",
     "PPPPPPPPPPDDDPPPPPPPPPPPP", ])
+
+
 level_messages.append(["Ride the moving carpets!"])
 levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
@@ -298,6 +279,8 @@ levels.append([
     "P                                   P",
     "P                                  EP",
     "PMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMPPP", ])
+
+
 level_messages.append(["Can you go the wrong way on a moving carpet?"])
 levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
@@ -332,6 +315,69 @@ levels.append([
     "P                                   P",
     "P                                  EP",
     "PWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWPPP", ])
+
+
+level_messages.append(["Which house in the village holds the exit block?",
+                       "The entrances to the houses are hidden",
+                       "Watch out!"])
+levels.append([
+    "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P                                              P",
+    "P                               II             P",
+    "P                              P  P            P",
+    "P                              P  P            P",
+    "P                            PPP  PPP          P",
+    "P                            PPPIIPPP          P",
+    "P                            P     EP       P  P",
+    "P                            I     SP          P",
+    "P                            I     SP P        P",
+    "P                            P     SP          P",
+    "P                            P MMMMSPP      P  P",
+    "P           P P P P  P       P      P          P",
+    "P           PPPPPPPPPP       PL     P       P  P",
+    "P           P        P       P      P  P       P",
+    "P    PP     I        I       P      P  PP      P",
+    "P   I  P    I        I       P      P         PP",
+    "P  P    P   P        P       P      P          P",
+    "P  P    I   P        P       I      I          P",
+    "PPPPHHHPPPPPPLPPPPPPPPPPPPPPPPHHHHHPPPPPPPPPPPPP", ])
+
+
+level_messages.append(["Moving carpet tower!"])
+levels.append([
+    "PPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P P                     P",
+    "P P                     P",
+    "P P                     P",
+    "P P                     P",
+    "P P                     P",
+    "P P     E               P",
+    "P P                     P",
+    "P P                     P",
+    "P P                     P",
+    "P P               WWWWWWP",
+    "P S              P      P",
+    "P S                     P",
+    "P S  MMMMMMMMMMM        P",
+    "P S                     P",
+    "P S                     P",
+    "P P                     P",
+    "P PMMMMMMMMMM           P",
+    "P P                     P",
+    "P P                     P",
+    "P P               WWWWWWP",
+    "P P        P            P",
+    "P PMMMMMMMMM            P",
+    "P P                     P",
+    "P P             WWWWWWWWP",
+    "P P        P            P",
+    "P P        P            P",
+    "P PMMMMMMMMM            P",
+    "P P          W          P",
+    "P                       P",
+    "PPPPMMMMMMMMMMMPPPPPPPPPP", ])
+
+
 level_messages.append(["Putting the blocks together."])
 levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
@@ -378,6 +424,8 @@ levels.append([
     "P                       P",
     "P                   P   P",
     "PPDDDPPDDDDDDDPPDPPPPPPPP", ])
+
+
 level_messages.append(["Now would be a bad time to fall :("])
 levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
@@ -400,6 +448,8 @@ levels.append([
     "P                       P",
     "P                       P",
     "PDDDDDDDDDDDDDDDDDDDDDDDP", ])
+
+
 level_messages.append(["Practice with stickies!"])
 levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
@@ -422,6 +472,8 @@ levels.append([
     "PH                   L  P",
     "PHHHHH                 EP",
     "PPPPPPDDDDDDDDPPPPPPPPPPP", ])
+
+
 level_messages.append(["That's a LOT of LAVA!!!"])
 levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
@@ -444,6 +496,8 @@ levels.append([
     "P                       P",
     "P                       P",
     "PDDDDDDDDDDDDDDDDDDDDDDDP", ])
+
+
 level_messages.append(["Oh, No! The lava spilled!",
                        "It is possible to take no damage. Try it!",
                        "It's a REAL challenge!"])

@@ -2,6 +2,42 @@
 level_messages = []
 levels = []
 
+
+level_messages.append(["Moving Carpets!"])
+levels.append([
+    "PPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P P                     P",
+    "P P                     P",
+    "P P                     P",
+    "P P                     P",
+    "P P                     P",
+    "P P     E               P",
+    "P P                     P",
+    "P P                     P",
+    "P P                     P",
+    "P P               WWWWWWP",
+    "P S              P      P",
+    "P S                     P",
+    "P S  MMMMMMMMMMM        P",
+    "P S                     P",
+    "P S                     P",
+    "P P                     P",
+    "P PMMMMMMMMMM           P",
+    "P P                     P",
+    "P P                     P",
+    "P P               WWWWWWP",
+    "P P        P            P",
+    "P PMMMMMMMMM            P",
+    "P P                     P",
+    "P P             WWWWWWWWP",
+    "P P        P            P",
+    "P P        P            P",
+    "P PMMMMMMMMM            P",
+    "P P          W          P",
+    "P                       P",
+    "PPPPMMMMMMMMMMMPPPPPPPPPP", ])
+
+
 level_messages.append(["Go for the pink portal block!"])
 levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",

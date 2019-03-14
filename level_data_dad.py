@@ -1,6 +1,33 @@
 level_messages = []
 levels = []
 
+
+level_messages.append(["Moving Sidewalks!",
+                       "... and more."])
+levels.append([
+    "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P                                    P",
+    "P                                    P",
+    "P                                    P",
+    "P                                    P",
+    "P      P                      P      P",
+    "PPPPPPPMMMMMMMMMMMMMMMMMMMMMMMM      P",
+    "P                                    P",
+    "P       WWWWWWWWWWWWWWWWWWWWWWWW     P",
+    "P  P      P      P           PP      P",
+    "P  P      P      P           P       P",
+    "P  PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+    "P                                    P",
+    "P                                    P",
+    "P               PPPPPPPPPPPPPPPPPPPPPP",
+    "P            P         P       P     P",
+    "P    PPP     P                       P",
+    "P    PP      P                       P",
+    "P    PP      P       P       P      EP",
+    "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", ])
+
+
+
 level_messages.append(["Go for the pink portal block!",
                        "Press up to jump."])
 levels.append([
@@ -132,12 +159,12 @@ levels.append([
     "P                                   L   P",
     "P                                       P",
     "PPPPP                                   P",
-    "P   HHHHHHHHHPPPPPHHHHHHHHHHHSSSSSSSSS  P",
+    "P   PHHHHHHHHPPPPPHHHHHHHHHHHSSSSSSSSS  P",
     "P                                    P  P",
     "P                                    H  P",
-    "S                                    H  S",
-    "S             P     P     P     P    P  S",
-    "S       PPPPPPPPPPPPPPPPPPPPPPPPPPP  P  S",
+    "S   PP                               H  S",
+    "S   PP        P     P     P     P    P  S",
+    "S   PP  PPPPPPPPPPPPPPPPPPPPPPPPPPP  P  S",
     "S   PP  P  H     H     H      H      S  H",
     "S   SP  P                            S  H",
     "P   SP  P     P     P      P         S  S",

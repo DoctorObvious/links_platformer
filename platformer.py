@@ -1,5 +1,5 @@
 from settings import *
-from level_data import *
+from level_data_dad import *
 from game_clock import *
 from pygame import *
 import time
@@ -696,23 +696,38 @@ class PlatformSticky(Platform):
 class Platformmovingcarpetleft(Platform):
     def __init__(self, x, y):
         Entity.__init__(self)
+        self.color = LIGHTBLUE
         self.image = Surface((32, 32))
         self.image.convert()
-        self.image.fill(Color(128, 0, 0))
+        self.image.fill(Color(*self.color))
         self.rect = Rect(x, y, 32, 32)
         self.x = x
         self.y = y
+
+    def update(self, camera_x, camera_y):
+        self.rect.x = self.x - camera_x
+        self.rect.y = self.y - camera_y
+        #CHANGE pulse time to change width of color band. Change pulse start time to change speed of transition.
+        use_color = get_pulse_color([self.color, LIGHTGRAY], pulse_time=2.0, pulse_start_time=-self.x / 256.0)
+        self.image.fill(Color(*use_color))
 
 
 class Platformmovingcarpetright(Platform):
     def __init__(self, x, y):
         Entity.__init__(self)
+        self.color = (255, 0, 255)
         self.image = Surface((32, 32))
         self.image.convert()
-        self.image.fill(Color(255, 0, 255))
+        self.image.fill(Color(*self.color))
         self.rect = Rect(x, y, 32, 32)
         self.x = x
         self.y = y
+
+    def update(self, camera_x, camera_y):
+        self.rect.x = self.x - camera_x
+        self.rect.y = self.y - camera_y
+        use_color = get_pulse_color([self.color, LIGHTGRAY], pulse_time=2.0, pulse_start_time=self.x / 256.0)
+        self.image.fill(Color(*use_color))
 
 
 ########################

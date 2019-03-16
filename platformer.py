@@ -1,5 +1,5 @@
 from settings import *
-from level_data_cora import *
+from level_data import *
 from game_clock import *
 from pygame import *
 import time
@@ -70,6 +70,10 @@ def main():
                     platforms.append(d)
                     entities.add(d)
                 if col == "H":
+                    h = PlatformHurtFull(x, y)
+                    platforms.append(h)
+                    entities.add(h)
+                if col == "h":
                     h = PlatformHurt(x, y)
                     platforms.append(h)
                     entities.add(h)
@@ -457,6 +461,30 @@ class Player(Entity):
                         self.yvel = -6.0
                         my_print("collide top")
 
+
+                elif isinstance(p, PlatformHurtFull):
+                    self.groundSpeed = 0
+                    if elapsed_time(self.last_hurt_time) > BANDAID_TIME:
+                        self.lives -= 1
+                        self.last_hurt_time = current_time()
+                        if self.lives == 0:
+                            pygame.event.post(pygame.event.Event(QUIT))
+                        print "Hurt: lives left = {}".format(self.lives)
+                    if xvel > 0:
+                        self.rect.right = p.rect.left
+                        my_print("collide left")
+                    if xvel < 0:
+                        self.rect.left = p.rect.right
+                        my_print("collide right")
+                    if yvel < 0:
+                        self.rect.top = p.rect.bottom
+                        my_print("collide bottom")
+                    if yvel > 0:
+                        self.rect.bottom = p.rect.top
+                        self.onGround = False
+                        self.yvel = -6.0
+                        my_print("collide top")
+
                 elif isinstance(p, PlatformPit):
                     self.lives -= 1
                     self.groundSpeed = 0
@@ -656,6 +684,17 @@ class PlatformHurt(Platform):
         self.rect = Rect(x, y + dip_height, 32, 32 - dip_height)
         self.x = x
         self.y = y + dip_height
+
+
+class PlatformHurtFull(Platform):
+    def __init__(self, x, y):
+        Entity.__init__(self)
+        self.image = Surface((32, 32))
+        self.image.convert()
+        self.image.fill(Color("#FF0000"))
+        self.rect = Rect(x, y, 32, 32)
+        self.x = x
+        self.y = y
 
 
 class PlatformPit(Platform):

@@ -38,8 +38,8 @@ levels.append([
     "PPPPP  PPPPPPP  PPPPP  PPPPP  PPPPP  PPPPP  P       P",
     "PPPPP  PPPPPPP  PPPPP  PPPPP  PPPPP  PPPPP  P       P",
     "PPPPP  PPPPPPP  PPPPP  PPPPP  PPPPP  PPPPP  P  PPPPPP",
-    "PPPPP  PPPPPPP  PPPPP  PPPPP   PPPP  PPPPP  P       P",
-    "PPPPP  PPPPPPP  PPPPP  PPPPP          PPPP  PPPPP   P",
+    "PPPPP  PPPPPPP  PPPPP  PPPPP  IPPPP  PPPPP  P       P",
+    "PPPPP  PPPPPPP  PPPPP  PPPPP         IPPPP  PPPPP   P",
     "PPPPP  PPPPPPP  PPPPP  PPPPP  PPPPP          PPPP   P",
     "PPPPP  PPPPPPP  PPPPP  PPPPP  PPPPP  PPPPP          P",
     "PPPPP  PPPPPPP  PPPPP  PPPPP  PPPPP  PPPPP  P  PPPPPP",
@@ -58,17 +58,17 @@ levels.append([
     "P                                    P",
     "P                                    P",
     "P                                    P",
-    "P      H     H       H        H      P",
+    "P      h     h       h        H      P",
     "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP      P",
     "P                                    P",
     "P                                    P",
-    "P  H      H      H           PH      P",
+    "P  H      H      h           Ph      P",
     "P  P      P      P           P       P",
     "P  PPPPPPPPPPPPPPPPPPPPPPPPPPPPLLPPPPP",
     "P                                    P",
     "P                                    P",
-    "P               PPPPPPPPPPPPPPPPHHH  P",
-    "P            H         P       P     P",
+    "P               PPPPPPPPPPPPPPPPhhh  P",
+    "P            h         P       P     P",
     "P     PP     PP                      P",
     "P     P      P                       P",
     "P     P      P       P       P      EP",
@@ -96,7 +96,7 @@ levels.append([
     "P                                    P",
     "P                                    P",
     "P             P         P           EP",
-    "PBBPPPPPHHHHHPPPHHHHHHHPPPHHHHHHHHPPPP", ])
+    "PBBPPPPPhhhhhPPPhhhhhhhPPPhhhhhhhhPPPP", ])
 
 # Sticky climb-n-drop
 level_messages.append(["Climb on the sticky blocks!",
@@ -121,7 +121,7 @@ levels.append([
     "P                                                 S",
     "P                                                 P",
     "P                          P         P            P",
-    "PBBPPPPPBBBBBPPPPPPPPHHHHHPPPHHHHHHHPPPHHHHHHHHPPPP", ])
+    "PBBPPPPPBBBBBPPPPPPPPhhhhhPPPhhhhhhhPPPhhhhhhhhPPPP", ])
 
 
 level_messages.append(["Check out the sticky blocks!",
@@ -133,7 +133,7 @@ levels.append([
     "P                                   L   P",
     "P                                       P",
     "PPPPP                                   P",
-    "P   PHHHHHHHHPPPPPHHHHHHHHHHHSSSSSSSSS  P",
+    "P   PhhhhhhhhPPPPPhhhhhhhhhhhSSSSSSSSS  P",
     "P                                    P  P",
     "P                                    H  P",
     "S   PP                               H  S",
@@ -148,8 +148,7 @@ levels.append([
     "S                                       P",
     "P                                       P",
     "P             P         P               P",
-    "PPPPPPPPHHHHHPPPDDDDDDDPPPHHHHHHHHHPPPPPP", ])
-
+    "PPPPPPPPhhhhhPPPDDDDDDDPPPhhhhhhhhhPPPPPP", ])
 
 
 level_messages.append(["Moving Sidewalks!",
@@ -189,7 +188,7 @@ levels.append([
     "P          P       P      P",
     "P          P             EP",
     "PPPPP   PPPPPPPS       PPPP",
-    "P             PS       SPPP",
+    "P             PS       PPPP",
     "P PS       SP PS       SPPP",
     "P PS       SP PS       SPPP",
     "P PS       SP PS       SPPP",

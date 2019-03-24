@@ -3,7 +3,7 @@ levels = []
 
 # P = platform, M = Right carpet, W = left carpet, e = exit, s = sticky, b = bouncy, l = life, D = pit, h = hurt.
 
-level_messages.append(["Pink block!!!"])
+level_messages.append(["Rainbow block!!!"])
 levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
     "P                       P",

@@ -15,6 +15,7 @@ FLAGS = 0
 CAMERA_SLACK_X = int(WIN_WIDTH / 5)
 CAMERA_SLACK_Y = int(WIN_HEIGHT / 5)
 
+
 def my_print(message):
     if False:
         print message
@@ -22,6 +23,8 @@ def my_print(message):
 
 def main():
     global cameraX, cameraY
+    global message_life, message_life2
+    global screen, timer
     global DISPLAYSURF, BASICFONT
     pygame.init()
     screen = pygame.display.set_mode(DISPLAY, FLAGS, DEPTH)
@@ -37,6 +40,7 @@ def main():
     num_levels = len(levels)
 
     for level_number in range(num_levels):
+        global bg, message_prompt, message_small, message_die
         player.finished_level = False
         player.reset_position(32, 32)
         player.last_hurt_time = current_time() - 10.0
@@ -51,7 +55,9 @@ def main():
         platforms = []
         start_message = 'Level: {}'.format(level_number + 1)
         info_message = level_messages[level_number]
-        message_prompt = 'Press any key to start'
+        message_prompt = 'Press any arrow to continue'
+        message_small = 'Press space to continue'
+        message_die = 'Game Over!'
 
         x = y = 0
         cameraX = cameraY = 0
@@ -166,10 +172,11 @@ def main():
             if not player.running_level:
                 draw_big_message(start_message, color=BLUE, pulse_time=1.0)
                 draw_small_message(info_message, color=BLUE, pulse_time=1.0)
-                draw_prompt_message(message_prompt, color=BLACK, pulse_time=1.5)
+                draw_prompt_message(message_prompt, color=BLUE, pulse_time=1.5)
                 level_start_time = current_time()
 
             message_time = 'Time = {:3.1f}'.format(elapsed_time(level_start_time))
+            message_life2 = 'lives = {}'.format(player.lives - 1)
             message_life = 'lives = {}'.format(player.lives)
             draw_life_message(message_life, color=BLUE, pulse_time=1.5)
             draw_time_message(message_time, color=RED, pulse_time=1.5)
@@ -181,29 +188,17 @@ def main():
         player.all_previous_level_times = player.all_previous_level_times + this_level_time
         print "Finished level {}, total playing time = {:3.1f}".format(level_number + 1, player.all_previous_level_times)
 
-        time_to_exit = False
-        while not time_to_exit:
-            timer.tick(60)
-            # draw background
-            for y in range(32):
-                for x in range(32):
-                    screen.blit(bg, (x * 32, y * 32))
-
-            # entities.draw(screen)
-            draw_life_message(message_life, color=BLUE, pulse_time=1.5)
-            draw_big_message("Finished level: time = {:3.1f}".format(this_level_time))
-            draw_small_message(["total time = {:3.1f}".format(player.all_previous_level_times),
-                                "press spacebar to continue..."])
-            for e in pygame.event.get():
-                if e.type == KEYDOWN and e.key == K_ESCAPE:
-                    raise SystemExit
-                elif e.type == KEYDOWN and e.key == K_SPACE:
-                    time_to_exit = True
-
-            pygame.display.update()
+        message_big = "Finished level: time = {:3.1f}".format(this_level_time)
+        message_small = ["total time = {:3.1f}".format(player.all_previous_level_times),
+                         "press spacebar to continue..."]
+        end_message(message_life, message_big, message_small, timer, screen, bg)
 
         if level_number + 1 == num_levels:
             print "win!!!!!!"
+            message_big = "You WIN!!!!!!!"
+            message_small = ["total time = {:3.1f}".format(player.all_previous_level_times),
+                             "press spacebar to end!"]
+            end_message(message_life, message_big, message_small, timer, screen, bg)
             raise SystemExit
 
 
@@ -444,6 +439,7 @@ class Player(Entity):
                         self.lives -= 1
                         self.last_hurt_time = current_time()
                         if self.lives == 0:
+                            die_message(message_die, screen, timer, bg)
                             pygame.event.post(pygame.event.Event(QUIT))
                         print "Hurt: lives left = {}".format(self.lives)
                     if xvel > 0:
@@ -468,6 +464,7 @@ class Player(Entity):
                         self.lives -= 1
                         self.last_hurt_time = current_time()
                         if self.lives == 0:
+                            die_message(message_die, screen, timer, bg)
                             pygame.event.post(pygame.event.Event(QUIT))
                         print "Hurt: lives left = {}".format(self.lives)
                     if xvel > 0:
@@ -486,13 +483,18 @@ class Player(Entity):
                         my_print("collide top")
 
                 elif isinstance(p, PlatformPit):
+                    message_pit = "Ouch, you hit a pit"
                     self.lives -= 1
                     self.groundSpeed = 0
-                    if self.lives == 0:
-                        pygame.event.post(pygame.event.Event(QUIT))
-                    print "hit pit: lives left = {}".format(self.lives)
                     self.reset_position(32, 32)
                     self.running_level = False
+                    pit_message(message_pit, screen, timer, bg)
+                    if self.lives == 0:
+                        die_message(message_die, screen, timer, bg)
+                        pygame.event.post(pygame.event.Event(QUIT))
+                    print "hit pit: lives left = {}".format(self.lives)
+
+                    pygame.display.update()
 
                 elif isinstance(p, PlatformLife):
                     print "Healed: lives = {}".format(self.lives)
@@ -647,9 +649,18 @@ class Platform(Entity):
 class ExitBlock(Platform):
     def __init__(self, x, y):
         Platform.__init__(self, x, y)
+        self.color = Color("#DD33FF")
+        self.other_colors = [RED, YELLOW, LIMEGREEN, BLUE]
         self.image.fill(Color("#DD33FF"))
         self.x = x
         self.y = y
+
+    def update(self, camera_x, camera_y):
+        self.rect.x = self.x - camera_x
+        self.rect.y = self.y - camera_y
+        # CHANGE pulse time to change width of color band. Change pulse start time to change speed of transition.
+        use_color = get_pulse_color([self.color] + self.other_colors, pulse_time=0.5, pulse_start_time=-self.x / 64)
+        self.image.fill(Color(*use_color))
 
 
 class PlatformIllusion(Platform):
@@ -678,12 +689,21 @@ class PlatformHurt(Platform):
     def __init__(self, x, y):
         dip_height = 10
         Entity.__init__(self)
+        self.color = RED
+        self.other_color = DARKERRED
         self.image = Surface((32, 32 - dip_height))
         self.image.convert()
-        self.image.fill(Color("#FF0000"))
+        self.image.fill(Color(*self.color))
         self.rect = Rect(x, y + dip_height, 32, 32 - dip_height)
         self.x = x
         self.y = y + dip_height
+
+    def update(self, camera_x, camera_y):
+        self.rect.x = self.x - camera_x
+        self.rect.y = self.y - camera_y
+        # CHANGE pulse time to change width of color band. Change pulse start time to change speed of transition.
+        use_color = get_pulse_color([self.color, self.other_color], pulse_time=2.0)
+        self.image.fill(Color(*use_color))
 
 
 class PlatformHurtFull(Platform):
@@ -712,13 +732,21 @@ class PlatformPit(Platform):
 class PlatformLife(Platform):
     def __init__(self, x, y):
         Entity.__init__(self)
+        self.color = LIFECOLOR
+        self.other_color = BYELLOW
         self.image = Surface((32, 32))
         self.image.convert()
-        self.image.fill(Color(0, 128, 128, 25))
+        self.image.fill(Color(*self.color))
         self.rect = Rect(x, y, 32, 32)
         self.x = x
         self.y = y
 
+    def update(self, camera_x, camera_y):
+        self.rect.x = self.x - camera_x
+        self.rect.y = self.y - camera_y
+        # CHANGE pulse time to change width of color band. Change pulse start time to change speed of transition.
+        use_color = get_pulse_color([self.color, self.other_color], pulse_time=2.0)
+        self.image.fill(Color(*use_color))
 
 class PlatformSticky(Platform):
     def __init__(self, x, y):
@@ -773,6 +801,29 @@ class Platformmovingcarpetright(Platform):
 # Helper Functions
 ########################
 
+
+def end_message(message_life, message_big, message_small, timer, screen, bg):
+    time_to_exit = False
+    while not time_to_exit:
+        timer.tick(60)
+        # draw background
+        for y in range(32):
+            for x in range(32):
+                screen.blit(bg, (x * 32, y * 32))
+
+        # entities.draw(screen)
+        draw_life_message(message_life, color=BLUE, pulse_time=1.5)
+        draw_big_message(message_big)
+        draw_small_message(message_small)
+        for e in pygame.event.get():
+            if e.type == KEYDOWN and e.key == K_ESCAPE:
+                raise SystemExit
+            elif e.type == KEYDOWN and e.key == K_SPACE:
+                time_to_exit = True
+
+        pygame.display.update()
+
+
 def draw_big_message(message, color=BLUE, pulse_time=8.0):
     use_color = get_pulse_color([color, GREEN], pulse_time=pulse_time)
 
@@ -795,6 +846,28 @@ def draw_life_message(message_life, color=RED, pulse_time=8.0):
         DISPLAYSURF.blit(surf, rect)
 
 
+def pit_message(message_pit, screen, timer, bg):
+    message_small = ["Press spacebar to continue"]
+    time_to_exit = False
+    while not time_to_exit:
+        timer.tick(60)
+        # draw background
+        for y in range(32):
+            for x in range(32):
+                screen.blit(bg, (x * 32, y * 32))
+
+        draw_life_message(message_life2, color=RED, pulse_time=1.0)
+        draw_small_message(message_small, color=BLUE, pulse_time=1.0)
+        draw_pit_message(message_pit)
+        for e in pygame.event.get():
+            if e.type == KEYDOWN and e.key == K_ESCAPE:
+                raise SystemExit
+            elif e.type == KEYDOWN and e.key == K_SPACE:
+                time_to_exit = True
+
+        pygame.display.update()
+
+
 def draw_time_message(message_time, color=RED, pulse_time=8.0):
     use_color = get_pulse_color([color, DARKRED], pulse_time=pulse_time)
 
@@ -806,7 +879,54 @@ def draw_time_message(message_time, color=RED, pulse_time=8.0):
         DISPLAYSURF.blit(surf, rect)
 
 
-def draw_prompt_message(message_prompt, color=BLACK, pulse_time=8.0):
+def draw_pit_message(message_time, color=DARKERRED, pulse_time=8.0):
+    use_color = get_pulse_color([color, DARKGREEN], pulse_time=pulse_time)
+
+    if message_time is not None:
+        font = pygame.font.Font('freesansbold.ttf', 50)
+        surf = font.render(message_time, True, use_color)
+        rect = surf.get_rect()
+        rect.midtop = (HALF_WIDTH, HALF_HEIGHT - 25)
+        DISPLAYSURF.blit(surf, rect)
+
+
+def draw_die_message(message_die, color=DARKERRED, pulse_time=8.0):
+    use_color = get_pulse_color([color, DARKGREEN], pulse_time=pulse_time)
+
+    if message_die is not None:
+        font = pygame.font.Font('freesansbold.ttf', 50)
+        surf = font.render(message_die, True, use_color)
+        rect = surf.get_rect()
+        rect.midtop = (HALF_WIDTH, HALF_HEIGHT - 25)
+        DISPLAYSURF.blit(surf, rect)
+
+
+def die_message(message_die, screen, timer, bg):
+    message_small = ["Uh, Oh",
+                     "You ran out of lives",
+                     "Press spacebar to end game"]
+    time_to_exit = False
+    while not time_to_exit:
+        timer.tick(60)
+        # draw background
+        for y in range(32):
+            for x in range(32):
+                screen.blit(bg, (x * 32, y * 32))
+
+        draw_life_message(message_life2, color=RED, pulse_time=1.0)
+        draw_small_message(message_small, color=BLUE, pulse_time=1.0)
+        draw_die_message(message_die, color=RED, pulse_time=1.0)
+        for e in pygame.event.get():
+            if e.type == KEYDOWN and e.key == K_ESCAPE:
+                raise SystemExit
+            elif e.type == KEYDOWN and e.key == K_SPACE:
+                time_to_exit = True
+
+        pygame.display.update()
+
+
+
+def draw_prompt_message(message_prompt, color=BLUE, pulse_time=8.0):
     use_color = get_pulse_color([color, DARKGREEN], pulse_time=pulse_time)
 
     if message_prompt is not None:

@@ -1,7 +1,7 @@
 level_messages = []
 levels = []
 
-level_messages.append(["Go for the pink portal block!"])
+level_messages.append(["Go for the rainbow portal block!"])
 levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
     "P                       P",
@@ -26,7 +26,8 @@ levels.append([
 
 
 level_messages.append(["The act of jumping",
-                       "Here's a test."])
+                       "Here's a test.",
+                       "Up is hard, down is easy"])
 levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
     "P                                      P",
@@ -51,7 +52,7 @@ levels.append([
 
 
 level_messages.append(["Don't get hurt with the red lava blocks,",
-                       "But if you do, heal with the teal water blocks."])
+                       "But if you do, heal with the GOLDEN life blocks."])
 levels.append([
     "PPPPPPPPPPPPPPPPPPPPPPPPP",
     "P                       P",

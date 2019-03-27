@@ -315,7 +315,7 @@ class Player(Entity):
 
         # reset things that are set in collision detection
         self.onSticky = False
-        #self.groundSpeed = 0
+        # self.groundSpeed = 0
 
         # do x-axis collisions
         self.collide(self.xvel + self.groundSpeed, 0, platforms)
@@ -923,7 +923,6 @@ def die_message(message_die, screen, timer, bg):
                 time_to_exit = True
 
         pygame.display.update()
-
 
 
 def draw_prompt_message(message_prompt, color=BLUE, pulse_time=8.0):

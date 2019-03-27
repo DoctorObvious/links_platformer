@@ -22,7 +22,7 @@ levels.append([
     "P                       P",
     "P                       P",
     "P                      EP",
-    "PPPPDDDPPDDDDPPPPPPPPPPPP", ])
+    "PPPPDDPPPPPPPPPPPPPPPPPPP", ])
 
 
 level_messages.append(["The act of jumping",
@@ -38,16 +38,16 @@ levels.append([
     "P                          PP          P",
     "P                      P               P",
     "P                                     EP",
-    "P                    P            PPPPPP",
-    "P                PP                    P",
+    "P                    P            P  PPP",
+    "P                PP              P     P",
+    "P              P               PPP     P",
+    "P            P P             P         P",
+    "P        PP    P      P    P           P",
+    "P      P                PP             P",
+    "P     P              P                 P",
+    "P                   P                  P",
+    "P PP              PP                   P",
     "P              P                       P",
-    "P            P P                 P     P",
-    "P        PP    P          PP    PP     P",
-    "P      P              PP               P",
-    "P     P                  PP            P",
-    "P                      P   PP          P",
-    "P PP                           PP      P",
-    "P              P             PP        P",
     "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", ])
 
 
@@ -70,10 +70,10 @@ levels.append([
     "P                       P",
     "P                       P",
     "P                       P",
-    "P                PLP    P",
-    "P                 P     P",
+    "P                 LP    P",
+    "P                PP     P",
     "P                      EP",
-    "PPPPhhhPPhhhhPPhhhhhhhhPP", ])
+    "PPPPhhhPPhPhhPPhhhhhhhhPP", ])
 
 
 level_messages.append(["More practice avoiding lava"])
@@ -92,10 +92,10 @@ levels.append([
     "P                       P      P       P",
     "P          P            P      P       P",
     "P          PP           P      P       P",
-    "P                       P      P       P",
-    "P              PPPPP    P      P       P",
+    "P                       I      P       P",
+    "P              PPPPP    I      P       P",
     "P                   P   P              P",
-    "P                       I              P",
+    "P                       P              P",
     "P                    PLLP              E",
     "PPPhhhPPPhhhPPPPPhhhPPPPPPPPPhhhPPPhhPPP", ])
 
@@ -119,34 +119,44 @@ levels.append([
     "S                S      P",
     "S               S      EP",
     "S                 SSSSSSP",
-    "S  PhhhhhhPS           SP",
+    "S  SSSSSSSSS           SP",
     "S  SSSSSSSSS  PS       SP",
     "S                      SP",
     "PPPPhhhhhhhhSSSSSSSSSSSSP", ])
 
 
-level_messages.append(["Here is a fun loop-de-loop!"])
+level_messages.append(["Here are some fun loop-de-loop with stickies!"])
 levels.append([
-    "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
-    "P                       P              P",
-    "P                       P              P",
-    "P                       P              P",
-    "P                       P              P",
-    "P                       P              P",
-    "P                       P              P",
-    "P                       PSSSSSSSSSSSSSSS",
-    "P                       P              S",
-    "P                       P PPPPPPhhPPPP S",
-    "P                       P  P    PP     S",
-    "P                       I  P           S",
-    "P                       I  P           S",
-    "P        SSSSSSSSSSSSSPPPE P           S",
-    "P                       SSSSSSS        S",
-    "P                    PP                S",
-    "P                      PP      SSSSSSSSS",
-    "P  P              P     P               L",
-    "P                       P              P",
-    "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", ])
+    "PPPPPPPPPPPPPPPPPPPPPPPPSSSSSSSSSSSSSSSSSSS",
+    "P   S                   S                 S",
+    "P   S                   S                 S",
+    "P   S                   S SSSSSSSSSSSSSS  S",
+    "P   S                   S             LS  S",
+    "P   S                   S              S  S",
+    "S   P                   SSSSSSSSSSSSSSSS  S",
+    "S   P                               SSSS  S",
+    "S   P                               SSSS  S",
+    "S   P                    SSSSSSSSSS       S",
+    "S   P                    SSSSSSSSSS       S",
+    "P   S                   SSSSSSSSSSSSSSSSSSS",
+    "P   S                   S                 S",
+    "P   S                   S                 S",
+    "P   S                   S  SSSSSSSSSSSSS  S",
+    "P   S                   S  S           S  S",
+    "P   S                   S  S           S  S",
+    "S   P                   S  S  SSSSSSS  S  S",
+    "S   P                   S  S       ES  S  S",
+    "S   P                   S  S        S  S  S",
+    "S   P                   S  SSSSSSSSSS  S  S",
+    "S   P    SSSSSSSSSSSSSSSS              S  S",
+    "S        SSSSSSSSSSSSSSSS              S  S",
+    "S                       SSSSSSSSSSSSSSSS  S",
+    "P                     P                   S",
+    "P                     S                   S",
+    "P                     PSSSSSSSSSSSSSSSSSSSS",
+    "P  P              P   PSSSSSSSSSSSSSSSSSSSS",
+    "P                     PSSSSSSSSSSSSSSSSSSSS",
+    "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", ])
 
 
 level_messages.append(["You can bounce on the bouncy blocks for a while,",

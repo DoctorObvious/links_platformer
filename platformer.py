@@ -1,5 +1,5 @@
 from settings import *
-from level_data import *
+from level_data_dad import *
 from game_clock import *
 from pygame import *
 import time
@@ -441,7 +441,7 @@ class Player(Entity):
                         if self.lives == 0:
                             die_message(message_die, screen, timer, bg)
                             pygame.event.post(pygame.event.Event(QUIT))
-                        print "Hurt: lives left = {}".format(self.lives)
+                        my_print("Hurt: lives left = {}".format(self.lives))
                     if xvel > 0:
                         self.rect.right = p.rect.left
                         my_print("collide left")
@@ -466,7 +466,7 @@ class Player(Entity):
                         if self.lives == 0:
                             die_message(message_die, screen, timer, bg)
                             pygame.event.post(pygame.event.Event(QUIT))
-                        print "Hurt: lives left = {}".format(self.lives)
+                        my_print("Hurt: lives left = {}".format(self.lives))
                     if xvel > 0:
                         self.rect.right = p.rect.left
                         my_print("collide left")
@@ -492,12 +492,12 @@ class Player(Entity):
                     if self.lives == 0:
                         die_message(message_die, screen, timer, bg)
                         pygame.event.post(pygame.event.Event(QUIT))
-                    print "hit pit: lives left = {}".format(self.lives)
+                    my_print("hit pit: lives left = {}".format(self.lives))
 
                     pygame.display.update()
 
                 elif isinstance(p, PlatformLife):
-                    print "Healed: lives = {}".format(self.lives)
+                    my_print("Healed: lives = {}".format(self.lives))
                     self.groundSpeed = 0
                     self.last_hurt_time = current_time() - 10.0
                     if xvel > 0:

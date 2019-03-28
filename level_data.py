@@ -22,7 +22,7 @@ levels.append([
     "P                       P",
     "P                       P",
     "P                      EP",
-    "PPPPDDPPPPPPPPPPPPPPPPPPP", ])
+    "PPPPPPPPPPPPPPPPPPPPPPPPP", ])
 
 
 level_messages.append(["The act of jumping",

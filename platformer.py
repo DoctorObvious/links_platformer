@@ -1,5 +1,5 @@
 from settings import *
-from level_data_dad import *
+from level_data import *
 from game_clock import *
 from pygame import *
 import time
@@ -40,7 +40,7 @@ def main():
     num_levels = len(levels)
 
     for level_number in range(num_levels):
-        global bg, message_prompt, message_small, message_die
+        global bg, message_prompt, message_die
         player.finished_level = False
         player.reset_position(32, 32)
         player.last_hurt_time = current_time() - 10.0
@@ -56,8 +56,14 @@ def main():
         start_message = 'Level: {}'.format(level_number + 1)
         info_message = level_messages[level_number]
         message_prompt = 'Press any arrow to continue'
-        message_small = 'Press space to continue'
         message_die = 'Game Over!'
+        message_pit = "Link's Platformer"
+        message_life2 = 'lives = {}'.format(player.lives - 1)
+        message_spawn = ''
+        message_small = ''
+
+        if level_number == num_levels - num_levels:
+            spawn_message(draw_spawn_message)
 
         x = y = 0
         cameraX = cameraY = 0
@@ -889,8 +895,43 @@ def draw_pit_message(message_time, color=DARKERRED, pulse_time=8.0):
         rect.midtop = (HALF_WIDTH, HALF_HEIGHT - 25)
         DISPLAYSURF.blit(surf, rect)
 
+def spawn_message(draw_spawn_message):
+    message_spawn = 'Use arrow keys to move'
+    message_big = "Link's Platformer"
+    message_small = ["Good luck to you!",
+                     "Press spacebar to continue"]
 
-def draw_die_message(message_die, color=DARKERRED, pulse_time=8.0):
+    time_to_exit = False
+    while not time_to_exit:
+        timer.tick(60)
+        # draw background
+        for y in range(32):
+            for x in range(32):
+                screen.blit(bg, (x * 32, y * 32))
+
+        draw_spawn_message(message_spawn)
+        draw_big_message(message_big, color=GOLD, pulse_time=2.0)
+        draw_small_message(message_small)
+
+        for e in pygame.event.get():
+            if e.type == KEYDOWN and e.key == K_ESCAPE:
+                raise SystemExit
+            elif e.type == KEYDOWN and e.key == K_SPACE:
+                time_to_exit = True
+
+        pygame.display.update()
+
+def draw_spawn_message(message_spawn, color=DARKERRED, pulse_time=2.0):
+    use_color = get_pulse_color([color, DARKGREEN], pulse_time=pulse_time)
+
+    if message_spawn is not None:
+        font = pygame.font.Font('freesansbold.ttf', 22)
+        surf = font.render(message_spawn, True, use_color)
+        rect = surf.get_rect()
+        rect.midtop = (HALF_WIDTH, HALF_HEIGHT + 115)
+        DISPLAYSURF.blit(surf, rect)
+
+def draw_die_message(message_die, color=DARKERRED, pulse_time=4.0):
     use_color = get_pulse_color([color, DARKGREEN], pulse_time=pulse_time)
 
     if message_die is not None:

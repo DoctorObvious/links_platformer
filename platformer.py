@@ -147,6 +147,8 @@ def run_game(levels, start_level_num):
                 if e.type == QUIT: raise SystemExit, "QUIT"
                 if e.type == KEYDOWN and e.key == K_ESCAPE:
                     raise SystemExit, "ESCAPE"
+                if e.type == KEYDOWN and e.key == K_F5:
+                    return
                 if e.type == KEYDOWN and e.key == K_UP:
                     up = True
                     player.running_level = True

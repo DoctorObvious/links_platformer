@@ -6,6 +6,9 @@ BANDAID_TIME = 1.567  # seconds
 
 GRAVITY = 0.55
 
+NUM_LIVES = 3
+NUM_HP = 3
+
 #             R    G    B
 WHITE     = (255, 255, 255)
 BLACK     = (  0,   0,   0)

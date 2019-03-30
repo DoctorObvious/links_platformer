@@ -58,7 +58,7 @@ def run_game(levels, start_level_num):
     num_levels = len(levels)
 
     for level_number in range(start_level_num, num_levels):
-        global bg, message_prompt, message_die
+        global bg, message_prompt, message_end
         player.finished_level = False
         player.reset_position(32, 32)
         player.last_hurt_time = current_time() - 10.0
@@ -76,12 +76,10 @@ def run_game(levels, start_level_num):
         start_message = 'Level {}: {}'.format(level_number + 1, level.name)
         info_message = level.message
         message_prompt = 'Press any arrow to continue'
-        message_die = 'Game Over!'
         message_life2 = 'lives = {}'.format(player.lives - 1)
 
         x = y = 0
         cameraX = cameraY = 0
-        message_time = ""
         message_life = ""
 
         # build the level
@@ -182,9 +180,17 @@ def run_game(levels, start_level_num):
             if player.running_level:
                 player.update(up, down, left, right, platforms, level_width, level_height)
 
+            if player.hp <= 0:
+                player.lives -= 1
+                player.hp = NUM_HP
+                die_message("Ouch, you lost a life", screen, TIMER, bg)
+                my_print("Died: lives left = {}".format(player.lives))
+                player.reset_position(32, 32)
+                player.running_level = False
+
             if player.lives <= 0:
-                die_message(message_die, screen, TIMER, bg)                    
-                my_print("Hurt: lives left = {}".format(player.lives))         
+                end_game_message(screen, TIMER, bg)
+                my_print("No lives left. Game over!")
                 return                                                         
 
             # camera movement
@@ -206,6 +212,7 @@ def run_game(levels, start_level_num):
             message_life2 = 'lives = {}'.format(player.lives - 1)
             message_life = 'lives = {}'.format(player.lives)
             draw_life_message(message_life, color=BLUE, pulse_time=1.5)
+            draw_hp(player.hp)
             draw_time_message(message_time, color=RED, pulse_time=1.5)
 
             pygame.display.update()
@@ -218,7 +225,7 @@ def run_game(levels, start_level_num):
         message_big = "Finished level: time = {:3.1f}".format(this_level_time)
         message_small = ["total time = {:3.1f}".format(player.all_previous_level_times),
                          "press spacebar to continue..."]
-        end_message(message_life, message_big, message_small, TIMER, screen, bg)
+        end_message(message_life, message_big, message_small, TIMER, screen, bg, player.hp)
 
         if level_number + 1 == num_levels:
             print "win!!!!!!"
@@ -227,7 +234,7 @@ def run_game(levels, start_level_num):
                              "playing {} out of {} levels".format(num_levels-start_level_num, num_levels),
                              "press spacebar to play again!",
                              "press escape to terminate the game."]
-            end_message(message_life, message_big, message_small, TIMER, screen, bg)
+            end_message(message_life, message_big, message_small, TIMER, screen, bg, player.hp)
             return
 
 
@@ -249,7 +256,8 @@ class Player(Entity):
         self.groundSpeed = 0
         self.rect = Rect(x, y, 32, 32)
         self.last_hurt_time = current_time() - 10.0
-        self.lives = 3
+        self.lives = NUM_LIVES
+        self.hp = NUM_HP
         self.running_level = False
         self.finished_level = False
         self.all_previous_level_times = 0
@@ -467,7 +475,7 @@ class Player(Entity):
                 elif isinstance(p, PlatformHurt):
                     self.groundSpeed = 0
                     if elapsed_time(self.last_hurt_time) > BANDAID_TIME:
-                        self.lives -= 1
+                        self.hp -= 1
                         self.last_hurt_time = current_time()
                     if xvel > 0:
                         self.rect.right = p.rect.left
@@ -487,7 +495,7 @@ class Player(Entity):
                 elif isinstance(p, PlatformHurtFull):
                     self.groundSpeed = 0
                     if elapsed_time(self.last_hurt_time) > BANDAID_TIME:
-                        self.lives -= 1
+                        self.hp -= 1
                         self.last_hurt_time = current_time()
                     if xvel > 0:
                         self.rect.right = p.rect.left
@@ -509,37 +517,25 @@ class Player(Entity):
                     self.groundSpeed = 0
                     self.reset_position(32, 32)
                     self.running_level = False
-                    pit_message("Ouch, you hit a pit", screen, TIMER, bg)
 
                 elif isinstance(p, PlatformLife):
-                    my_print("Healed: lives = {}".format(self.lives))
                     self.groundSpeed = 0
                     self.last_hurt_time = current_time() - 10.0
+                    self.hp = NUM_HP
+                    my_print("Healed: HP = {}".format(self.hp))
                     if xvel > 0:
                         self.rect.right = p.rect.left
                         self.xvel = 0
-                        self.lives = 3
-                        if self.lives > 3:
-                            self.lives = 3
                     if xvel < 0:
                         self.rect.left = p.rect.right
                         self.xvel = 0
-                        self.lives = 3
-                        if self.lives > 3:
-                            self.lives = 3
                     if yvel < 0:
                         self.rect.top = p.rect.bottom
                         self.yvel = 0
-                        self.lives = 3
-                        if self.lives > 3:
-                            self.lives = 3
                     if yvel > 0:
                         self.rect.bottom = p.rect.top
                         self.onGround = True
                         self.yvel = 0
-                        self.lives = 3
-                        if self.lives > 3:
-                            self.lives = 3
 
                 elif isinstance(p, Platformmovingcarpetleft):
                     my_print("Left carpet: ")
@@ -818,7 +814,7 @@ class Platformmovingcarpetright(Platform):
 ########################
 
 
-def end_message(message_life, message_big, message_small, timer, screen, bg):
+def end_message(message_life, message_big, message_small, timer, screen, bg, num_hp):
     time_to_exit = False
     while not time_to_exit:
         timer.tick(60)
@@ -829,6 +825,7 @@ def end_message(message_life, message_big, message_small, timer, screen, bg):
 
         # entities.draw(screen)
         draw_life_message(message_life, color=BLUE, pulse_time=1.5)
+        draw_hp(num_hp)
         draw_big_message(message_big)
         draw_small_message(message_small)
         for e in pygame.event.get():
@@ -865,7 +862,15 @@ def draw_life_message(message_life, color=RED, pulse_time=8.0):
         DISPLAYSURF.blit(surf, rect)
 
 
-def pit_message(message_pit, screen, timer, bg):
+def draw_hp(num_hp):
+    pulse_time = 8.0
+    use_color = get_pulse_color([LIMEGREEN, DARKGREEN], pulse_time=pulse_time)
+
+    for ii in range(num_hp):
+        pygame.draw.rect(DISPLAYSURF, use_color, (3*DEPTH + ii * (DEPTH/2+2), DEPTH/4, DEPTH/2, DEPTH/2))
+
+
+def die_message(message_die, screen, timer, bg):
     message_small = ["Press spacebar to continue"]
     time_to_exit = False
     while not time_to_exit:
@@ -877,7 +882,7 @@ def pit_message(message_pit, screen, timer, bg):
 
         draw_life_message(message_life2, color=RED, pulse_time=1.0)
         draw_small_message(message_small, color=BLUE, pulse_time=1.0)
-        draw_pit_message(message_pit)
+        draw_die_message(message_die)
         for e in pygame.event.get():
             if e.type == KEYDOWN and e.key == K_ESCAPE:
                 raise SystemExit
@@ -898,7 +903,7 @@ def draw_time_message(message_time, color=RED, pulse_time=8.0):
         DISPLAYSURF.blit(surf, rect)
 
 
-def draw_pit_message(message_time, color=DARKERRED, pulse_time=8.0):
+def draw_die_message(message_time, color=DARKERRED, pulse_time=8.0):
     use_color = get_pulse_color([color, DARKGREEN], pulse_time=pulse_time)
 
     if message_time is not None:
@@ -940,7 +945,7 @@ def instructions_message():
         pygame.display.update()
 
 
-def draw_die_message(message_die, color=DARKERRED, pulse_time=4.0):
+def draw_end_message(message_die, color=DARKERRED, pulse_time=4.0):
     use_color = get_pulse_color([color, DARKGREEN], pulse_time=pulse_time)
 
     if message_die is not None:
@@ -951,7 +956,8 @@ def draw_die_message(message_die, color=DARKERRED, pulse_time=4.0):
         DISPLAYSURF.blit(surf, rect)
 
 
-def die_message(message_die, screen, timer, bg):
+def end_game_message(screen, timer, bg):
+    message_end = 'Game Over!'
     message_small = ["Uh, Oh",
                      "You ran out of lives",
                      "Press spacebar to restart",
@@ -966,7 +972,7 @@ def die_message(message_die, screen, timer, bg):
 
         draw_life_message(message_life2, color=RED, pulse_time=1.0)
         draw_small_message(message_small, color=BLUE, pulse_time=1.0)
-        draw_die_message(message_die, color=RED, pulse_time=1.0)
+        draw_end_message(message_end, color=RED, pulse_time=1.0)
         for e in pygame.event.get():
             if e.type == KEYDOWN and e.key == K_ESCAPE:
                 raise SystemExit

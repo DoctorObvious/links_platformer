@@ -173,10 +173,6 @@ def run_game(levels, start_level_num):
                 if e.type == KEYUP and e.key == K_RIGHT:
                     right = False
 
-            # TODO Handle this better
-            if player.lives <= 0:
-                return
-
             # draw background
             for y in range(32):
                 for x in range(32):
@@ -185,6 +181,11 @@ def run_game(levels, start_level_num):
             # update player, draw everything else
             if player.running_level:
                 player.update(up, down, left, right, platforms, level_width, level_height)
+
+            if player.lives <= 0:
+                die_message(message_die, screen, TIMER, bg)                    
+                my_print("Hurt: lives left = {}".format(player.lives))         
+                return                                                         
 
             # camera movement
             for entity in entities:
@@ -224,7 +225,8 @@ def run_game(levels, start_level_num):
             message_big = "You WIN!!!!!!!"
             message_small = ["total time = {:3.1f}".format(player.all_previous_level_times),
                              "playing {} out of {} levels".format(num_levels-start_level_num, num_levels),
-                             "press spacebar to end!"]
+                             "press spacebar to play again!",
+                             "press escape to terminate the game."]
             end_message(message_life, message_big, message_small, TIMER, screen, bg)
             return
 
@@ -467,9 +469,6 @@ class Player(Entity):
                     if elapsed_time(self.last_hurt_time) > BANDAID_TIME:
                         self.lives -= 1
                         self.last_hurt_time = current_time()
-                        if self.lives == 0:
-                            die_message(message_die, screen, TIMER, bg)
-                        my_print("Hurt: lives left = {}".format(self.lives))
                     if xvel > 0:
                         self.rect.right = p.rect.left
                         my_print("collide left")
@@ -490,9 +489,6 @@ class Player(Entity):
                     if elapsed_time(self.last_hurt_time) > BANDAID_TIME:
                         self.lives -= 1
                         self.last_hurt_time = current_time()
-                        if self.lives == 0:
-                            die_message(message_die, screen, TIMER, bg)
-                        my_print("Hurt: lives left = {}".format(self.lives))
                     if xvel > 0:
                         self.rect.right = p.rect.left
                         my_print("collide left")
@@ -514,11 +510,6 @@ class Player(Entity):
                     self.reset_position(32, 32)
                     self.running_level = False
                     pit_message("Ouch, you hit a pit", screen, TIMER, bg)
-                    if self.lives == 0:
-                        die_message(message_die, screen, TIMER, bg)
-                    my_print("hit pit: lives left = {}".format(self.lives))
-
-                    pygame.display.update()
 
                 elif isinstance(p, PlatformLife):
                     my_print("Healed: lives = {}".format(self.lives))

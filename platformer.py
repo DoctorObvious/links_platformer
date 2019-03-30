@@ -1,7 +1,13 @@
 from settings import *
-from level_data import *
 from game_clock import *
 from pygame import *
+from level_class import *
+
+
+import level_data as levels_link
+import level_data_dad as levels_dad
+import level_data_cora as levels_cora
+
 import time
 
 WIN_WIDTH = 800
@@ -22,47 +28,58 @@ def my_print(message):
 
 
 def main():
-    global cameraX, cameraY
-    global message_life, message_life2
-    global screen, timer
-    global DISPLAYSURF, BASICFONT
+    global DISPLAYSURF, TIMER, levels, screen
+
     pygame.init()
     screen = pygame.display.set_mode(DISPLAY, FLAGS, DEPTH)
     pygame.display.set_caption("PLATFORMER! Producers: Link, Mark")
-    timer = pygame.time.Clock()
+
+    TIMER = pygame.time.Clock()
+
+    DISPLAYSURF = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+
+    # TODO show_start_screen
+    while True:
+        levels = level_pack_choice_screen()
+        start_level_num = level_num_choice_screen(levels)
+        run_game(levels, start_level_num)
+
+
+def run_game(levels, start_level_num):
+    global cameraX, cameraY
+    global message_life, message_life2
+    global DISPLAYSURF, BASICFONT
 
     start_the_clock()
 
-    DISPLAYSURF = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
     BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
 
     player = Player(32, 32)
     num_levels = len(levels)
 
-    for level_number in range(num_levels):
+    for level_number in range(start_level_num, num_levels):
         global bg, message_prompt, message_die
         player.finished_level = False
         player.reset_position(32, 32)
         player.last_hurt_time = current_time() - 10.0
+
         level = levels[level_number]
-        level_width = len(level[0]) * 32
-        level_height = len(level) * 32
+        level_layout = level.layout
+        level_width = len(level_layout[0]) * 32
+        level_height = len(level_layout) * 32
         up = down = left = right = False
-        bg = Surface((32,32))
+        bg = Surface((32, 32))
         bg.convert()
         bg.fill(Color("#000032"))
         entities = pygame.sprite.Group()
         platforms = []
-        start_message = 'Level: {}'.format(level_number + 1)
-        info_message = level_messages[level_number]
+        start_message = 'Level {}: {}'.format(level_number + 1, level.name)
+        info_message = level.message
         message_prompt = 'Press any arrow to continue'
         message_die = 'Game Over!'
-        message_pit = "Link's Platformer"
         message_life2 = 'lives = {}'.format(player.lives - 1)
-        message_spawn = ''
-        message_small = ''
 
-        if level_number == num_levels - num_levels:
+        if level_number == start_level_num:
             spawn_message(draw_spawn_message)
 
         x = y = 0
@@ -71,7 +88,7 @@ def main():
         message_life = ""
 
         # build the level
-        for row in level:
+        for row in level_layout:
             for col in row:
                 if col == "P":
                     p = Platform(x, y)
@@ -127,7 +144,7 @@ def main():
         # start interactive part of level
         player.running_level = False
         while not player.finished_level:
-            timer.tick(60)
+            TIMER.tick(60)
 
             for e in pygame.event.get():
                 if e.type == QUIT: raise SystemExit, "QUIT"
@@ -156,6 +173,10 @@ def main():
                     left = False
                 if e.type == KEYUP and e.key == K_RIGHT:
                     right = False
+
+            # TODO Handle this better
+            if player.lives <= 0:
+                return
 
             # draw background
             for y in range(32):
@@ -197,15 +218,15 @@ def main():
         message_big = "Finished level: time = {:3.1f}".format(this_level_time)
         message_small = ["total time = {:3.1f}".format(player.all_previous_level_times),
                          "press spacebar to continue..."]
-        end_message(message_life, message_big, message_small, timer, screen, bg)
+        end_message(message_life, message_big, message_small, TIMER, screen, bg)
 
         if level_number + 1 == num_levels:
             print "win!!!!!!"
             message_big = "You WIN!!!!!!!"
             message_small = ["total time = {:3.1f}".format(player.all_previous_level_times),
                              "press spacebar to end!"]
-            end_message(message_life, message_big, message_small, timer, screen, bg)
-            raise SystemExit
+            end_message(message_life, message_big, message_small, TIMER, screen, bg)
+            return
 
 
 class Entity(pygame.sprite.Sprite):
@@ -391,7 +412,6 @@ class Player(Entity):
                 # Handle collision with an Exit Block
                 if isinstance(p, ExitBlock):
                     self.finished_level = True
-                    # pygame.event.post(pygame.event.Event(QUIT))
 
                 # Handle collision with an Bouncy Block
                 elif isinstance(p, PlatformBouncy1):
@@ -445,8 +465,7 @@ class Player(Entity):
                         self.lives -= 1
                         self.last_hurt_time = current_time()
                         if self.lives == 0:
-                            die_message(message_die, screen, timer, bg)
-                            pygame.event.post(pygame.event.Event(QUIT))
+                            die_message(message_die, screen, TIMER, bg)
                         my_print("Hurt: lives left = {}".format(self.lives))
                     if xvel > 0:
                         self.rect.right = p.rect.left
@@ -463,15 +482,13 @@ class Player(Entity):
                         self.yvel = -6.0
                         my_print("collide top")
 
-
                 elif isinstance(p, PlatformHurtFull):
                     self.groundSpeed = 0
                     if elapsed_time(self.last_hurt_time) > BANDAID_TIME:
                         self.lives -= 1
                         self.last_hurt_time = current_time()
                         if self.lives == 0:
-                            die_message(message_die, screen, timer, bg)
-                            pygame.event.post(pygame.event.Event(QUIT))
+                            die_message(message_die, screen, TIMER, bg)
                         my_print("Hurt: lives left = {}".format(self.lives))
                     if xvel > 0:
                         self.rect.right = p.rect.left
@@ -489,15 +506,13 @@ class Player(Entity):
                         my_print("collide top")
 
                 elif isinstance(p, PlatformPit):
-                    message_pit = "Ouch, you hit a pit"
                     self.lives -= 1
                     self.groundSpeed = 0
                     self.reset_position(32, 32)
                     self.running_level = False
-                    pit_message(message_pit, screen, timer, bg)
+                    pit_message("Ouch, you hit a pit", screen, TIMER, bg)
                     if self.lives == 0:
-                        die_message(message_die, screen, timer, bg)
-                        pygame.event.post(pygame.event.Event(QUIT))
+                        die_message(message_die, screen, TIMER, bg)
                     my_print("hit pit: lives left = {}".format(self.lives))
 
                     pygame.display.update()
@@ -830,14 +845,14 @@ def end_message(message_life, message_big, message_small, timer, screen, bg):
         pygame.display.update()
 
 
-def draw_big_message(message, color=BLUE, pulse_time=8.0):
+def draw_big_message(message, color=BLUE, pulse_time=8.0, height=HALF_HEIGHT - 25):
     use_color = get_pulse_color([color, GREEN], pulse_time=pulse_time)
 
     if message is not None:
         font = pygame.font.Font('freesansbold.ttf', 50)
         surf = font.render(message, True, use_color)
         rect = surf.get_rect()
-        rect.midtop = (HALF_WIDTH, HALF_HEIGHT - 25)
+        rect.midtop = (HALF_WIDTH, height)
         DISPLAYSURF.blit(surf, rect)
 
 
@@ -895,6 +910,7 @@ def draw_pit_message(message_time, color=DARKERRED, pulse_time=8.0):
         rect.midtop = (HALF_WIDTH, HALF_HEIGHT - 25)
         DISPLAYSURF.blit(surf, rect)
 
+
 def spawn_message(draw_spawn_message):
     message_spawn = 'Use arrow keys to move'
     message_big = "Link's Platformer"
@@ -903,7 +919,7 @@ def spawn_message(draw_spawn_message):
 
     time_to_exit = False
     while not time_to_exit:
-        timer.tick(60)
+        TIMER.tick(60)
         # draw background
         for y in range(32):
             for x in range(32):
@@ -921,6 +937,7 @@ def spawn_message(draw_spawn_message):
 
         pygame.display.update()
 
+
 def draw_spawn_message(message_spawn, color=DARKERRED, pulse_time=2.0):
     use_color = get_pulse_color([color, DARKGREEN], pulse_time=pulse_time)
 
@@ -930,6 +947,7 @@ def draw_spawn_message(message_spawn, color=DARKERRED, pulse_time=2.0):
         rect = surf.get_rect()
         rect.midtop = (HALF_WIDTH, HALF_HEIGHT + 115)
         DISPLAYSURF.blit(surf, rect)
+
 
 def draw_die_message(message_die, color=DARKERRED, pulse_time=4.0):
     use_color = get_pulse_color([color, DARKGREEN], pulse_time=pulse_time)
@@ -945,7 +963,8 @@ def draw_die_message(message_die, color=DARKERRED, pulse_time=4.0):
 def die_message(message_die, screen, timer, bg):
     message_small = ["Uh, Oh",
                      "You ran out of lives",
-                     "Press spacebar to end game"]
+                     "Press spacebar to restart",
+                     "Press escape to quit"]
     time_to_exit = False
     while not time_to_exit:
         timer.tick(60)
@@ -977,15 +996,15 @@ def draw_prompt_message(message_prompt, color=BLUE, pulse_time=8.0):
         DISPLAYSURF.blit(surf, rect)
 
 
-def draw_small_message(message_list, color=BLUE, pulse_time=8.0):
+def draw_small_message(message_list, color=BLUE, pulse_time=8.0, start_height=HALF_HEIGHT + 50, font_size = 25):
     use_color = get_pulse_color([color, GREEN], pulse_time=pulse_time)
 
     for m, message in enumerate(message_list):
         if message is not None:
-            font = pygame.font.Font('freesansbold.ttf', 25)
+            font = pygame.font.Font('freesansbold.ttf', font_size)
             surf = font.render(message, True, use_color)
             rect = surf.get_rect()
-            rect.midtop = (HALF_WIDTH, HALF_HEIGHT + 50 + (m * 25))
+            rect.midtop = (HALF_WIDTH, start_height + (m * font_size))
             DISPLAYSURF.blit(surf, rect)
 
 
@@ -1006,6 +1025,88 @@ def get_pulse_color(colors, pulse_time=2.0, pulse_start_time=0.0):
     use_color = tuple(use_color)
     return use_color
 
+
+def terminate():
+    pygame.quit()
+    sys.exit()
+
+
+def check_for_key_press():
+    for event in pygame.event.get():
+        if event.type == QUIT:  # event is quit
+            terminate()
+        elif event.type == KEYDOWN:
+            if event.key == K_ESCAPE:  # event is escape key
+                terminate()
+            else:
+                return event.key  # key found return with it
+    # no quit or key events in queue so return None
+    return None
+
+
+def level_pack_choice_screen():
+    global TIMER
+
+    level_choice_messages = [
+        "1: Nlocnil's",
+        "2: Dad's",
+        "3: Cora's",
+    ]
+
+    pygame.event.get()  # clear out event queue
+
+    while True:
+        DISPLAYSURF.fill(0x000000)
+        draw_big_message('Which level pack?')
+        draw_small_message(level_choice_messages)
+
+        #
+        pygame.display.update()
+
+        key = check_for_key_press()
+        if key:
+            if key == K_1:
+                return levels_link.levels
+            elif key == K_2:
+                return levels_dad.levels
+            elif key == K_3:
+                return levels_cora.levels
+
+        TIMER.tick(60)
+
+
+def level_num_choice_screen(levels):
+    global TIMER
+
+    pygame.event.get()  # clear out event queue
+    num_levels = len(levels)
+
+    level_names = ['{}: {}'.format(ii+1, l.name) for ii, l in enumerate(levels)]
+    level_names = ['Enter number and hit return', ''] + level_names
+
+    entered_number_string = ''
+    small_font_size = min(25, int(25 * 17/num_levels))  # Shrink the font as needed so they fit.
+    while True:
+        DISPLAYSURF.fill(0x000000)
+        draw_big_message('Which level in the pack?', height=HALF_HEIGHT / 5)
+        draw_small_message(level_names, start_height=HALF_HEIGHT / 4 + 50, font_size=small_font_size)
+
+        pygame.display.update()
+
+        key = check_for_key_press()
+        if key:
+            if K_0 <= key <= K_9:
+                entered_number_string += str(key - K_0)
+            elif key == K_BACKSPACE:
+                entered_number_string = entered_number_string[0:-1]
+            elif key == K_RETURN:
+                level_choice = int(entered_number_string)
+                if 1 <= level_choice <= num_levels:
+                    return level_choice-1
+                else:
+                    entered_number_string = ''
+
+        TIMER.tick(60)
 
 if __name__ == "__main__":
     main()

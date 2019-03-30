@@ -35,10 +35,10 @@ def main():
     pygame.display.set_caption("PLATFORMER! Producers: Link, Mark")
 
     TIMER = pygame.time.Clock()
-
     DISPLAYSURF = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
 
     # TODO show_start_screen
+    instructions_message()
     while True:
         levels = level_pack_choice_screen()
         start_level_num = level_num_choice_screen(levels)
@@ -78,9 +78,6 @@ def run_game(levels, start_level_num):
         message_prompt = 'Press any arrow to continue'
         message_die = 'Game Over!'
         message_life2 = 'lives = {}'.format(player.lives - 1)
-
-        if level_number == start_level_num:
-            spawn_message(draw_spawn_message)
 
         x = y = 0
         cameraX = cameraY = 0
@@ -723,12 +720,14 @@ class PlatformHurt(Platform):
         self.rect.x = self.x - camera_x
         self.rect.y = self.y - camera_y
         # CHANGE pulse time to change width of color band. Change pulse start time to change speed of transition.
-        use_color = get_pulse_color([self.color, self.other_color], pulse_time=2.0)
+        use_color = get_pulse_color([self.color, self.other_color], pulse_time=4.0, pulse_start_time=self.y / 128.0)
         self.image.fill(Color(*use_color))
 
 
-class PlatformHurtFull(Platform):
+class PlatformHurtFull(PlatformHurt):
     def __init__(self, x, y):
+        self.color = RED            
+        self.other_color = DARKERRED
         Entity.__init__(self)
         self.image = Surface((32, 32))
         self.image.convert()
@@ -736,7 +735,6 @@ class PlatformHurtFull(Platform):
         self.rect = Rect(x, y, 32, 32)
         self.x = x
         self.y = y
-
 
 class PlatformPit(Platform):
     def __init__(self, x, y):
@@ -848,8 +846,11 @@ def end_message(message_life, message_big, message_small, timer, screen, bg):
 def draw_big_message(message, color=BLUE, pulse_time=8.0, height=HALF_HEIGHT - 25):
     use_color = get_pulse_color([color, GREEN], pulse_time=pulse_time)
 
+    proposed_size = 50*28/len(message)
+    font_size = min(50, proposed_size)
+
     if message is not None:
-        font = pygame.font.Font('freesansbold.ttf', 50)
+        font = pygame.font.Font('freesansbold.ttf', font_size)
         surf = font.render(message, True, use_color)
         rect = surf.get_rect()
         rect.midtop = (HALF_WIDTH, height)
@@ -911,23 +912,27 @@ def draw_pit_message(message_time, color=DARKERRED, pulse_time=8.0):
         DISPLAYSURF.blit(surf, rect)
 
 
-def spawn_message(draw_spawn_message):
-    message_spawn = 'Use arrow keys to move'
-    message_big = "Link's Platformer"
-    message_small = ["Good luck to you!",
-                     "Press spacebar to continue"]
+def instructions_message():
+    global TIMER, DISPLAYSURF
+
+    message_big = "Lincoln's Block Head"
+    message_instructions = ["How to Play:" ,
+                            '* Use arrow keys to move',
+                            '* Tap up to jump small',
+                            '* Hold up to jump big'
+                            ]
+    message_small_2 = ["Press spacebar to continue",
+                       "Good luck to you!",
+                      ]
 
     time_to_exit = False
     while not time_to_exit:
         TIMER.tick(60)
-        # draw background
-        for y in range(32):
-            for x in range(32):
-                screen.blit(bg, (x * 32, y * 32))
-
-        draw_spawn_message(message_spawn)
-        draw_big_message(message_big, color=GOLD, pulse_time=2.0)
-        draw_small_message(message_small)
+        DISPLAYSURF.fill(0x000000)
+        
+        draw_big_message(message_big, color=GOLD, pulse_time=2.0, height=WIN_HEIGHT/4)
+        draw_small_message(message_instructions, color=DARKRED, start_height=WIN_HEIGHT/4 + 100)
+        draw_small_message(message_small_2, start_height=WIN_HEIGHT/2 + 100)
 
         for e in pygame.event.get():
             if e.type == KEYDOWN and e.key == K_ESCAPE:
@@ -936,17 +941,6 @@ def spawn_message(draw_spawn_message):
                 time_to_exit = True
 
         pygame.display.update()
-
-
-def draw_spawn_message(message_spawn, color=DARKERRED, pulse_time=2.0):
-    use_color = get_pulse_color([color, DARKGREEN], pulse_time=pulse_time)
-
-    if message_spawn is not None:
-        font = pygame.font.Font('freesansbold.ttf', 22)
-        surf = font.render(message_spawn, True, use_color)
-        rect = surf.get_rect()
-        rect.midtop = (HALF_WIDTH, HALF_HEIGHT + 115)
-        DISPLAYSURF.blit(surf, rect)
 
 
 def draw_die_message(message_die, color=DARKERRED, pulse_time=4.0):
@@ -1045,7 +1039,7 @@ def check_for_key_press():
 
 
 def level_pack_choice_screen():
-    global TIMER
+    global TIMER, DISPLAYSURF
 
     level_choice_messages = [
         "1: Nlocnil's",
@@ -1057,8 +1051,8 @@ def level_pack_choice_screen():
 
     while True:
         DISPLAYSURF.fill(0x000000)
-        draw_big_message('Which level pack?')
-        draw_small_message(level_choice_messages)
+        draw_big_message('Which level pack?', height=WIN_HEIGHT/4)
+        draw_small_message(level_choice_messages, start_height=WIN_HEIGHT/2)
 
         #
         pygame.display.update()
@@ -1100,7 +1094,11 @@ def level_num_choice_screen(levels):
             elif key == K_BACKSPACE:
                 entered_number_string = entered_number_string[0:-1]
             elif key == K_RETURN:
-                level_choice = int(entered_number_string)
+                if len(entered_number_string) == 0:
+                    level_choice = 1
+                else:
+                    level_choice = int(entered_number_string)
+                    
                 if 1 <= level_choice <= num_levels:
                     return level_choice-1
                 else:

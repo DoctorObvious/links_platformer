@@ -221,6 +221,7 @@ def run_game(levels, start_level_num):
             print "win!!!!!!"
             message_big = "You WIN!!!!!!!"
             message_small = ["total time = {:3.1f}".format(player.all_previous_level_times),
+                             "playing {} out of {} levels".format(num_levels-start_level_num, num_levels),
                              "press spacebar to end!"]
             end_message(message_life, message_big, message_small, TIMER, screen, bg)
             return
@@ -317,11 +318,12 @@ class Player(Entity):
             self.yvel += GRAVITY
             if not self.is_jumping and self.yvel < 0:
                 # This allows you to have big and little jumps depending on how long you hold up.
-                self.yvel += GRAVITY
+                self.yvel += 1.3*GRAVITY
             # max falling speed
             if self.yvel > 90:
                 self.yvel = 90
         if self.onGround and not(left or right):
+            # this will let you change direction quickly but not immediately
             self.xvel = self.xvel*.2
             if abs(self.xvel) < 0.2:
                 self.xvel = 0.
@@ -330,12 +332,14 @@ class Player(Entity):
         if self.onSticky and not(up or down):
             self.yvel = 0
 
+        # give the player a little help... let them fight the groundspeed if they jump
+        # if they are actively pushing in the opposite direction of the carpet, lessen the effect of the carpet
+        # by shrinking the groundspeed
+        if not self.onGround and cmp(self.xvel, 0) != cmp(self.groundSpeed, 0) and (left or right): 
+                self.groundSpeed *= 0.975
+
         # increment in x direction
-        # if self.onGround:
         self.rect.left += self.xvel + self.groundSpeed
-        # print "Groundspeed: {:3.1f}".format(self.groundSpeed)
-        # else:
-        #     self.rect.left += self.xvel
 
         # reset things that are set in collision detection
         self.onSticky = False

@@ -3,6 +3,7 @@ from pygame.locals import *
 
 FPS = 8
 BANDAID_TIME = 1.567  # seconds
+UP_JUMP_TIME = 0.2    # seconds
 
 GRAVITY = 0.55
 

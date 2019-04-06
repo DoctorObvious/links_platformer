@@ -150,6 +150,8 @@ def run_game(levels, start_level_num):
                 if e.type == KEYDOWN and e.key == K_UP:
                     up = True
                     player.running_level = True
+                    if player.up_was_released:
+                        player.last_up_time = current_time()
                 if e.type == KEYDOWN and e.key == K_DOWN:
                     down = True
                     player.running_level = True
@@ -462,7 +464,13 @@ class Player(Entity):
                         self.groundSpeed = 0
                         self.rect.bottom = p.rect.top
                         my_print('Bounce start yvel {}'.format(self.yvel))
+
+                        # lose a bit of energy
                         self.yvel = -max(0.0, self.yvel - 1.5 * GRAVITY) * 0.85
+
+                        if elapsed_time(self.last_up_time) < UP_JUMP_TIME:
+                            # A fresh jump will add some speed up to a point
+                            self.yvel = min(self.yvel, max(-18.0, self.yvel - 3.0))
 
                         if self.yvel > -3*GRAVITY:
                             self.yvel = 0.0

@@ -275,6 +275,7 @@ class Player(Entity):
         self.groundSpeed = 0
         self.is_jumping = False
         self.last_up_time = -10.0
+        self.last_bounce_time = -10.0
         self.up_was_released = True
 
     def reset_position(self, x, y):
@@ -285,13 +286,16 @@ class Player(Entity):
         self.onGround = False
         self.onSticky = False
         self.groundSpeed = 0
-        # self.is_jumping = False
-        # self.last_up_time = -10.0
-        # self.up_was_released = True
+        self.last_up_time = -10.0
+        self.last_bounce_time = -10.0
 
         self.rect = Rect(x, y, self.player_size, self.player_size)
         self.last_hurt_time = current_time() - 10.0
         self.image.fill((0, 225, 0))
+
+    def add_jump_boost(self):
+        # A fresh jump will add some speed up to a point
+        self.yvel = min(self.yvel, max(-18.0, self.yvel - 3.0))
 
     def update(self, up, down, left, right, platforms, level_width, level_height):
         global cameraX, cameraY
@@ -305,6 +309,11 @@ class Player(Entity):
                 self.is_jumping = True
                 self.up_was_released = False
                 self.yvel -= 10.2
+            elif not self.onGround and self.up_was_released and elapsed_time(self.last_bounce_time) < UP_JUMP_TIME:
+                self.add_jump_boost()
+                self.is_jumping = True
+                self.up_was_released = False
+
         else:
             self.is_jumping = False
             self.up_was_released = True
@@ -469,13 +478,15 @@ class Player(Entity):
                         self.yvel = -max(0.0, self.yvel - 1.5 * GRAVITY) * 0.85
 
                         if elapsed_time(self.last_up_time) < UP_JUMP_TIME:
-                            # A fresh jump will add some speed up to a point
-                            self.yvel = min(self.yvel, max(-18.0, self.yvel - 3.0))
+                            self.add_jump_boost()
+                        else:
+                            self.last_bounce_time = current_time()
 
                         if self.yvel > -3*GRAVITY:
                             self.yvel = 0.0
                             self.is_jumping = False
                             self.onGround = True
+                            # self.up_was_released = True
                         else:
                             self.is_jumping = True
                             self.up_was_released = False

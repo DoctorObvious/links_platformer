@@ -392,7 +392,13 @@ class Player(Entity):
             self.xvel = 8.0
 
         # increment/move in y direction
-        self.rect.top = self.rect.top + self.yvel
+        if self.yvel > 0:
+            # This makes sure that gravity (when onGround) will move player enough downward to ensure it
+            # goes down at least 1 pixel so that collisions will happen and set OnGround appropriately again after
+            # the reset a few lines below.
+            self.rect.top = self.rect.top + max(1.0, self.yvel)
+        else:
+            self.rect.top = self.rect.top + self.yvel
 
         # assuming we're in the air
         if not self.onSticky:

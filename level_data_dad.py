@@ -2,8 +2,8 @@ from level_class import *
 
 levels = []
 
-levels.append(Level('Some Name',
-                    ["Go for the pink portal block!",
+levels.append(Level("Let's do this!",
+                    ["Go for the rainbow portal block!",
                      "Press up to jump."],
                     [
                         "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
@@ -28,7 +28,7 @@ levels.append(Level('Some Name',
                         "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
                     ]))
 
-levels.append(Level('Some Name',
+levels.append(Level('Watch Your Step',
                     ["Don't fall in the black pits!"],
                     [
                         "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
@@ -54,8 +54,9 @@ levels.append(Level('Some Name',
                     ]))
 
 
-levels.append(Level('Some Name',
-                    ["Watch out for red blocks!"],
+levels.append(Level('Hot Stuff',
+                    ["Watch out for red blocks, they burn!",
+                     "Look for glowing yellow health blocks to heal!"],
                     [
                         "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
                         "P                                    P",
@@ -80,14 +81,14 @@ levels.append(Level('Some Name',
                     ]))
 
 
-levels.append(Level('Some Name',
+levels.append(Level('Trampoline',
                     ["Bounce on!",
                      "Hold up for extra bounce."],
                     [
                         "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
-                        "P  P                                 P",
-                        "P  P                                 P",
-                        "P  P                                 P",
+                        "P  P       PPI                       P",
+                        "P  P       PLI                       P",
+                        "P  P       PPP                       P",
                         "P  P                                 P",
                         "P  P                                EP",
                         "P          PPPPPPPPPPPPPPPPPPPPPPPPPPP",
@@ -98,7 +99,7 @@ levels.append(Level('Some Name',
                         "P      PP  H     H     H      H      P",
                         "P                                    P",
                         "P       P     P     P      P        EP",
-                        "P      PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP P",
+                        "P      PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
                         "P                                    P",
                         "P                                    P",
                         "P                                    P",
@@ -141,7 +142,7 @@ levels.append(Level('Hanging Tough',
                         "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
                         "P  PSSSSSSSSSSSSSSSSSSSSSSSS            P",
                         "P  P           HH                       P",
-                        "P                                   L   P",
+                        "P                                     L P",
                         "P                                       P",
                         "PPPPP                                   P",
                         "P   PhhhhhhhhPPPPPhhhhhhhhhhhSSSSSSSSS  P",
@@ -160,7 +161,7 @@ levels.append(Level('Hanging Tough',
                         "P                                       P",
                         "P             P         P               P",
                         "PPPPPPPPhhhhhPPPDDDDDDDPPPhhhhhhhhhPPPPPP",
-                    ]))
+                    ], fast_time=25.0))
 
 
 levels.append(Level("Moving Sidewalks!",
@@ -191,7 +192,7 @@ levels.append(Level("Moving Sidewalks!",
                         "P                                                                                                 P",
                         "PPPPPBBBBPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPhhhhhhhP",
                     ],
-                    fast_time=7.5))
+                    fast_time=7.7))
 
 
 levels.append(Level("Tricky Sticky!",

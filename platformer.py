@@ -3,7 +3,7 @@ from game_clock import *
 from pygame import *
 from level_class import *
 
-
+import sys
 import level_data as levels_link
 import level_data_dad as levels_dad
 import level_data_cora as levels_cora
@@ -252,24 +252,27 @@ class Entity(pygame.sprite.Sprite):
 
 
 class Player(Entity):
+
     def __init__(self, x, y):
         Entity.__init__(self)
-        self.image = Surface((32,32))
+        self.player_size = 30
+        self.image = Surface((self.player_size, self.player_size))
         self.image.fill((0, 224, 0))
         self.image.convert()
-        self.xvel = 0
-        self.yvel = 0
-        self.onGround = False
-        self.onSticky = False
-        self.groundSpeed = 0
-        self.rect = Rect(x, y, 32, 32)
+        self.rect = Rect(x, y, self.player_size, self.player_size)
         self.last_hurt_time = current_time() - 10.0
         self.lives = NUM_LIVES
         self.hp = NUM_HP
         self.running_level = False
         self.finished_level = False
         self.all_previous_level_times = 0
+        self.xvel = 0
+        self.yvel = 0
+        self.onGround = False
+        self.onSticky = False
+        self.groundSpeed = 0
         self.is_jumping = False
+        self.last_up_time = -10.0
         self.up_was_released = True
 
     def reset_position(self, x, y):
@@ -280,7 +283,11 @@ class Player(Entity):
         self.onGround = False
         self.onSticky = False
         self.groundSpeed = 0
-        self.rect = Rect(x, y, 32, 32)
+        # self.is_jumping = False
+        # self.last_up_time = -10.0
+        # self.up_was_released = True
+
+        self.rect = Rect(x, y, self.player_size, self.player_size)
         self.last_hurt_time = current_time() - 10.0
         self.image.fill((0, 225, 0))
 
@@ -289,6 +296,7 @@ class Player(Entity):
         if up:
             # only jump if on the ground
             if self.onSticky:
+                self.is_jumping = True      # This is counter intuitive, but allows the slide up off the stickies.
                 self.yvel = self.yvel - 0.65
             elif self.onGround and self.up_was_released:
                 # start a new jump
@@ -458,10 +466,10 @@ class Player(Entity):
 
                         if self.yvel > -3*GRAVITY:
                             self.yvel = 0.0
-                            self.is_jumping=False
+                            self.is_jumping = False
                             self.onGround = True
                         else:
-                            self.is_jumping=True
+                            self.is_jumping = True
                             self.up_was_released = False
                             self.onGround = False
 
@@ -520,6 +528,7 @@ class Player(Entity):
 
                 elif isinstance(p, PlatformPit):
                     self.lives -= 1
+                    self.hp = NUM_HP
                     self.groundSpeed = 0
                     self.reset_position(32, 32)
                     self.running_level = False

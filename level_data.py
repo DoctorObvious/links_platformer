@@ -165,7 +165,8 @@ levels.append(Level('Loop-de-loops',
                         "P  P         P   PSSSSSSSSSSSSSSSSSSSS",
                         "P                PSSSSSSSSSSSSSSSSSSSS",
                         "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
-                    ]))
+                    ],
+                    fast_time=18.3))
 
 levels.append(Level('First bouncy',
                     ["You can bounce on the bouncy blocks for a while,",
@@ -300,7 +301,8 @@ levels.append(Level('First moving carpet',
                         "P                                     P",
                         "P                                    EP",
                         "PMMMMMDDDDMMMMMMMMMMMMMMMMMMMMDDDDPLPPP",
-                    ]))
+                    ],
+                    fast_time=24.0))
 
 levels.append(Level('Wrong way?',
                     ["Can you go the wrong way on a moving carpet?"],
@@ -341,7 +343,8 @@ levels.append(Level('Wrong way?',
                         "P                          P        P",
                         "P        P                 P       EP",
                         "PMMMMMMMMMWWWWWMMMMMMMMMMMMMWWWMMMPPP",
-                    ]))
+                    ],
+                    fast_time=13.1))
 
 levels.append(Level('Houses',
                     ["Which house in the village holds the exit block?",
@@ -406,7 +409,8 @@ levels.append(Level('Tower',
                         "P                           MMMMMMMMMMMPPPP",
                         "P                                         P",
                         "PPPPMMMMMMMMWWWWWMMMMMMMMPPPPPPPPPPPPPPPPPP",
-                    ]))
+                    ],
+                    fast_time=26.0))
 
 levels.append(Level("Putting the blocks together.",
                     ["Putting the blocks together."],
@@ -464,7 +468,8 @@ levels.append(Level("Sticky climb-n-drop!",
                         "S         P      P          P",
                         "S         P      P          P",
                         "PBBBBBBBPPPPPPPPPPBBBBBBPPPPP",
-                    ]))
+                    ],
+                    fast_time=13.0))
 
 levels.append(Level("Climb-n-bounce",
                     ["Climb-n-bounce"],
@@ -498,7 +503,9 @@ levels.append(Level("Climb-n-bounce",
                         "P PS         P                          S    P",
                         "P            P                          S    P",
                         "PPPPPBBBBBPPPPPPPPPDDPDDDDDPDDDPPPPPPPPPPPPPPP",
-                    ]))
+                    ],
+                    fast_time=12.1))
+
 
 levels.append(Level("Falling",
                     ["Sometimes, falling is inevitable"],
@@ -598,7 +605,8 @@ levels.append(Level("Lava!",
                         "P                       P",
                         "P                       P",
                         "PDDDDDDDDDDDDDDDDDDDDDDDP",
-                    ]))
+                    ],
+                    fast_time=5.5))
 
 levels.append(Level("More lava!",
                     ["Oh, No! The lava spilled!",
@@ -625,4 +633,77 @@ levels.append(Level("More lava!",
                         "P PPPPPPPP      P  P    P",
                         "P                    P  P",
                         "PPPPPPPPPPPPPPPPPPPPPPPLP",
-                    ]))
+                    ],
+                    fast_time=10.5))
+
+levels.append(Level('Castle maze',
+                    ["Navigate your way through the mirrored structure!",
+                     "Watch out; it's dangerous!"],
+                    [
+                        "PPPPPPPPPPPPPPPPPPPPPPPPPPP",
+                        "P            P           EP",
+                        "P       H    P    H       P",
+                        "P            P            P",
+                        "PPPPPP       P       PPPPPP",
+                        "P    P       P       P    P",
+                        "P    PP      P      PP    P",
+                        "P           PPP           P",
+                        "P            P            P",
+                        "PhhP         P         PhhP",
+                        "PHHP   P     P     P   PHHP",
+                        "PHHP         P         PHHP",
+                        "PHHPP        P        PPHHP",
+                        "PHHP         P         PHHP",
+                        "PHHPHHH      P      HHHPHHP",
+                        "PHHPPPPPP    P    PPPPPPHHP",
+                        "PH      P    P    P      HP",
+                        "PH P  P      P      P  P HP",
+                        "PH     PPP   P   PPP     HP",
+                        "PH LP    P  PPP  P    PL HP",
+                        "PPPPP  PPP   P   PPP  PPPPP",
+                        "P      P  P  P  P  P      P",
+                        "P PPPP PPPPPPPPPPPPP PPPP P",
+                        "P      P    HPH    P      P",
+                        "PP PPPPP P  HPH  P PPPPP  P",
+                        "P        P  HPH  P        P",
+                        "P P      PH     HP      P P",
+                        "P   PPPPPP      PPPPPPP   P",
+                        "PP  P        P        P  PP",
+                        "P      PPP   P   PPP      P",
+                        "P        PP HPH PP        P",
+                        "PPPPPPPPPPPPPPPPPPPPPPPPPPP",
+                    ],
+                    fast_time=40.0))
+
+levels.append(Level("Skullz",
+                    ["That's a LOT of Skulls!!!",
+                     "But how can you get to the exits?"],
+                    [
+                        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+                        "P                                           P",
+                        "P          PPP                  PP  PPP     P",
+                        "P         PPPPP                PPPP  PPP    S",
+                        "P        PEEPEEP              PEEEE EEEEP   S",
+                        "P        PEEPEEP              PMMMMPWWWWP   S",
+                        "P        PPP PPP              PEEEEPEEEEP   S",
+                        "P         PPPPP               PMMMMPWWWWP   S",
+                        "P         P P P               PEEEEPEEEEP   S",
+                        "P     PPP       PPP         PPPPPPP PPPPPPP S",
+                        "P    PEEPPP   PPPEEP        PP           PP S",
+                        "P   PPEEPP     PPEEPP       PP PPPPPPPPP PP S",
+                        "P   PPPP PP   PP PPPP          PP PPP PP    P",
+                        "P   PPEEPP     PPEEPP         PPP PPP PPP   P",
+                        "P    PEEPPP   PPPEEP        PP           PP P",
+                        "P     PPP       PPP                         S",
+                        "P         P P P                             S",
+                        "P         PPPPP                             S",
+                        "P        PPP PPP                            S",
+                        "P        PEEPEEP                            S",
+                        "P        PEEPEEP                            S",
+                        "P         PPPPP                             S",
+                        "P          PPP                              S",
+                        "P                                           P",
+                        "P                                           P",
+                        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+                    ],
+                    fast_time=12.0))

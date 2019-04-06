@@ -183,14 +183,17 @@ def run_game(levels, start_level_num):
             if player.hp <= 0:
                 player.lives -= 1
                 player.hp = NUM_HP
+                up = left = right = down = False
                 die_message("Ouch, you lost a life", screen, TIMER, bg)
                 my_print("Died: lives left = {}".format(player.lives))
                 player.reset_position(32, 32)
                 player.running_level = False
+                pygame.event.get()  # clear out event queue
 
             if player.lives <= 0:
                 end_game_message(screen, TIMER, bg)
                 my_print("No lives left. Game over!")
+                pygame.event.get()  # clear out event queue
                 return                                                         
 
             # camera movement
@@ -219,12 +222,17 @@ def run_game(levels, start_level_num):
 
         # Add the time spent on the just-finished level
         this_level_time = elapsed_time(level_start_time)
+        get_one_up = this_level_time < level.fast_time
         player.all_previous_level_times = player.all_previous_level_times + this_level_time
         print "Finished level {}, total playing time = {:3.1f}".format(level_number + 1, player.all_previous_level_times)
 
         message_big = "Finished level: time = {:3.1f}".format(this_level_time)
         message_small = ["total time = {:3.1f}".format(player.all_previous_level_times),
                          "press spacebar to continue..."]
+
+        if get_one_up:
+            player.lives += 1
+            message_big += '  Fast! 1 UP!!'
         end_message(message_life, message_big, message_small, TIMER, screen, bg, player.hp)
 
         if level_number + 1 == num_levels:
@@ -287,8 +295,6 @@ class Player(Entity):
                 self.is_jumping = True
                 self.up_was_released = False
                 self.yvel -= 10.2
-            # self.onGround = False
-            # self.onSticky = False
         else:
             self.is_jumping = False
             self.up_was_released = True
@@ -596,10 +602,14 @@ class Player(Entity):
                         or self.rect.top == p.rect.bottom - 1 or self.rect.bottom == p.rect.top + 1:
 
                         pass
+
                         # Determine if we are on the top or, say, a side. Only allow side movement when checking
                         # collisions based on the yvel (not when checking horizontal)
                         # if self.rect.bottom != p.rect.top + 1 and yvel != 0.0:
                         #     self.yvel = 0.0
+
+                        # if xvel != 0 and self.rect.top == p.rect.bottom - 1:
+                        #     print "Hit the clause"
 
                     else:
                         if xvel > 0:
@@ -917,8 +927,8 @@ def draw_die_message(message_time, color=DARKERRED, pulse_time=8.0):
 def instructions_message():
     global TIMER, DISPLAYSURF
 
-    message_big = "Lincoln's Block Head"
-    message_instructions = ["How to Play:" ,
+    message_big = "Little Squares' long journey"
+    message_instructions = ["How to Play:",
                             '* Use arrow keys to move',
                             '* Tap up to jump small',
                             '* Hold up to jump big'

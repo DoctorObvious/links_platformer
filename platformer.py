@@ -927,7 +927,7 @@ def draw_die_message(message_time, color=DARKERRED, pulse_time=8.0):
 def instructions_message():
     global TIMER, DISPLAYSURF
 
-    message_big = "Little Squares' long journey"
+    message_big = "Little Squares, Long Journey"
     message_instructions = ["How to Play:",
                             '* Use arrow keys to move',
                             '* Tap up to jump small',

@@ -28,7 +28,9 @@ def my_print(message):
 
 
 def main():
-    global DISPLAYSURF, TIMER, levels, screen
+    global DISPLAYSURF, TIMER, levels, screen, SOUND_LIFE, SOUND_BOUNCE_LARGE, SOUND_BOUNCE_MED
+    global SOUND_HURT2, SOUND_HURT1, SOUND_DIE, SOUND_PIT_DIE, SOUND_JUMP, SOUND_PORTAL
+    global SOUND_STICKY_ON, SOUND_STICKY_MOVE, SOUND_STICKY_OFF, SOUND_BOUNCE_SMALL
 
     pygame.init()
     screen = pygame.display.set_mode(DISPLAY, FLAGS, DEPTH)
@@ -36,6 +38,24 @@ def main():
 
     TIMER = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+
+    SOUND_LIFE = pygame.mixer.Sound(SOUND_LIFE_FILE)
+    SOUND_STICKY_MOVE = pygame.mixer.Sound(SOUND_STICKY_MOVE_FILE)
+    SOUND_STICKY_MOVE.set_volume(0.3)
+    SOUND_STICKY_ON = pygame.mixer.Sound(SOUND_STICKY_ON_FILE)
+    SOUND_STICKY_OFF = pygame.mixer.Sound(SOUND_STICKY_OFF_FILE)
+    SOUND_HURT1 = pygame.mixer.Sound(SOUND_HURT_FILE1)
+    SOUND_HURT2 = pygame.mixer.Sound(SOUND_HURT_FILE2)
+    SOUND_BOUNCE_LARGE = pygame.mixer.Sound(SOUND_BOUNCE_LARGE_FILE)
+    SOUND_BOUNCE_MED = pygame.mixer.Sound(SOUND_BOUNCE_MEDIUM_FILE)
+    SOUND_BOUNCE_SMALL = pygame.mixer.Sound(SOUND_BOUNCE_SMALL_FILE)
+    SOUND_BOUNCE_SMALL.set_volume(0.5)
+    SOUND_JUMP = pygame.mixer.Sound(SOUND_JUMP_FILE)
+    SOUND_JUMP.set_volume(0.5)
+    SOUND_DIE = pygame.mixer.Sound(SOUND_DIE_FILE)
+    SOUND_PIT_DIE = pygame.mixer.Sound(SOUND_PIT_DIE_FILE)
+    SOUND_PORTAL = pygame.mixer.Sound(SOUND_PORTAL_FILE)
+
 
     # TODO show_start_screen
     instructions_message()
@@ -147,7 +167,7 @@ def run_game(levels, start_level_num):
                     raise SystemExit, "ESCAPE"
                 if e.type == KEYDOWN and e.key == K_F5:
                     return
-                if e.type == KEYDOWN and e.key == K_UP:
+                if e.type == KEYDOWN and (e.key == K_UP or e.key == K_SPACE):
                     up = True
                     player.running_level = True
                     if player.up_was_released:
@@ -162,7 +182,7 @@ def run_game(levels, start_level_num):
                     right = True
                     player.running_level = True
 
-                if e.type == KEYUP and e.key == K_UP:
+                if e.type == KEYUP and (e.key == K_UP or e.key == K_SPACE):
                     up = False
                 if e.type == KEYUP and e.key == K_DOWN:
                     down = False
@@ -183,6 +203,7 @@ def run_game(levels, start_level_num):
                 player.update(up, down, left, right, platforms, level_width, level_height)
 
             if player.hp <= 0:
+                SOUND_DIE.play()
                 player.lives -= 1
                 player.hp = NUM_HP
                 up = left = right = down = False
@@ -208,6 +229,20 @@ def run_game(levels, start_level_num):
 
             # draw text
             if not player.running_level:
+
+                SOUND_LIFE.stop()
+                SOUND_STICKY_MOVE.stop()
+                SOUND_STICKY_ON.stop()
+                SOUND_STICKY_OFF.stop()
+                SOUND_HURT1.stop()
+                SOUND_HURT2.stop()
+                SOUND_BOUNCE_SMALL.stop()
+                SOUND_BOUNCE_MED.stop()
+                SOUND_BOUNCE_LARGE.stop()
+                SOUND_JUMP.stop()
+                SOUND_DIE.stop()
+                SOUND_PIT_DIE.stop()
+
                 draw_big_message(start_message, color=BLUE, pulse_time=1.0)
                 draw_small_message(info_message, color=BLUE, pulse_time=1.0)
                 draw_prompt_message(message_prompt, color=BLUE, pulse_time=1.5)
@@ -304,11 +339,13 @@ class Player(Entity):
             if self.onSticky:
                 self.is_jumping = True      # This is counter intuitive, but allows the slide up off the stickies.
                 self.yvel = self.yvel - 0.65
+                # SOUND_STICKY_MOVE.play()
             elif self.onGround and self.up_was_released:
                 # start a new jump
                 self.is_jumping = True
                 self.up_was_released = False
                 self.yvel -= 10.2
+                SOUND_JUMP.play()
             elif not self.onGround and self.up_was_released and elapsed_time(self.last_bounce_time) < UP_JUMP_TIME:
                 self.add_jump_boost()
                 self.is_jumping = True
@@ -379,6 +416,7 @@ class Player(Entity):
         self.rect.left += self.xvel + self.groundSpeed
 
         # reset things that are set in collision detection
+        last_onSticky = self.onSticky
         self.onSticky = False
         # self.groundSpeed = 0
 
@@ -412,6 +450,17 @@ class Player(Entity):
                 self.yvel = -5.0
             if self.yvel > 5.0:
                 self.yvel = 5.0
+
+        if not last_onSticky and self.onSticky:
+            SOUND_STICKY_ON.play()
+
+        if last_onSticky and not self.onSticky:
+            SOUND_STICKY_OFF.play()
+
+        if self.onSticky and (abs(self.yvel) + abs(self.xvel)) > 2.0:
+            SOUND_STICKY_MOVE.play()
+        else:
+            SOUND_STICKY_MOVE.stop()
 
         # calculate new x camera
         old_cameraX = cameraX
@@ -449,12 +498,21 @@ class Player(Entity):
         else:
             self.image.fill((0, 225, 0))
 
+    def bouncy_sound(self, vel):
+        if abs(vel) >= 15.0:
+            SOUND_BOUNCE_LARGE.play()
+        if 8.0 <= abs(vel) < 15.0:
+            SOUND_BOUNCE_MED.play()
+        if 3.0 < abs(vel) < 8.0:
+            SOUND_BOUNCE_SMALL.play()
+
     def collide(self, xvel, yvel, platforms):
         for p in platforms:
             if pygame.sprite.collide_rect(self, p):
 
                 # Handle collision with an Exit Block
                 if isinstance(p, ExitBlock):
+                    SOUND_PORTAL.play()
                     self.finished_level = True
 
                 # Handle collision with an Bouncy Block
@@ -465,16 +523,19 @@ class Player(Entity):
                         my_print("collide left")
                         self.xvel = -self.xvel
                         self.groundSpeed = -self.groundSpeed
+                        self.bouncy_sound(self.xvel)
                     if xvel < 0:
                         self.rect.left = p.rect.right
                         my_print("collide right")
                         self.xvel = -self.xvel
                         self.groundSpeed = -self.groundSpeed
+                        self.bouncy_sound(self.xvel)
                     if yvel < 0:
                         self.groundSpeed = 0
                         self.rect.top = p.rect.bottom
                         self.yvel = -self.yvel
                         my_print("collide bottom bounce off")
+                        self.bouncy_sound(self.yvel)
                     if yvel > 0:
                         self.groundSpeed = 0
                         self.rect.bottom = p.rect.top
@@ -498,6 +559,8 @@ class Player(Entity):
                             self.up_was_released = False
                             self.onGround = False
 
+                        self.bouncy_sound(self.yvel)
+
                         my_print("collide top bounce off")
 
                 elif isinstance(p, PlatformIllusion):
@@ -512,7 +575,13 @@ class Player(Entity):
                         pass
 
                 elif isinstance(p, PlatformHurt):
+                    SOUND_HURT1.stop()
+                    SOUND_HURT2.stop()
                     self.groundSpeed = 0
+                    if self.hp == 3:
+                        SOUND_HURT1.play()
+                    if self.hp == 2:
+                        SOUND_HURT2.play()
                     if elapsed_time(self.last_hurt_time) > BANDAID_TIME:
                         self.hp -= 1
                         self.last_hurt_time = current_time()
@@ -532,7 +601,13 @@ class Player(Entity):
                         my_print("collide top")
 
                 elif isinstance(p, PlatformHurtFull):
+                    SOUND_HURT1.stop()
+                    SOUND_HURT2.stop()
                     self.groundSpeed = 0
+                    if self.hp == 3:
+                        SOUND_HURT1.play()
+                    if self.hp == 2:
+                        SOUND_HURT2.play()
                     if elapsed_time(self.last_hurt_time) > BANDAID_TIME:
                         self.hp -= 1
                         self.last_hurt_time = current_time()
@@ -557,10 +632,13 @@ class Player(Entity):
                     self.groundSpeed = 0
                     self.reset_position(32, 32)
                     self.running_level = False
+                    SOUND_PIT_DIE.play()
 
                 elif isinstance(p, PlatformLife):
                     self.groundSpeed = 0
                     self.last_hurt_time = current_time() - 10.0
+                    if self.hp < NUM_HP:
+                        SOUND_LIFE.play()
                     self.hp = NUM_HP
                     my_print("Healed: HP = {}".format(self.hp))
                     if xvel > 0:
@@ -663,7 +741,7 @@ class Player(Entity):
                         if yvel > 0:
                             self.rect.bottom = p.rect.top + 1
                             self.yvel = 0.0
-                            my_print ("collide top")
+                            my_print("collide top")
 
                 else:  # Must be a normal platform
                     my_print("Platform: ")
@@ -961,11 +1039,12 @@ def draw_die_message(message_time, color=DARKERRED, pulse_time=8.0):
 def instructions_message():
     global TIMER, DISPLAYSURF
 
-    message_big = "Little Squares, Long Journey"
+    message_big = "Little Square, Long Journey"
     message_instructions = ["How to Play:",
                             '* Use arrow keys to move',
                             '* Tap up to jump small',
-                            '* Hold up to jump big'
+                            '* Hold up to jump big',
+                            '* You can press multiple keys at a time'
                             ]
     message_small_2 = ["Press spacebar to continue",
                        "Good luck to you!",
@@ -1089,7 +1168,7 @@ def level_pack_choice_screen():
     global TIMER, DISPLAYSURF
 
     level_choice_messages = [
-        "1: Nlocnil's",
+        "1: Lincoln's",
         "2: Dad's",
         "3: Cora's",
     ]

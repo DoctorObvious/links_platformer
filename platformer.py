@@ -34,7 +34,7 @@ def main():
 
     pygame.init()
     screen = pygame.display.set_mode(DISPLAY, FLAGS, DEPTH)
-    pygame.display.set_caption("PLATFORMER! Producers: Link, Mark")
+    pygame.display.set_caption("Little Square, Long Journey! Producers: Link, Mark")
 
     TIMER = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
@@ -95,7 +95,7 @@ def run_game(levels, start_level_num):
         platforms = []
         start_message = 'Level {}: {}'.format(level_number + 1, level.name)
         info_message = level.message
-        message_prompt = 'Press any arrow to continue'
+        message_prompt = 'Press any arrow or space to continue'
         message_life2 = 'lives = {}'.format(player.lives - 1)
 
         x = y = 0
@@ -241,7 +241,6 @@ def run_game(levels, start_level_num):
                 SOUND_BOUNCE_LARGE.stop()
                 SOUND_JUMP.stop()
                 SOUND_DIE.stop()
-                SOUND_PIT_DIE.stop()
 
                 draw_big_message(start_message, color=BLUE, pulse_time=1.0)
                 draw_small_message(info_message, color=BLUE, pulse_time=1.0)
@@ -577,6 +576,7 @@ class Player(Entity):
                 elif isinstance(p, PlatformHurt):
                     SOUND_HURT1.stop()
                     SOUND_HURT2.stop()
+                    SOUND_LIFE.stop()
                     self.groundSpeed = 0
                     if self.hp == 3:
                         SOUND_HURT1.play()
@@ -587,22 +587,27 @@ class Player(Entity):
                         self.last_hurt_time = current_time()
                     if xvel > 0:
                         self.rect.right = p.rect.left
+                        self.xvel = -6.0
                         my_print("collide left")
                     if xvel < 0:
                         self.rect.left = p.rect.right
+                        self.xvel = 6.0
                         my_print("collide right")
                     if yvel < 0:
                         self.rect.top = p.rect.bottom
+                        self.yvel = 6.0
                         my_print("collide bottom")
                     if yvel > 0:
                         self.rect.bottom = p.rect.top
                         self.onGround = False
                         self.yvel = -6.0
+                        self.last_bounce_time = current_time()
                         my_print("collide top")
 
                 elif isinstance(p, PlatformHurtFull):
                     SOUND_HURT1.stop()
                     SOUND_HURT2.stop()
+                    SOUND_LIFE.stop()
                     self.groundSpeed = 0
                     if self.hp == 3:
                         SOUND_HURT1.play()
@@ -638,6 +643,9 @@ class Player(Entity):
                     self.groundSpeed = 0
                     self.last_hurt_time = current_time() - 10.0
                     if self.hp < NUM_HP:
+                        SOUND_HURT1.stop()
+                        SOUND_HURT2.stop()
+                        SOUND_LIFE.stop()
                         SOUND_LIFE.play()
                     self.hp = NUM_HP
                     my_print("Healed: HP = {}".format(self.hp))
@@ -1042,8 +1050,8 @@ def instructions_message():
     message_big = "Little Square, Long Journey"
     message_instructions = ["How to Play:",
                             '* Use arrow keys to move',
-                            '* Tap up to jump small',
-                            '* Hold up to jump big',
+                            '* Tap up or space to jump small',
+                            '* Hold up or space to jump big',
                             '* You can press multiple keys at a time'
                             ]
     message_small_2 = ["Press spacebar to continue",

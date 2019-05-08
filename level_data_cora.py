@@ -105,3 +105,30 @@ levels.append(Level("Bouncy",
                         "P                      EP",
                         "PBBBBBBBBBBPPPPPPPPPPPPPP",
                     ]))
+
+
+
+levels.append(Level("All",
+                    ["Bouncy"],
+                    [
+                        "PPPPPPPPPPPPPPPPPPPPPPPPP",
+                        "P                       P",
+                        "P                       P",
+                        "P                       P",
+                        "PPPPP          PPPPPPPPPP",
+                        "P                       P",
+                        "P                       P",
+                        "P                  H    P",
+                        "P                  H    P",
+                        "P                  H    P",
+                        "P                       P",
+                        "P                       P",
+                        "P                       P",
+                        "P                       P",
+                        "P                       P",
+                        "P                  H    P",
+                        "P                  H    P",
+                        "P                  H    P",
+                        "P                  H   EP",
+                        "PDDDDDBBBBBBBBBBDDDPPLLPP",
+                    ]))

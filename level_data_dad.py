@@ -26,10 +26,11 @@ levels.append(Level("Let's do this!",
                         "P    PP      P                       P",
                         "P    PP      P       P       P      EP",
                         "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
-                    ]))
+                    ], fast_time=14.1))
 
 levels.append(Level('Watch Your Step',
-                    ["Don't fall in the black pits!"],
+                    ["Don't fall in the black pits!",
+                     "If you go fast enough you might get a prize..."],
                     [
                         "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
                         "P                                                   P",
@@ -51,7 +52,7 @@ levels.append(Level('Watch Your Step',
                         "PPPPP  PPPPPPP  PPPPP  PPPPP  PPPPP  PPPPP  P  PP   P",
                         "PPPPP  PPPPPPP  PPPPP  PPPPP  PPPPP  PPPPP  P       P",
                         "PPPPPDDPPPPPPPDDPPPPPDDPPPPPDDPPPPPDDPPPPPDDPPPPPPPPP",
-                    ]))
+                    ], fast_time=8.7))
 
 
 levels.append(Level('Hot Stuff',
@@ -78,7 +79,7 @@ levels.append(Level('Hot Stuff',
                         "P     P      P                       P",
                         "P     P      P       P       P      EP",
                         "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
-                    ]))
+                    ], fast_time=15.0))
 
 
 levels.append(Level('Trampoline',

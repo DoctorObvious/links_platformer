@@ -4,6 +4,7 @@ from pygame import *
 from level_class import *
 
 import sys
+import level_data_expert as levels_expert
 import level_data as levels_link
 import level_data_dad as levels_dad
 import level_data_cora as levels_cora
@@ -1179,6 +1180,7 @@ def level_pack_choice_screen():
         "1: Lincoln's",
         "2: Dad's",
         "3: Cora's",
+        "4: Experts",
     ]
 
     pygame.event.get()  # clear out event queue
@@ -1199,6 +1201,8 @@ def level_pack_choice_screen():
                 return levels_dad.levels
             elif key == K_3:
                 return levels_cora.levels
+            elif key == K_4:
+                return levels_expert.levels
 
         TIMER.tick(60)
 

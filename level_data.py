@@ -742,3 +742,4 @@ levels.append(Level("Skullz",
                     ],
                     fast_time=12.0))
 
+

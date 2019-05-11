@@ -1180,7 +1180,7 @@ def level_pack_choice_screen():
         "1: Lincoln's",
         "2: Dad's",
         "3: Cora's",
-        "4: Experts",
+        "4: Expert",
     ]
 
     pygame.event.get()  # clear out event queue

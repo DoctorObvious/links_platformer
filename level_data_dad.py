@@ -162,7 +162,7 @@ levels.append(Level('Hanging Tough',
                         "S                                       P",
                         "P                                       P",
                         "P             P         P               P",
-                        "PPPPPPPPhhhhhPPPDDDDDDDPPPhhhhhhhhhPPPPPP",
+                        "PPPPPPPPhhhhhPPPDDDDDDPPPPPhhhhhhhhPPPPPP",
                     ], fast_time=25.0))
 
 

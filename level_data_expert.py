@@ -2,6 +2,31 @@ from level_class import *
 
 levels = []
 
+levels.append(Level('Impossible?',
+                    ["How hard can it be?"],
+                    [
+                        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+                        "P                                         P",
+                        "P                                         P",
+                        "I                                         P",
+                        "I         P                               P",
+                        "IP  P             I                       P",
+                        "I                 PPI                     P",
+                        "I  DDDDDDDDDDDDDDDDDDPDDDDDDDHHHHH  DDDDDDP",
+                        "P                                H  H     P",
+                        "P                                H  H     P",
+                        "PD                               H  H     P",
+                        "P                                H  H     P",
+                        "P                                H  H     P",
+                        "P   D                            H  H     P",
+                        "P                                         P",
+                        "P                                         D",
+                        "PD                                        P",
+                        "P   D                            DHHD   D P",
+                        "PE  D                            DLLD   DEP",
+                        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+                    ],
+                    fast_time=11.0))
 
 levels.append(Level('Triple the fun',
                     ["Combining some blocks in three layers"],
@@ -30,4 +55,33 @@ levels.append(Level('Triple the fun',
                         "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
                     ],
                     fast_time=60.0))
+
+levels.append(Level('Triple the fun Hard',
+                    ["Combining dangerous blocks in three layers"],
+                    [
+                        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+                        "P                                           P",
+                        "P                                           P",
+                        "P                                    B      B",
+                        "PM H                      D          BH     B",
+                        "P   H                                B     BB",
+                        "P   H   HhPHhPHH                    BB H  BBP",
+                        "P   H                               B  B    P",
+                        "P    HHH           H      H     L   B  B    P",
+                        "P               PPDDDPP          BB   B  P  P",
+                        "P                                  BBB DDDD P",
+                        "PHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH       P",
+                        "PL                                    PPPPPPP",
+                        "P                                           P",
+                        "P                                           P",
+                        "P   WWWWWWWW      WWWWWW  I  I  WWWWHHL     P",
+                        "P   HHHHHHHHHHHHSSHHHHHHHPIIIIIHHHHHHHHHHHHHP",
+                        "P      SH LS          H   DDDD    D   D     P",
+                        "P      S   S    S HHH        D              P",
+                        "P    S   S      S      HL                   P",
+                        "P    S   SH     SSSSS           H     D    EP",
+                        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+                    ],
+                    fast_time=40.0))
+
 

@@ -4,10 +4,10 @@ from pygame import *
 from level_class import *
 
 import sys
-import level_data_expert as levels_expert
 import level_data as levels_link
 import level_data_dad as levels_dad
 import level_data_cora as levels_cora
+import level_data_expert as levels_expert
 
 import time
 
@@ -142,10 +142,18 @@ def run_game(levels, start_level_num):
                     i = PlatformIllusion(x, y)
                     platforms.append(i)
                     entities.add(i)
+                if col == "G":
+                    g = PlatformGlass(x, y)
+                    platforms.append(g)
+                    entities.add(g)
                 if col == "W":
                     w = Platformmovingcarpetleft(x, y)
                     platforms.append(w)
                     entities.add(w)
+                if col == "F":
+                    f = FakeExitBlock(x, y)
+                    platforms.append(f)
+                    entities.add(f)
                 if col == "E":
                     e = ExitBlock(x, y)
                     platforms.append(e)
@@ -273,7 +281,7 @@ def run_game(levels, start_level_num):
         end_message(message_life, message_big, message_small, TIMER, screen, bg, player.hp)
 
         if level_number + 1 == num_levels:
-            print "win!!!!!!"
+            print "You win!!!!!!"
             message_big = "You WIN!!!!!!!"
             message_small = ["total time = {:3.1f}".format(player.all_previous_level_times),
                              "playing {} out of {} levels".format(num_levels-start_level_num, num_levels),
@@ -307,6 +315,7 @@ class Player(Entity):
         self.yvel = 0
         self.onGround = False
         self.onSticky = False
+        self.onIce = False
         self.groundSpeed = 0
         self.is_jumping = False
         self.last_up_time = -10.0
@@ -319,7 +328,7 @@ class Player(Entity):
         self.xvel = 0
         self.yvel = 0
         self.onGround = False
-        self.onSticky = False
+        self.onIce = False
         self.groundSpeed = 0
         self.last_up_time = -10.0
         self.last_bounce_time = -10.0
@@ -362,7 +371,7 @@ class Player(Entity):
 
         if left:
             if self.xvel > 0.0:
-                if self.onGround:
+                if self.onGround and not self.onIce:
                     # self.xvel = 0.0
                     self.xvel = self.xvel * 0.4  # extra help changing direction on ground
                 else:
@@ -375,7 +384,7 @@ class Player(Entity):
 
         if right:
             if self.xvel < 0.0:
-                if self.onGround:
+                if self.onGround and not self.onIce:
                     # self.xvel = 0.0
                     self.xvel = self.xvel * 0.3  # extra help changing direction on ground
                 else:
@@ -396,7 +405,7 @@ class Player(Entity):
             # max falling speed
             if self.yvel > 90:
                 self.yvel = 90
-        if self.onGround and not(left or right):
+        if self.onGround and not(left or right) and not self.onIce:
             # this will let you change direction quickly but not immediately
             self.xvel = self.xvel*.2
             if abs(self.xvel) < 0.2:
@@ -515,6 +524,34 @@ class Player(Entity):
                     SOUND_PORTAL.play()
                     self.finished_level = True
 
+                if isinstance(p, FakeExitBlock):
+                    self.groundSpeed = 0
+                    self.reset_position(32, 32)
+                    if xvel > 0:
+                        self.rect.right = p.rect.left
+                    if xvel < 0:
+                        self.rect.left = p.rect.right
+                    if yvel < 0:
+                        self.rect.top = p.rect.bottom
+                    if yvel > 0:
+                        self.rect.bottom = p.rect.top
+                        self.yvel = 0
+
+                if isinstance(p, PlatformGlass):
+                    self.groundSpeed = 0
+                    self.onIce = True
+                    self.onGround = True
+                    if xvel > 0:
+                        self.rect.right = p.rect.left
+                    if xvel < 0:
+                        self.rect.left = p.rect.right
+                    if yvel < 0:
+                        self.rect.top = p.rect.bottom
+                        self.yvel = 0
+                    if yvel > 0:
+                        self.rect.bottom = p.rect.top
+                        self.yvel = 0
+
                 # Handle collision with an Bouncy Block
                 elif isinstance(p, PlatformBouncy1):
                     my_print("Bouncy: ")
@@ -542,7 +579,7 @@ class Player(Entity):
                         my_print('Bounce start yvel {}'.format(self.yvel))
 
                         # lose a bit of energy
-                        self.yvel = -max(0.0, self.yvel - 1.5 * GRAVITY) * 0.85
+                        self.yvel = -max(0.0, self.yvel - 1.45 * GRAVITY) * 0.85
 
                         if elapsed_time(self.last_up_time) < UP_JUMP_TIME:
                             self.add_jump_boost()
@@ -804,6 +841,22 @@ class ExitBlock(Platform):
         use_color = get_pulse_color([self.color] + self.other_colors, pulse_time=0.5, pulse_start_time=-self.x / 64)
         self.image.fill(Color(*use_color))
 
+class FakeExitBlock(Platform):
+    def __init__(self, x, y):
+        Platform.__init__(self, x, y)
+        self.color = Color("#DD33FF")
+        self.other_colors = [DARKRED, BYELLOW, DARKGREEN]
+        self.image.fill(Color("#DD33FF"))
+        self.x = x
+        self.y = y
+
+    def update(self, camera_x, camera_y):
+        self.rect.x = self.x - camera_x
+        self.rect.y = self.y - camera_y
+        # CHANGE pulse time to change width of color band. Change pulse start time to change speed of transition.
+        use_color = get_pulse_color([self.color] + self.other_colors, pulse_time=1.0, pulse_start_time=-self.x / 64)
+        self.image.fill(Color(*use_color))
+
 
 class PlatformIllusion(Platform):
     def __init__(self, x, y):
@@ -811,6 +864,17 @@ class PlatformIllusion(Platform):
         self.image = Surface((32, 32))
         self.image.convert()
         self.image.fill(Color("#898989"))
+        self.rect = Rect(x, y, 32, 32)
+        self.x = x
+        self.y = y
+
+
+class PlatformGlass(Platform):
+    def __init__(self, x, y):
+        Entity.__init__(self)
+        self.image = Surface((32, 32))
+        self.image.convert()
+        self.image.fill(LIGHTBLUE)
         self.rect = Rect(x, y, 32, 32)
         self.x = x
         self.y = y

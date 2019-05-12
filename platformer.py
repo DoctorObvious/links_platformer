@@ -146,6 +146,10 @@ def run_game(levels, start_level_num):
                     g = PlatformGlass(x, y)
                     platforms.append(g)
                     entities.add(g)
+                if col == "U":
+                    u = PlatformFly(x, y)
+                    platforms.append(u)
+                    entities.add(u)
                 if col == "W":
                     w = Platformmovingcarpetleft(x, y)
                     platforms.append(w)
@@ -306,6 +310,7 @@ class Player(Entity):
         self.image.convert()
         self.rect = Rect(x, y, self.player_size, self.player_size)
         self.last_hurt_time = current_time() - 10.0
+        self.last_fly_time = current_time() - 10.0
         self.lives = NUM_LIVES
         self.hp = NUM_HP
         self.running_level = False
@@ -314,10 +319,12 @@ class Player(Entity):
         self.xvel = 0
         self.yvel = 0
         self.onGround = False
+        self.onFly = False
         self.onSticky = False
         self.onIce = False
         self.groundSpeed = 0
         self.is_jumping = False
+        self.is_flying = False
         self.last_up_time = -10.0
         self.last_bounce_time = -10.0
         self.up_was_released = True
@@ -328,6 +335,7 @@ class Player(Entity):
         self.xvel = 0
         self.yvel = 0
         self.onGround = False
+        self.onFly = False
         self.onIce = False
         self.groundSpeed = 0
         self.last_up_time = -10.0
@@ -335,6 +343,7 @@ class Player(Entity):
 
         self.rect = Rect(x, y, self.player_size, self.player_size)
         self.last_hurt_time = current_time() - 10.0
+        self.last_fly_time = current_time() - 10.0
         self.image.fill((0, 225, 0))
 
     def add_jump_boost(self):
@@ -349,7 +358,7 @@ class Player(Entity):
                 self.is_jumping = True      # This is counter intuitive, but allows the slide up off the stickies.
                 self.yvel = self.yvel - 0.65
                 # SOUND_STICKY_MOVE.play()
-            elif self.onGround and self.up_was_released:
+            elif (self.onGround or self.is_flying) and self.up_was_released:
                 # start a new jump
                 self.is_jumping = True
                 self.up_was_released = False
@@ -427,7 +436,8 @@ class Player(Entity):
         # reset things that are set in collision detection
         last_onSticky = self.onSticky
         self.onSticky = False
-        # self.groundSpeed = 0
+        if elapsed_time(self.last_fly_time) > FLY_TIME:
+            self.is_flying = False
 
         # do x-axis collisions
         self.collide(self.xvel + self.groundSpeed, 0, platforms)
@@ -504,6 +514,8 @@ class Player(Entity):
         # making you turn red after hurt
         if elapsed_time(self.last_hurt_time) < BANDAID_TIME:
             self.image.fill((255, 0, 0, 5))
+        elif elapsed_time(self.last_fly_time) < FLY_TIME:
+            self.image.fill(DARKGREEN)
         else:
             self.image.fill((0, 225, 0))
 
@@ -518,6 +530,8 @@ class Player(Entity):
     def collide(self, xvel, yvel, platforms):
         for p in platforms:
             if pygame.sprite.collide_rect(self, p):
+                self.is_flying = False
+                self.last_fly_time = current_time() - 10.0
 
                 # Handle collision with an Exit Block
                 if isinstance(p, ExitBlock):
@@ -550,6 +564,24 @@ class Player(Entity):
                         self.yvel = 0
                     if yvel > 0:
                         self.rect.bottom = p.rect.top
+                        self.yvel = 0
+
+                if isinstance(p, PlatformFly):
+                    self.groundSpeed = 0
+                    self.is_flying = True
+                    self.last_fly_time = current_time()
+                    if xvel > 0:
+                        self.rect.right = p.rect.left
+                        self.xvel = 0
+                    if xvel < 0:
+                        self.rect.left = p.rect.right
+                        self.xvel = 0
+                    if yvel < 0:
+                        self.rect.top = p.rect.bottom
+                        self.yvel = 0
+                    if yvel > 0:
+                        self.rect.bottom = p.rect.top
+                        self.onGround = True
                         self.yvel = 0
 
                 # Handle collision with an Bouncy Block
@@ -875,6 +907,17 @@ class PlatformGlass(Platform):
         self.image = Surface((32, 32))
         self.image.convert()
         self.image.fill(LIGHTBLUE)
+        self.rect = Rect(x, y, 32, 32)
+        self.x = x
+        self.y = y
+
+
+class PlatformFly(Platform):
+    def __init__(self, x, y):
+        Entity.__init__(self)
+        self.image = Surface((32, 32))
+        self.image.convert()
+        self.image.fill(DARKGREEN)
         self.rect = Rect(x, y, 32, 32)
         self.x = x
         self.y = y

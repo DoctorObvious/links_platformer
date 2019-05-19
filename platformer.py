@@ -4,9 +4,10 @@ from pygame import *
 from level_class import *
 
 import sys
-import level_data as levels_link
+import level_data_intro as levels_intro
 import level_data_dad as levels_dad
 import level_data_cora as levels_cora
+import level_data_intermediate as levels_intermediate
 import level_data_expert as levels_expert
 
 import time
@@ -541,6 +542,7 @@ class Player(Entity):
                 if isinstance(p, FakeExitBlock):
                     self.groundSpeed = 0
                     self.reset_position(32, 32)
+                    self.cameraX = self.cameraY = 0
                     if xvel > 0:
                         self.rect.right = p.rect.left
                     if xvel < 0:
@@ -1284,10 +1286,11 @@ def level_pack_choice_screen():
     global TIMER, DISPLAYSURF
 
     level_choice_messages = [
-        "1: Lincoln's",
-        "2: Dad's",
-        "3: Cora's",
-        "4: Expert",
+        "1: Lincoln's Intro",
+        "2: Lincoln's Intermediate",
+        "3: Lincoln's Expert",
+        "4: Dad's",
+        "5: Cora's",
     ]
 
     pygame.event.get()  # clear out event queue
@@ -1303,13 +1306,16 @@ def level_pack_choice_screen():
         key = check_for_key_press()
         if key:
             if key == K_1:
-                return levels_link.levels
+                return levels_intro.levels
             elif key == K_2:
-                return levels_dad.levels
+                return levels_intermediate.levels
             elif key == K_3:
-                return levels_cora.levels
-            elif key == K_4:
                 return levels_expert.levels
+            elif key == K_4:
+                return levels_dad.levels
+            elif key == K_5:
+                return levels_cora.levels
+
 
         TIMER.tick(60)
 

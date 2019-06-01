@@ -28,8 +28,8 @@ levels.append(Level("Rainbow block!!!",
                         "P                       P",
                         "P                      EP",
                         "PPPPPPPPPPPPPPPPPPPPPPPPP",
-                    ]))
-
+                    ],
+                    fast_time=2.0))
 levels.append(Level("Hurty,Hurty and Hurt",
                     ["Hurty,Hurty and Hurt"],
                     [
@@ -53,7 +53,8 @@ levels.append(Level("Hurty,Hurty and Hurt",
                         "P                       P",
                         "P                      EP",
                         "PPPPPPPPPPPPPPPPPPPPPPPPP",
-                    ]))
+                    ],
+                    fast_time=5.0))
 
 levels.append(Level("Heal, heal, heal",
                     ["Heal, heal, heal"],
@@ -78,7 +79,9 @@ levels.append(Level("Heal, heal, heal",
                         "P                   LL  P",
                         "P                      EP",
                         "PPPPPPPPPPPPPPPPPPPPPLPPP",
-                    ]))
+                    ],
+                     fast_time=3.5))
+
 
 
 levels.append(Level("Bouncy",
@@ -104,7 +107,9 @@ levels.append(Level("Bouncy",
                         "P                       P",
                         "P                      EP",
                         "PBBBBBBBBBBPPPPPPPPPPPPPP",
-                    ]))
+                    ],
+                     fast_time=3.0))
+
 
 
 
@@ -131,4 +136,51 @@ levels.append(Level("All",
                         "P                  H    P",
                         "P                  H   EP",
                         "PDDDDDBBBBBBBBBBDDDPPLLPP",
-                    ]))
+                   ],
+                     fast_time=5.0))
+
+
+
+levels.append(Level("Rainbow block!!!",
+                    ["Rainbow block!!!"],
+                    [
+                        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+                        "P                                                                EP",
+                        "P                                PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+                        "P                               P",
+                        "P                               P",
+                        "P          BBBBBBBBBBBBBBB      P",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P",
+                        "PH          HHH HH  HHH   HH    P",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P LP",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P",
+                        "P                               P",
+                        "P                            UUUP",
+                        "P               HHHHHHHHHHH  IIEP",
+                        "PPPPPUUUUUUUUUPPPPPPPPPPPPPPPPPPP",
+                    ],
+                    fast_time=13.0))

@@ -307,11 +307,11 @@ class Player(Entity):
         Entity.__init__(self)
         self.player_size = 30
         self.image = Surface((self.player_size, self.player_size))
-        self.image.fill((0, 224, 0))
+        self.image.fill((0, 225, 0))
         self.image.convert()
         self.rect = Rect(x, y, self.player_size, self.player_size)
         self.last_hurt_time = current_time() - 10.0
-        self.last_fly_time = current_time() - 10.0
+        self.last_fly_time = 0
         self.lives = NUM_LIVES
         self.hp = NUM_HP
         self.running_level = False
@@ -344,7 +344,7 @@ class Player(Entity):
 
         self.rect = Rect(x, y, self.player_size, self.player_size)
         self.last_hurt_time = current_time() - 10.0
-        self.last_fly_time = current_time() - 10.0
+        self.last_fly_time = 0
         self.image.fill((0, 225, 0))
 
     def add_jump_boost(self):
@@ -515,7 +515,7 @@ class Player(Entity):
         # making you turn red after hurt
         if elapsed_time(self.last_hurt_time) < BANDAID_TIME:
             self.image.fill((255, 0, 0, 5))
-        elif elapsed_time(self.last_fly_time) < FLY_TIME:
+        elif self.is_flying:
             self.image.fill(DARKGREEN)
         else:
             self.image.fill((0, 225, 0))
@@ -531,8 +531,6 @@ class Player(Entity):
     def collide(self, xvel, yvel, platforms):
         for p in platforms:
             if pygame.sprite.collide_rect(self, p):
-                self.is_flying = False
-                self.last_fly_time = current_time() - 10.0
 
                 # Handle collision with an Exit Block
                 if isinstance(p, ExitBlock):
@@ -646,6 +644,8 @@ class Player(Entity):
                         pass
 
                 elif isinstance(p, PlatformHurt):
+                    self.is_flying = False
+                    self.last_fly_time = 0
                     SOUND_HURT1.stop()
                     SOUND_HURT2.stop()
                     SOUND_LIFE.stop()
@@ -677,6 +677,8 @@ class Player(Entity):
                         my_print("collide top")
 
                 elif isinstance(p, PlatformHurtFull):
+                    self.is_flying = False
+                    self.last_fly_time = 0
                     SOUND_HURT1.stop()
                     SOUND_HURT2.stop()
                     SOUND_LIFE.stop()
